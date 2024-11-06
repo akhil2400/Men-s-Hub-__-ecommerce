@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Meta Data -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="author" content="Untree.co" />
+    <meta name="description" content="Your one-stop destination for premium men's fashion." />
+    <meta name="keywords" content="men's fashion, online shopping, clothing, accessories" />
+    
+    <!-- Page Title and Favicon -->
+    <title>Men's Hub</title>
+    <link rel="shortcut icon" href="favicon.png" />
+    
+    <!-- Bootstrap CSS and Custom Fonts -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <!-- Custom CSS Files -->
+    <link href="/css/tiny-slider.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- google login -->
+
+    
+  </head>
+  <body>
+
+    <%- include("./layouts/header.ejs") %>
+
+    <section class="mid-section">
+    <div class="registration-container ">
+      
+      <form action="/auth/google" method="get">
+
+        <div>
+        <button class="googlebtn" type="submit"><img class="google" src="/images/img/googleimg/google.png" alt=""></button> 
+        </div>
+    </form>
+      
+      <div class="divider">- OR -</div>
+      <form  class="registration-form" id="registerForm" >
+        <div class="name-inputs">
+            <input type="text" name="userName" id="userName" placeholder="userName *">
+        </div>
+        <p id="userNameError" class="errormessage"></p> <!-- Separate first name error -->
+
+        <input type="text" name="email" id="email" placeholder="Email ID *">
+        <p id="emailError" class="errormessage"></p>
+        <div class="password-input">
+            <input type="password" name="password" id="password" placeholder="Choose New Password *">
+            <i class="fa fa-eye-slash toggle-password" id="togglePassword" onclick="togglePasswordVisibility()"></i>
+        </div>
+        <p id="passwordError" class="errormessage"></p>
+        <div class="password-input">
+            <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password *">
+            <i class="fa fa-eye-slash toggle-password" id="toggleConfirmPassword" onclick="toggleConfirmPasswordVisibility()"></i>
+            <p id="confirmPasswordError" class="errormessage"></p>
+        </div>
+        <div class="mobile-input">
+            <select class="countrycode">
+                <option value="+91">+91 (India)</option>
+                <option value="+1">+1 (USA)</option>
+                <option value="+44">+44 (UK)</option>
+                <option value="+61">+61 (Australia)</option>
+                <option value="+81">+81 (Japan)</option>
+            </select>
+            <input class="number" name="mobileNumber" id="mobileNumber" type="tel" placeholder="Mobile Number (For order status update)">
+        </div>
+        <p id="mobileNumberError" class="errormessage"></p>
+        <div class="gender">
+            <label>Gender</label>
+            <label><input type="radio" id="gender1" name="gender" value="Male" checked> Male</label>
+            <label><input type="radio" id="gender2" name="gender" value="Female"> Female</label>
+            <label><input type="radio" id="gender3" name="gender" value="Other"> Other</label>
+        </div>
+        <p id="genderError" class="errormessage"></p>
+        <button id="registerBtn" class="register-btn">GET OTP</button>
+        <p class="login-link">Already a Customer? <a href="#">Login</a></p>
+    </form>
+    
+    </div>
+  </section>
+  
+    <%- include("./layouts/footer.ejs") %>
+
+    <!-- Scripts -->
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/tiny-slider.js"></script>
+    <script src="js/custom.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="/js/users/toggle.js"></script>
+    <script src="/js/users/regvalidation.js"></script>
+
+  </body>
+</html>

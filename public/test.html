@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
+    <title>Test CSS</title>
+</head>
+<body>
+    <h1>This is a test page</h1>
+    <p>This should be styled by styles.css.</p>
+</body>
+</html>
+
+swal.fire({
+    title: "Registration Successful",
+    text: "Your registration has been successful!",
+    icon: "success",
+    confirmButtonText: "OK"
+}).then((result) => {
+    if (result.isConfirmed) {
+        // Now submit the form after user clicks OK
+        document.getElementById("registerForm").submit();
+    }
+});
