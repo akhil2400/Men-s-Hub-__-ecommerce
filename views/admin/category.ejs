@@ -245,8 +245,7 @@
                           <td> <%= data.name  %> </td>
                           <td> <%= data.productCount  %> </td>
                           <td>
-                            <div data-id="<%= data._id  %>" class="badge badge-outline-primary">Unlist</div>
-                          </td>
+                            <div data-id="<%= data._id  %>" class="badge btnListAndUnlist <%= data.isDeleted?'badge-outline-success':'badge-outline-primary' %>"><%= data.isDeleted?'List':'Unlist'%></div>
                           <td>
                             <div data-id="<%= data._id %>" class="badge badge-outline-warning">Update</div>
                           </td>
@@ -372,10 +371,12 @@
   
 </div>
 
+
     <script src="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom js for this page -->
     <script src="/js/admin/category.js"></script>
+    <script src="/js/admin/categoryvalidation.js"></script>
     <!-- End custom js for this page -->
- </body>
+  </body>
 </html>

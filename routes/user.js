@@ -17,6 +17,7 @@ router.get('/forgotpassword',userController.loadforgotpassword)
 router.post('/forgotpassword',userController.forgotpassword)
 router.get('/fotp-verify',userController.loadfotp)
 router.get('/ban',userController.loadban)
+router.get('/shop',userController.loadshop)
 
 
 module.exports = router;

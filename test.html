@@ -3,107 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Oversized T-Shirt Catalog</title>
     <style>
-
         * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-body {
-    background-color: #f9f9f9;
-}
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
 
-.container {
-    display: flex;
-    height: 100vh;
-    width: 100%;
-}
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 80%;
+        }
 
-.sidebar {
-    width: 250px;
-    background-color: #ffffff;
-    padding-top: 20px;
-    min-height: 100vh;
-   
-    border: 1px solid black;
-}
+        .product-tile {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            background-color: #fff;
+        }
 
-.sidebar ul {
-    list-style-type: none;
-    padding: 0;
-    
-}
+        .product-tile img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
 
-.sidebar ul li {
-    margin-bottom: 20px;
-}
+        .title {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 0 5px;
+        }
 
-.sidebar ul li a {
-    text-decoration: none;
-    color: #000000;
-    font-size: 16px;
-    padding: 10px;
-    display: block;
-}
+        .category {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
 
-.sidebar ul li a:hover {
-    background-color: #406350;
-    border-radius: 5px;
-    color: #ffffff;
-}
-
-.content {
-    flex: 1;
-    padding: 20px;
-    background-color: #fff;
-}
-
-.content h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.content p {
-    font-size: 16px;
-    color: #555;
-    line-height: 1.6;
-}
-
-@media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-    }
-
-    .sidebar {
-        width: 100%;
-        height: auto;
-    }
-}
-
+        .price {
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="sidebar">
-            <ul>
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Orders</a></li>
-                <li><a href="#">Update Profile</a></li>
-                <li><a href="#">My Address</a></li>
-                <li><a href="#">Change Password</a></li>
-                <li><a href="#">Wallet</a></li>
-                <li><a href="#">Logout</a></li>
-            </ul>
+    <div class="grid-container">
+        <!-- Each tile represents a product -->
+        <div class="product-tile">
+            <img src="needover2.png" alt="T-Shirt 1">
+            <p class="title">Colourblock: Sapphire</p>
+            <p class="category">Oversized T-Shirts</p>
+            <p class="price">₹ 899</p>
         </div>
-        <div class="content">
-            <h2>Hello Rosie</h2>
-            <p>From your account dashboard, you can easily check & view your recent order, manage your shipping and billing addresses and edit your password and account details.</p>
+        <div class="product-tile">
+            <img src="needover2.png" alt="T-Shirt 2">
+            <p class="title">Patchwork T-Shirt: Freedom</p>
+            <p class="category">Oversized T-Shirts</p>
+            <p class="price">₹ 999</p>
         </div>
+        <div class="product-tile">
+            <img src="needover2.png" alt="T-Shirt 3">
+            <p class="title">Looney Tunes: Taz Outburst</p>
+            <p class="category">Oversized T-Shirts</p>
+            <p class="price">₹ 899</p>
+        </div>
+        <div class="product-tile">
+            <img src="needover2.png" alt="T-Shirt 4">
+            <p class="title">Brooklyn Nine-Nine: 99th Precinct</p>
+            <p class="category">Oversized T-Shirts</p>
+            <p class="price">₹ 1049</p>
+        </div>
+        <div class="product-tile">
+            <img src="needover2.png" alt="T-Shirt 5">
+            <p class="title">One Piece: Pirate Logo</p>
+            <p class="category">Oversized T-Shirts</p>
+            <p class="price">₹ 1199</p>
+        </div>
+        <div class="product-tile">
+            <img src="needover2.png" alt="T-Shirt 5">
+            <p class="title">One Piece: Pirate Logo</p>
+            <p class="category">Oversized T-Shirts</p>
+            <p class="price">₹ 1199</p>
+        </div>
+        <div class="product-tile">
+            <img src="needover2.png" alt="T-Shirt 5">
+            <p class="title">One Piece: Pirate Logo</p>
+            <p class="category">Oversized T-Shirts</p>
+            <p class="price">₹ 1199</p>
+        </div>
+        <div class="product-tile">
+            <img src="needover2.png" alt="T-Shirt 5">
+            <p class="title">One Piece: Pirate Logo</p>
+            <p class="category">Oversized T-Shirts</p>
+            <p class="price">₹ 1199</p>
+        </div>
+        <div class="product-tile">
+            <img src="needover2.png" alt="T-Shirt 5">
+            <p class="title">One Piece: Pirate Logo</p>
+            <p class="category">Oversized T-Shirts</p>
+            <p class="price">₹ 1199</p>
+        </div>
+        <div class="product-tile">
+            <img src="needover2.png" alt="T-Shirt 5">
+            <p class="title">One Piece: Pirate Logo</p>
+            <p class="category">Oversized T-Shirts</p>
+            <p class="price">₹ 1199</p>
+        </div>
+        <div class="product-tile">
+            <img src="needover2.png" alt="T-Shirt 5">
+            <p class="title">One Piece: Pirate Logo</p>
+            <p class="category">Oversized T-Shirts</p>
+            <p class="price">₹ 1199</p>
+        </div>
+        <div class="product-tile">
+            <img src="needover2.png" alt="T-Shirt 5">
+            <p class="title">One Piece: Pirate Logo</p>
+            <p class="category">Oversized T-Shirts</p>
+            <p class="price">₹ 1199</p>
+        </div>
+        <div class="product-tile">
+            <img src="needover2.png" alt="T-Shirt 5">
+            <p class="title">One Piece: Pirate Logo</p>
+            <p class="category">Oversized T-Shirts</p>
+            <p class="price">₹ 1199</p>
+        </div>
+        <div class="product-tile">
+            <img src="needover2.png" alt="T-Shirt 5">
+            <p class="title">One Piece: Pirate Logo</p>
+            <p class="category">Oversized T-Shirts</p>
+            <p class="price">₹ 1199</p>
+        </div>
+        <div class="product-tile">
+            <img src="needover2.png" alt="T-Shirt 5">
+            <p class="title">One Piece: Pirate Logo</p>
+            <p class="category">Oversized T-Shirts</p>
+            <p class="price">₹ 1199</p>
+        </div>
+        <div class="product-tile">
+            <img src="needover2.png" alt="T-Shirt 5">
+            <p class="title">One Piece: Pirate Logo</p>
+            <p class="category">Oversized T-Shirts</p>
+            <p class="price">₹ 1199</p>
+        </div>
+        <div class="product-tile">
+            <img src="needover2.png" alt="T-Shirt 5">
+            <p class="title">One Piece: Pirate Logo</p>
+            <p class="category">Oversized T-Shirts</p>
+            <p class="price">₹ 1199</p>
+        </div>
+        <!-- Add more product tiles to reach a total of 12 items -->
     </div>
 </body>
 </html>

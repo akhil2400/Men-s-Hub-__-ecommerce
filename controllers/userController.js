@@ -24,7 +24,7 @@ module.exports = {
     if (!req.session.logedIn) {
       return res.render('home', { user: null });
     } else {
-      const  email  = req.session.emailverfy;
+      const email = req.session.emailverfy;
       res.render('home', { user: email });
     }
   },
@@ -243,5 +243,10 @@ module.exports = {
   loadban(req, res) {
     res.render('ban');
   },
+
+  loadshop(req, res) {
+    res.render('shop');
+  },
+  
 }
 
