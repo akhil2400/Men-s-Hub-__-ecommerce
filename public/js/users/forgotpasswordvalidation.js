@@ -5,43 +5,49 @@ function validateform(e){
   e.preventDefault();
 
   // to clear all previous error messages
-  document.getElementById("emailusernameError").innerText = "";
-  document.getElementById("passwordError").innerText = "";
+  document.getElementById("newPasswordError").innerText = "";
+  document.getElementById("confirmPasswordError").innerText = "";
 
-  const password = document.getElementById("new-password").value;
-
+  const newPassword = document.getElementById("newPassword").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+  
+  
+  
 // Password regex pattern
 const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
 
 
 let valid = true;
 
-// new password validation 
-if(!passwordPattern.test(password)){
-  document.getElementById("passwordError").innerText =  'Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character.';
+
+
+
+// password validation 
+if(!passwordPattern.test(newPassword)){
+  document.getElementById("newPasswordError").innerText =  'Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character.';
   valid = false;
 }
-
+if(newPassword !== confirmPassword){
+  document.getElementById("confirmPasswordError").innerText = "Passwords do not match";
+  valid = false;
+}
 if(valid){
   async function fetchData() {
     try {
-      const response = await fetch('/login', {
+      const response = await fetch('/forgotpassword', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          emailuserName: emailuserName,
-          password: password
+          password: newPassword
         })
       });
       const data = await response.json();
       if (data.st === false) {
-        if (data.type === "username" || data.type === "email") {
-          document.getElementById("emailusernameError").innerText = data.msg;
-        } else if (data.type === "password") {
-          document.getElementById("passwordError").innerText = data.msg;
-        }
+        if (data.type === "password") {
+          document.getElementById("newPasswordError").innerText = data.msg;
+        } 
       } else {
         console.log(data.msg);
         window.location.href = '/home';

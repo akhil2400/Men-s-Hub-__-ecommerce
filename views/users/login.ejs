@@ -26,13 +26,23 @@
   <%- include("./layouts/header.ejs") %>
       
     <div class="login-container">
+        <form action="/auth/google" method="get">
+          <div>
+          <button class="log-googlebtn" type="submit"><img class="google" src="/images/img/googleimg/google.png" alt=""></button> 
+          </div>
+      </form>
+    
+      <div class="divider">- OR -</div>
       <h2>LOGIN</h2>
       <form id="loginform">
         <input type="email" id="userName-email" placeholder="Your Email or Username" >
         <p id="emailusernameError" class="errormessage"></p>
-        <input type="password" id="password" placeholder="Your Password">
+        <div class="password-container">
+          <input type="password" id="password" placeholder="Your Password">
+          <i class="fa fa-eye-slash toggle-password log-toggle" id="togglePassword" onclick="togglePasswordVisibility()"></i>
+        </div>
         <p id="passwordError" class="errormessage"></p>
-        <button id="loginBtn">Login</button>
+        <button class="login-btn" id="loginBtn">Login</button>
       </form>
       <p><a href="/forgotpasswordemailverification">Forgot password?</a></p>
       <p>Don't have an account? <a href="/register">Sign up</a></p>
@@ -49,5 +59,6 @@
       <script src="js/tiny-slider.js"></script>
       <script src="js/custom.js"></script>
       <script src="js/users/logvalidation.js"></script>
+      <script src="/js/users/logpasstoggle.js"></script>
   </body>
 </html>

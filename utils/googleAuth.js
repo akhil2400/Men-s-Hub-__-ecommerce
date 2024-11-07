@@ -8,13 +8,14 @@ passport.use(new Strategy({
   callbackURL: '/auth/google/callback'
 }, async (accessToken, refreshToken, profile, done) => {
   try {
+    console.log(`profile :- `+profile)
     let user = await userModel.findOne({ googleId: profile.id });
+    console.log(`user:---`+user)
     if (user) {
       done(null, user);
     } else {
       await userModel.create({
         userName: profile.displayName,
-        
         googleId: profile.id,
         isGoogleLogin: true,
         email: profile.emails[0].value

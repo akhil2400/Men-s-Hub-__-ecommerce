@@ -71,7 +71,7 @@ a.more {
 
 @media (min-width: 992px) {
   .custom-navbar .custom-navbar-nav li {
-    margin-left: 8px;
+    margin-left: 4px;
     margin-right: 11px;
   }
 }
@@ -1173,7 +1173,7 @@ textarea {
 }
 
 /* Login button styling */
-.login-container button {
+.login-btn {
   width: 100%;
   padding: 10px;
   border: none;
@@ -1476,6 +1476,16 @@ margin-top:9px
 .resendBtn{
   cursor: pointer;
 }
+.fSubmit{
+  background-color: rgb(59, 93, 80);
+  color: white;
+  padding: 10px 10px 10px 10px;
+  border:none;
+  border-radius: 3px;
+}
+.fSubmit:hover{
+  background-color: #59846c;
+}
 
 .google{
   width:100%;
@@ -1486,6 +1496,46 @@ margin-top:9px
 .googlebtn{
   border: none;
 
+}
+.neddit{
+
+    padding-left: 0;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    text-decoration: none;
+}
+/* .neddit1{
+
+} */
+.log-googlebtn{
+  border: none;
+}
+/* Container for the password input and icon */
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Styling for the password input */
+.password-container input {
+  padding-right: 2rem; /* Space for the icon */
+}
+
+/* Position the toggle icon consistently */
+.log-toggle {
+  position: absolute;
+  right: 10px; /* Adjust as needed */
+  top: 50%;
+  transform: translateY(-50%); /* Center the icon vertically */
+  font-size: 1.2rem;
+  color: #888;
+  cursor: pointer;
+  width: 1.5rem; /* Ensures icon size consistency */
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 

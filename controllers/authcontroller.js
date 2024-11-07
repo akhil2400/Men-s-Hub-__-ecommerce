@@ -17,9 +17,10 @@ module.exports = {
       if (!user) {
         return res.redirect('/suii');
       }
-      console.log('Hii')
+      console.log(user)
       req.session.loggedIn = true;
-      req.session.currentUsername = user.username;
+      req.session.currentUsername = user.useNname;
+      req.session.userData = {email:user.email,useNname:user.userName};
       req.session.currentEmail = user.email;
       return res.redirect('/home');
     })(req, res, next);

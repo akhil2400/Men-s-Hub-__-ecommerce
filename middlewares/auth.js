@@ -1,11 +1,11 @@
-const checkSession = (req, res, next) => {
-  if (!req.session.user) {
-    return res.redirect('/user/login');
-  } else {
-    next();
-  }
-}
+// const checkSession = (req, res, next) => {
+//   if (!req.session.loggedIn) { 
+//     // return res.redirect('');
+//   } else {
+//     next();
+//   }
+// };
 
-module.exports ={
-  checkSession
-} 
+// module.exports = {
+//   checkSession
+// };

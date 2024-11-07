@@ -10,6 +10,8 @@ function validateform(e){
 
   const emailuserName = document.getElementById("userName-email").value;
   const password = document.getElementById("password").value;
+
+  
   
   //  Email regex pattern
   const emailuserNamePattern = /^[a-zA-Z0-9_.@]+$/;;

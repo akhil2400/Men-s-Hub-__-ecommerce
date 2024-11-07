@@ -3,8 +3,11 @@ const otpSchema = require('../models/otpModel');
 const User = require('../models/userModel');
 const { generateOTP, otpExpire } = require('../utils/otpGenerator');
 
+
+
 module.exports = {
   async requestOtp(req, res) {
+    console.log('ssgdg')
     try {
       const {isResend} = req.body;
       if(isResend){
@@ -71,7 +74,35 @@ module.exports = {
 
     }
 
-  }
+  },
+ 
 
-}
+  async fotpverify(req, res) {
+    console.log("1======");
+    const { otp } = req.body;
+    console.log(otp);
+    console.log(req.session.emailverfy);
+    const user = await otpSchema.findOne({ email: req.session.emailverfy });
+    if (!user) {
+      return res.status(400).json({
+        st: false,
+        msg: 'Enter valid OTP',
+      });
+    }
+    if (user.otp !== otp) {
+      return res.status(400).json({
+        st: false,
+        msg: 'Enter valid OTP',
+      });
+    }
+    return res.status(200).json({
+      st: true,
+      msg: 'OTP verified successfully',
+    });
+  },
+
+
+};
+
+
 

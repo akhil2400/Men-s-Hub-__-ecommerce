@@ -11,6 +11,8 @@ const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/admin");
 require("./utils/googleAuth");
 
+const {checkBan}= require("./middlewares/checkban");
+
 // Set views directory and view engine
 app.set("view engine", "ejs");
 app.set("views", [path.join(__dirname, "views","users"),path.join(__dirname, "views","admin")]);
@@ -38,16 +40,20 @@ app.use(session({
     }
 }));
 
+//middleWares
+app.use(checkBan);
+
 // Use user routes
 app.use("/", userRoutes);
 app.use("/", authRoutes);
 app.use("/", otpRoutes);
 app.use("/", adminRoutes);
 
+
 // Connect to the database
 connectDB();
 
 // Start the server
 app.listen(PORT, () => {
-    console.log(`Server started at http://localhost:${PORT}/login`);
+    console.log(`Server started at http://localhost:${PORT}/`);
 });
