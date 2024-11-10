@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
-// const { checkSession } = require('../middlewares/auth');
+// const {checkSession}   = require('../middlewares/auth');
+
 
 router.get('/',userController.loadstartingpage);
 router.get('/login',userController.loadlogin);
@@ -17,7 +18,9 @@ router.get('/forgotpassword',userController.loadforgotpassword)
 router.post('/forgotpassword',userController.forgotpassword)
 router.get('/fotp-verify',userController.loadfotp)
 router.get('/ban',userController.loadban)
-router.get('/shop',userController.loadshop)
+router.get('/shop',userController.shopPageLoad)
+router.get('/productDetails/:id',userController.productDetails)
+
 
 
 module.exports = router;

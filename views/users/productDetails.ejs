@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= product.name %> - Product Details</title>
+  <link href="/css/tiny-slider.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/pdtDetails.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="/css/bootstrap.min.css" rel="stylesheet" />
+  
+</head>
+<body>
+  <%- include("./layouts/header.ejs") %>
+
+  <div class="container mt-5 product-detail-container">
+    <% if (product) { %>
+      <div class="row">
+        <!-- Left: Product Images Carousel -->
+        <div class="col-md-6 product-images">
+          <div id="productImagesCarousel" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+              <% product.images.forEach((image, index) => { %>
+                <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                  <img src="/<%= image %>" class="main-image d-block w-100" alt="<%= product.name %>">
+                </div>
+              <% }) %>
+            </div>
+            <a class="carousel-control-prev" href="#productImagesCarousel" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#productImagesCarousel" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only">Next</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Product Info -->
+        <div class="col-md-6 product-info">
+          <h1><%= product.name %></h1>
+          <p class="price">₹<%= product.offerPrice ? product.offerPrice : product.price %> <span class="original-price">₹<%= product.price %></span> <span class="discount">25% Off</span></p>
+          <p class="description"><%= product.description %></p>
+          <ul class="features">
+            <li><strong>Warranty:</strong> <%= product.warranty || 'No warranty provided' %></li>
+            <li><strong>Return Policy:</strong> <%= product.returnPolicy || '30 Days Return Policy' %></li>
+            <li><strong>Stock:</strong> <%= product.stock %> left</li>
+          </ul>
+
+          <div class="options">
+            <div class="color-options mb-3">
+              <label>Color:</label>
+              <% product.colors.forEach(color => { %>
+                <button class="color-option" style="background-color: <%= color %>;"></button>
+              <% }) %>
+            </div>
+            <div class="size-options mb-3">
+              <label>Size:</label>
+              <% product.sizes.forEach(size => { %>
+                <label class="size-option"><input type="radio" name="size" value="<%= size %>"> <%= size %></label>
+              <% }) %>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="add-to-cart btn-add-to-cart">Add to Cart</button>
+            <button class="buy-now btn btn-warning">Buy Now</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Related Products Section -->
+      <div class="related-products mt-5">
+        <h2>Pair It With</h2>
+        <div class="product-list row">
+          <% relatedProducts.forEach(function(relatedProduct) { %>
+            <div class="col-md-3 related-product text-center">
+              <img src="/<%= relatedProduct.images[0] %>" alt="<%= relatedProduct.name %>">
+              <p><%= relatedProduct.name %></p>
+              <p class="price">₹<%= relatedProduct.price %></p>
+              <a href="/productDetails/<%= relatedProduct._id %>" class="btn btn-primary">View</a>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% } else { %>
+      <p>Product not found.</p>
+    <% } %>
+  </div>
+
+  <%- include("./layouts/footer.ejs") %>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

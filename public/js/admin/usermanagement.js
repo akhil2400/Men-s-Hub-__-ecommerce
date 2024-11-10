@@ -31,3 +31,35 @@ btnBan.forEach((elem) => {
     }
   });
 });
+
+
+document.querySelectorAll(".btn-view").forEach(btn => {
+  btn.addEventListener("click", async function () {
+    const email = this.getAttribute("data-id");
+
+    try {
+      console.log(`/admin/users/view/?email=${email}`);
+      const response = await fetch(`/admin/users/view/?email=${email}`);
+
+      if (!response.ok) {
+        const newError = await response.text();
+        throw new Error(`failed to fetch user information ${response.status}- ${newError}`);
+
+      }
+      const data = await response.json();
+      console.log('CQKCJWOIEC');
+      document.querySelector(".userInfoView").innerHTML = `
+      <h3>User Information</h3>
+      <p><strong>Name:</strong> ${data.username}</p>
+      <p><strong>Email:</strong> ${data.email}</p>
+      <p><strong>Role:</strong> ${data.role}</p>
+      <p><strong>Mobile Number:</strong> ${data.mobileNumber}</p>
+      <p><strong>Joined date:</strong> ${data.createdAt}</p>`
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
+
+  })
+
+})

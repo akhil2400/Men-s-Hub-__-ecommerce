@@ -10,6 +10,11 @@ const connectDB = require("./db/connectdb");
 const authRoutes = require("./routes/authRoutes"); 
 const adminRoutes = require("./routes/admin");
 require("./utils/googleAuth");
+const cors = require('cors');
+
+
+app.use(cors());
+
 
 const {checkBan}= require("./middlewares/checkban");
 
@@ -41,7 +46,7 @@ app.use(session({
 }));
 
 //middleWares
-app.use(checkBan);
+// app.use(checkBan);
 
 // Use user routes
 app.use("/", userRoutes);

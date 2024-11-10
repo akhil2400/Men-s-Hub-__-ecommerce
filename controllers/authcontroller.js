@@ -11,15 +11,18 @@ module.exports = {
     passport.authenticate('google', {
       failureRedirect: '/koii'
     }, (err, user, info) => {
+      console.log('Hiiiii')
       if (err) {
         return next(err);
       }
+      console.log('dhhdh')
+      console.log("User:", user)
       if (!user) {
         return res.redirect('/suii');
       }
-      console.log(user)
-      req.session.loggedIn = true;
-      req.session.currentUsername = user.useNname;
+      console.log("User:", user)
+      req.session.logedIn = true;
+      req.session.currentUsername = user.userName;
       req.session.userData = {email:user.email,useNname:user.userName};
       req.session.currentEmail = user.email;
       return res.redirect('/home');

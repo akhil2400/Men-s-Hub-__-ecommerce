@@ -216,6 +216,7 @@
                         <th> Username</th>
                         <th> Email</th>
                         <th> Ban </th>
+                        <th> View</th>
                         
                       </tr>
                     </thead>
@@ -227,6 +228,8 @@
                           <td>
                             <div data-id="<%= value._id  %>" class="badge <%= value.isDeleted?'badge-outline-primary':'badge-outline-danger' %> btn-ban"><%= value.isDeleted?'Unban':'Ban' %></div>
                           </td>
+                          <td>
+                            <button data-id="<%= value.email  %>" class="badge badge-outline-warning btn-view">View</button></td>
                         </tr>
                       <% }); %>
                     </tbody>

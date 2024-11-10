@@ -2,11 +2,16 @@ const express = require('express');
 const userModel = require('../models/userModel');
 const categoryModel = require('../models/categoryModel');
 const productModel = require('../models/productModel');
-const path = require('path')
+const path = require('path');
+const { create } = require('../models/otpModel');
 
 
 
 module.exports = {
+
+  async loadadminlogin(req, res) {
+    res.render('adminlogin');
+  },
   async loadusermanagement(req, res) {
     try {
       const users = await userModel.find({});
@@ -59,107 +64,107 @@ module.exports = {
       });
     }
   },
-  
-    async productsPageLoad(req, res) {
-      try {
-        const category = await categoryModel.find({});
-        const products = await productModel.find({});
 
-        return res.status(200).render("products", {
-          val: products.length > 0,
-          msg: products.length ? null : "No products found",
-          products,
-          category,
-        });
-      } catch (err) {
-        console.log(err);
-        res.status(500).render("products", {
-          val: false,
-          msg: "Error loading products",
-          products: null,
-          category: null,
+  async productsPageLoad(req, res) {
+    try {
+      const category = await categoryModel.find({});
+      const products = await productModel.find({});
+
+      return res.status(200).render("products", {
+        val: products.length > 0,
+        msg: products.length ? null : "No products found",
+        products,
+        category,
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).render("products", {
+        val: false,
+        msg: "Error loading products",
+        products: null,
+        category: null,
+      });
+    }
+  },
+  async productsAdd(req, res) {
+    let {
+      name,
+      description,
+      category,
+      tags,
+      brand,
+      price,
+      colors,
+      sizes,
+      cashOnDelivery,
+      offerPrice,
+      stock,
+      warranty,
+      returnPolicy,
+    } = req.body;
+
+    price = Number(price);
+    offerPrice = Number(offerPrice);
+    stock = Number(stock);
+    cashOnDelivery = cashOnDelivery === "true";
+    offerPrice = offerPrice === NaN ? 0 : offerPrice;
+
+    try {
+      if (!req.files || req.files.length === 0) {
+        return res
+          .status(400)
+          .json({ val: false, msg: "No files were uploaded" });
+      }
+      const categoryObject = await categoryModel.findOne({ name: category });
+      if (!categoryObject) {
+        return res.status(400).json({ val: false, msg: "Category not found" });
+      }
+      const imagePaths = [];
+      for (const key in req.files) {
+        req.files[key].forEach((file) => {
+          imagePaths.push(
+            path.relative(path.join(__dirname, "..", "public"), file.path)
+          );
         });
       }
-    },
-    async productsAdd(req, res) {
-      let {
+
+      console.log(imagePaths);
+      console.log(warranty);
+      await productModel.create({
         name,
         description,
-        category,
-        tags,
-        brand,
         price,
-        colors,
-        sizes,
-        cashOnDelivery,
-        offerPrice,
+        offerPrice: offerPrice,
         stock,
+        category: categoryObject._id,
+        images: imagePaths,
+        colors: colors.split(",").filter(Boolean),
+        sizes: sizes.split(","),
+        brand,
+        tags: tags.split("#").filter(Boolean),
+        cashOnDelivery,
         warranty,
         returnPolicy,
-      } = req.body;
-
-      price = Number(price);
-      offerPrice = Number(offerPrice);
-      stock = Number(stock);
-      cashOnDelivery = cashOnDelivery === "true";
-      offerPrice = offerPrice === NaN ? 0 : offerPrice;
-
-      try {
-        if (!req.files || req.files.length === 0) {
-          return res
-            .status(400)
-            .json({ val: false, msg: "No files were uploaded" });
-        }
-        const categoryObject = await categoryModel.findOne({ name: category });
-        if (!categoryObject) {
-          return res.status(400).json({ val: false, msg: "Category not found" });
-        }
-        const imagePaths = [];
-        for (const key in req.files) {
-          req.files[key].forEach((file) => {
-            imagePaths.push(
-              path.relative(path.join(__dirname, "..", "public"), file.path)
-            );
-          });
-        }
-
-        console.log(imagePaths);
-        console.log(warranty);
-        await productModel.create({
-          name,
-          description,
-          price,
-          offerPrice: offerPrice,
-          stock,
-          category: categoryObject._id,
-          images: imagePaths,
-          colors: colors.split(",").filter(Boolean),
-          sizes: sizes.split(","),
-          brand,
-          tags: tags.split("#").filter(Boolean),
-          cashOnDelivery,
-          warranty,
-          returnPolicy,
-        });
-        res.status(200).json({ val: true, msg: "Upload successful" });
-      } catch (err) {
-        console.error(err);
-        res.status(500).json({ val: false, msg: "Internal server error" });
+      });
+      res.status(200).json({ val: true, msg: "Upload successful" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ val: false, msg: "Internal server error" });
+    }
+  },
+  async productUnlist(req, res) {
+    const { id, val } = req.query;
+    try {
+      if (val === "Unlist") {
+        await productModel.updateOne({ _id: id }, { isDeleted: true });
+      } else {
+        await productModel.updateOne({ _id: id }, { isDeleted: false });
       }
-    },
-    async productUnlist(req, res){
-      const { id, val } = req.query;
-      try {
-        if (val === "Unlist") {
-          await productModel.updateOne({ _id: id }, { isDeleted: true });
-        } else {
-          await productModel.updateOne({ _id: id }, { isDeleted: false });
-        }
-        res.status(200).json({ val: true });
-      } catch (err) {
-        res.status(500).json({ val: false });
-      }
-    },
+      res.status(200).json({ val: true });
+    } catch (err) {
+      res.status(500).json({ val: false });
+    }
+  },
 
   async categoryAdd(req, res) {
     const { categoryName } = req.body;
@@ -189,7 +194,30 @@ module.exports = {
     } catch (err) {
       res.status(500).json({ val: false });
     }
-  }
+  },
+  async viewUser(req, res) {
+    try {
+      const { email } = req.query;
+      const user = await userModel.findOne({ email: email });
+  
+      if (!user) {
+        return res.status(400).json({ val: false, msg: "User not found" });
+      }
+  
+      res.status(200).json({
+        username: user.userName,
+        email: user.email,
+        role: user.role,
+        mobileNumber: user.mobileNumber,
+        createdAt: user.createdAt.toISOString().split("T")[0],
+      });
+  
+    } catch (err) {
+      console.error("Error fetching user:", err);  // Log the error for debugging
+      res.status(500).json({ val: false, msg: "Internal server error" });
+    }
+  },
+  
 
 }
 

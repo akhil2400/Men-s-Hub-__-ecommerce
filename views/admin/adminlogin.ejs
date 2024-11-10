@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login</title>
+  <link rel="stylesheet" href="/css/adminlogin.css">
+</head>
+<body>
+  <div class="login-container">
+    <h2>ADMIN LOGIN</h2>
+    <form onsubmit="return validateForm()">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username">
+      <span id="username-error" class="error-message"></span>
+      
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password">
+      <span id="password-error" class="error-message"></span>
+      
+      <button type="submit">LOGIN</button>
+    </form>
+  </div>
+
+  <script src="/js/admin/adminloginvalidation.js"></script>
+</body>
+</html>
