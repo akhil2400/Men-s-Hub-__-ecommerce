@@ -246,9 +246,9 @@
                           <td> <%= data.productCount  %> </td>
                           <td>
                             <div data-id="<%= data._id  %>" class="badge btnListAndUnlist <%= data.isDeleted?'badge-outline-success':'badge-outline-primary' %>"><%= data.isDeleted?'List':'Unlist'%></div>
-                          <td>
-                            <div data-id="<%= data._id %>" class="badge badge-outline-warning">Update</div>
-                          </td>
+                            <td>
+                              <button data-id="/admin/category/update/<%= data._id %>" class="badge badge-outline-warning update-category-btn">Update</button>
+                            </td>
                         </tr>
                       <% }) %>
                     </tbody>
@@ -333,9 +333,11 @@
               aria-label="Close"
             ></button>
           </div>
+
           <div class="modal-body">
-            <form class="forms-sample" id="categoryForm" enctype="multipart/form-data" novalidate>
-              <input style="display: none;" type="file" class="category-image" required />
+            <form class="forms-sample" id="updateCategoryForm" enctype="multipart/form-data" novalidate>
+              <input type="hidden" id="categoryId" name="categoryId" />
+              <!-- <input style="display: none;" type="file" class="category-image" required /> -->
               <div class="form-group">
                 <label for="category">Name</label>
                 <input
@@ -360,7 +362,7 @@
               <div class="form-group">
       
               <button type="submit" class="btn btn-primary mt-3">
-                Create
+              update
               </button>
             </form>
           </div>
@@ -378,5 +380,5 @@
     <script src="/js/admin/category.js"></script>
     <script src="/js/admin/categoryvalidation.js"></script>
     <!-- End custom js for this page -->
-  </body>
+ </body>
 </html>

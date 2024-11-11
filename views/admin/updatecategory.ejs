@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="/css/admin.css">
+  </head>
+  <body>
+    <div class="container-scroller">
+      <!-- Sidebar -->
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top" style="width:204px;
+    background: white;">
+          <a class="sidebar-brand brand-logo" href="index.html">MEN'S HUB</a>
+          <a class="sidebar-brand brand-logo-mini" href="index.html"><img src="assets/images/logo-mini.svg" alt="logo" /></a>
+        </div>
+        <ul class="nav">
+          <li class="nav-item menu-items">
+            <a class="nav-link" href="index.html">
+              <span class="menu-title">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item menu-items">
+            <a class="nav-link" href="users.html">
+              <span class="menu-title">User Management</span>
+            </a>
+          </li>
+          <li class="nav-item menu-items">
+            <a class="nav-link" href="products.html">
+              <span class="menu-title">Products Management</span>
+            </a>
+          </li>
+          <li class="nav-item menu-items">
+            <a class="nav-link" href="orders.html">
+              <span class="menu-title">Order Management</span>
+            </a>
+          </li>
+          <li class="nav-item menu-items">
+            <a class="nav-link" href="category.html">
+              <span class="menu-title">Category Management</span>
+            </a>
+          </li>
+          <li class="nav-item menu-items">
+            <a class="nav-link" href="coupons.html">
+              <span class="menu-title">Coupon Management</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      
+      <div class="container">
+        <h2 class="pt-5">Update Category</h2>
+<form id="updatecategory">
+  <div class="form-group">
+
+    <input type="hidden" id="categoryId" name="categoryId" value="<%= category.id %>">
+
+    <label for="name" class="pt-3">Category Name</label>
+    <input type="text" id="categoryName" name="categoryName" class="form-control mb-3" value="<%= category.name %>" required>
+
+    <label for="image" class="pt-3">Category Image</label>
+    <input type="text" id="categoryImage" name="categoryimage" class="form-control mb-3" value="<%= category.image %>" required>
+  </div>
+
+  <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+  <a href="/admin/categorymanagement" class="btn btn-secondary mt-3">Cancel</a>
+</form>
+</div>
+<script>
+
+const updateform=document.getElementById("updatecategory")
+updateform.addEventListener("submit",async(e)=>{
+    e.preventDefault()
+    let categoryname=document.getElementById("categoryName").value
+    console.log(categoryname);
+    
+    let categoryimage=document.getElementById("categoryImage").value
+    console.log(categoryimage);
+    
+    let categoryid=document.getElementById("categoryId").value
+    console.log(categoryid);
+    
+    try {
+    const response=await fetch(`/admin/category/update/${categoryid}`,{
+        method:"PUT",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            categoryname,
+            categoryimage,
+            categoryid
+        })
+    })
+    const data = await response.json();
+        if (data.success) {
+          alert('Category updated successfully!');
+          window.location.href = '/admin/categorymanagement';
+        } else {
+          alert(data.message || 'Failed to update category');
+        }
+      } catch (error) {
+        console.error('Error updating category:', error);
+        alert('An error occurred while updating the category.');
+}
+});
+</script>
+</body>
+</html>

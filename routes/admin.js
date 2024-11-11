@@ -19,6 +19,9 @@ router.post('/admin/products/add', upload.fields([
 ]), adminController.productsAdd);
 router.get('/admin/products/unlist', adminController.productUnlist);
 router.get('/admin/users/view', adminController.viewUser);
+router.get('/admin/category/update/:id', adminController.loadupdatecategory);
+router.put('/admin/category/update/:id', adminController.updateCategory);
+
 
 
 module.exports = router;

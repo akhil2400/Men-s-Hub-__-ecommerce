@@ -219,6 +219,44 @@ module.exports = {
   },
   
 
+  async loadupdatecategory (req, res) {
+    console.log('not  in')
+    const categoryId = req.params.id;
+    try {
+      const category = await categoryModel.findById( categoryId );
+      if(!category) {
+        return res.redirect("/admin/categorymanagement")
+    } res.render('updatecategory', { category : category });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+
+
+async updateCategory (req, res) {
+  
+  const categoryId = req.params.id;
+  const { categoryname,categoryimage } = req.body;
+  console.log(req.body)
+
+  try {
+    const category = await categoryModel.findById( categoryId );
+    console.log(category)
+    if(!category) {
+      return res.status(404).json({ val: false, msg: "Category not found" });
+  }
+  category.name = categoryname
+  category.image = categoryimage
+  category.updatedAt = new Date();
+
+  await category.save();
+  return res.status(200).json({ val: true, msg: "Category updated successfully" });
+  }catch (error) {
+    console.log(error);
+    return res.status(500).json({ val: false, msg: "Internal server error" });
+  }
+    
+},
+
 }
-
-

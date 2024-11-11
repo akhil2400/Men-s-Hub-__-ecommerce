@@ -5,6 +5,7 @@ const userModel = require('../models/userModel');
 const { generateOTP, otpExpire } = require('../utils/otpGenerator');
 const { sendOTP } = require('../utils/mailSender');
 const productModel = require('../models/productModel');
+const categoryModel = require('../models/categoryModel');
 
 
 
@@ -24,11 +25,14 @@ module.exports = {
   },
 
   async loadhome(req, res) {
-    if (!req.session.logedIn) {
-      return res.render('home', { user: null });
-    } else {
-      const email = req.session.emailverfy;
-      res.render('home', { user: email });
+    console.log('shsh')
+    try {
+      const category = await categoryModel.find({});
+      const products = await productModel.find({}).sort({ createdAt: -1 }).limit(9);
+      console.log(category)
+      res.render('home', { category, products });
+    } catch (err) {
+      console.log(err);
     }
   },
 
@@ -248,56 +252,56 @@ module.exports = {
   },
 
   // In your product controller or app.js route file
-async shopPageLoad(req, res) {
-  try {
-    // Fetch all products where isDeleted is false (i.e., only listed products)
-    const products = await productModel.find({ isDeleted: false });
+  async shopPageLoad(req, res) {
+    try {
+      // Fetch all products where isDeleted is false (i.e., only listed products)
+      const products = await productModel.find({ isDeleted: false });
 
-    // If products exist, render them to the shop page
-    return res.status(200).render("shop", {
-      val: products.length > 0,
-      msg: products.length ? null : "No products found",
-      products,
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(500).render("shop", {
-      val: false,
-      msg: "Error loading products",
-      products: null,
-    });
-  }
-},
-// Route for product details page
-async productDetails(req, res) {
-  try {
-    const productId = req.params.id;
-    const product = await productModel.findById(productId);
-
-    if (!product || product.isDeleted) {
-      return res.status(404).render("productDetails", { msg: "Product not found" });
+      // If products exist, render them to the shop page
+      return res.status(200).render("shop", {
+        val: products.length > 0,
+        msg: products.length ? null : "No products found",
+        products,
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).render("shop", {
+        val: false,
+        msg: "Error loading products",
+        products: null,
+      });
     }
+  },
+  // Route for product details page
+  async productDetails(req, res) {
+    try {
+      const productId = req.params.id;
+      const product = await productModel.findById(productId);
 
-    // Fetch related products (example logic based on category)
-    const relatedProducts = await productModel.find({
-      category: product.category,
-      _id: { $ne: productId } // Exclude the current product
-    }).limit(4); // Adjust the limit as per your need
+      if (!product || product.isDeleted) {
+        return res.status(404).render("productDetails", { msg: "Product not found" });
+      }
 
-    return res.status(200).render("productDetails", { 
-      product, 
-      relatedProducts 
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(500).render("productDetails", { msg: "Error loading product details" });
+      // Fetch related products (example logic based on category)
+      const relatedProducts = await productModel.find({
+        category: product.category,
+        _id: { $ne: productId } // Exclude the current product
+      }).limit(4); // Adjust the limit as per your need
+
+      return res.status(200).render("productDetails", {
+        product,
+        relatedProducts
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).render("productDetails", { msg: "Error loading product details" });
+    }
   }
-}
 
 
 
 
 
-  
+
 }
 
