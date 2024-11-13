@@ -68,7 +68,7 @@
           <ul class="features">
             <li><%= product.warranty%></li>
             <li><%= product. returnPolicy%></li>
-            <li>cash On Delivery :<%= product.cashOnDelivery%></li>
+            <li>cash On Delivery :<% if(product.cashOnDelivery=== true){"Availabe"}else{"Not Availabe"} %></li>
           </ul>
 
           <!-- Color and Size Options -->
@@ -78,7 +78,7 @@
               <% product.colors.forEach(color => { %>
               <button
                 class="color-option"
-                style="background-color:<%= color %>"
+                style="background-color: <%= color %>"
               ></button>
               <% }) %>
             </div>
@@ -92,15 +92,39 @@
               <% }) %>
             </div>
           </div>
-            <div>
-              <% if(product.stock > 0){ %>
-                <p style="color: green;">In Stock:<%= product.stock %></p>
-                <% }else{ %>
-                  <p style="color: red;">Out of Stock</p>
-              <% } %>
+          <div>
+            <% if(product.stock > 0) { %>
+              <p style="color: green;">In Stock: <%= product.stock %></p>
+            <% } else { %>
+              <p style="color: red;">Out of Stock</p>
+            <% } %>
+          </div>
+          
+          <div class="wrap-num-product flex-w m-r-20 m-tb-10">
+            <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m" onclick="decreaseQuantity()">
+              <i class="fs-16 zmdi zmdi-minus"></i>
             </div>
-          <!-- Add to Cart and Buy Now -->
-          <div class="actions mt-3">
+            <div style="display: flex; ">
+              <p style="margin-top: 8px; margin-right: 8px;">Quantity</p>
+            <input 
+            class="mtext-104 cl3 txt-center num-product " 
+            style="width: 66px; height: 32px; margin-top: 4px;" 
+            type="number" 
+              name="num-product" 
+              value="1" 
+              data-stock="<%= product.stock %>" 
+              id="quantityInput"
+              min="1"
+              max="<%= product.stock %>">
+          
+            <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m" oninput="validateQuantity()" onclick="increaseQuantity()">
+              <i class="fs-16 zmdi zmdi-plus"></i>
+            </div>
+            <p id="QuantityError" style="color: red;"></p>
+          </div>
+          </div>
+            <!-- Add to Cart and Buy Now -->
+            <div class="actions mt-3">
             <button class="btn btn-primary">Add to Cart</button>
             <button class="btn btn-warning">Buy Now</button>
             <img class="heart-icon" src="/images/img/wishicon/icons8-heart-64.png" alt="">

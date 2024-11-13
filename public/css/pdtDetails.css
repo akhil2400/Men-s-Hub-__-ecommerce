@@ -222,7 +222,8 @@
 .heart-icon {
     width: 22px;
     position: absolute;
-    top: 568px;
+    top: 656px;
+    bottom: 656px;
     right: 442px;
     font-size: 20px;
     cursor: pointer;

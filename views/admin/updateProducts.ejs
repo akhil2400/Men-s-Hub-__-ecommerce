@@ -4,6 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Admin Panel</title>
+
+    <!-- cropper.js -->
+    <link
+    href="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.css"
+    rel="stylesheet"
+  />
+
     <link rel="stylesheet" href="/css/admin.css">
   </head>
   <body>
@@ -69,26 +76,37 @@
                   name="name"
                   placeholder="Product Name"
                   required
+                  value="<%= products.name %>"
                 />
                 <p class="error-message" id="productNameError"></p>
               </div>
-    
-              <!-- Images Section -->
-              <div class="form-group">
-                <label for="productImages">Images</label>
-                <input
-                  type="file"
-                  class="form-control product-image"
-                  id="productImage1"
-                  accept="image/*"
-                  onchange="previewAndCrop(event, 0)"
-                />
-                <div class="cropPreviewSection" id="cropPreviewSection0" style="display: none">
-                  <img id="cropPreview0" style="max-width: 100%" />
-                  <button type="button" onclick="startCropping(0)">Crop Image 1</button>
-                </div>
-                <!-- Repeat for other images as needed -->
+              <p>Product Images</p>
+              <div class="product-update-image-div">
+                <% products.images.forEach((data, index) => { %>
+                  <label for="productImage<%= index %>">
+                    <img class="product-update-image" src="/<%= data %>" alt="Product Image" />
+                  </label>
+                <% }) %>
               </div>
+              
+              <!-- Images Section -->
+              <% for (let i = 0; i < 4; i++) { %>
+                <div class="form-group">
+                  <input
+                    style="display: none;"
+                    type="file"
+                    class="form-control product-image"
+                    id="productImage<%= i %>"
+                    accept="image/*"
+                    onchange="previewAndCrop(event, <%= i %>)"
+                  />
+                  <div class="cropPreviewSection" id="cropPreviewSection<%= i %>" style="display: none; width: 500px;">
+                    <img id="cropPreview<%= i %>" style="max-width: 500px" />
+                    <button type="button" onclick="startCropping(<%= i %>)">Crop Image <%= i+1 %></button>
+                  </div>
+                </div>
+              <% } %>
+              
     
               <!-- Description -->
               <div class="form-group">
@@ -99,6 +117,7 @@
                   id="productDescription"
                   name="description"
                   placeholder="Product Description"
+                  value="<%= products.description %>"
                   required
                 />
                 <p class="error-message" id="descError"></p>
@@ -108,13 +127,16 @@
               <div class="form-group">
                 <label for="productCategory">Category</label>
                 <select class="form-control" id="productCategory" name="cta">
-                  <option value="">Select Category</option>
                   <% category.forEach((data) => { %>
-                  <option value="<%= data.name %>"><%= data.name %></option>
+                  <option value=""><%= data.name  %></option>
+                    <option value="<%= data.name %>" <%= products.category === data.name ? 'selected' : '' %>>
+                      <%= data.name %>
+                    </option>
                   <% }) %>
                 </select>
                 <p class="error-message" id="categoryError"></p>
               </div>
+              
     
               <!-- Tags -->
               <div class="form-group">
@@ -124,6 +146,7 @@
                   class="form-control product-tags"
                   id="productTags"
                   placeholder="Product tags"
+                  value="#<%=products.tags %>"
                   required
                 />
               </div>
@@ -136,6 +159,7 @@
                   class="form-control product-brand"
                   id="productBrand"
                   placeholder="Product brand"
+                  value="<%= products.brand %>"
                   required
                 />
               </div>
@@ -143,19 +167,73 @@
               <!-- Size Options -->
               <div class="form-group">
                 <label>Size Options</label>
-                <div class="size-options">
-                  <!-- Example for size 'S' -->
+                <div style="padding: 10px">
                   <div class="form-check">
                     <input
                       type="checkbox"
                       class="form-check-input"
                       id="sizeSmall"
+                      <% if(products.sizes.includes("S")){ %>checked <% } %>
                       value="S"
                       onchange="updateSelectedSizes()"
                     />
                     <label class="form-check-label" for="sizeSmall">S</label>
                   </div>
-                  <!-- Repeat for other sizes -->
+                  <div class="form-check">
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      id="sizeMedium"
+                      <% if(products.sizes.includes("M")){ %>checked <% } %>
+                      value="M"
+                      onchange="updateSelectedSizes()"
+                    />
+                    <label class="form-check-label" for="sizeMedium">M</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      id="sizeLarge"
+                      <% if(products.sizes.includes("L")){ %>checked <% } %>
+                      value="L"
+                      onchange="updateSelectedSizes()"
+                    />
+                    <label class="form-check-label" for="sizeLarge">L</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      id="sizeXL"
+                      <% if(products.sizes.includes("XL")){ %>checked <% } %>
+                      value="XL"
+                      onchange="updateSelectedSizes()"
+                    />
+                    <label class="form-check-label" for="sizeXL">XL</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      id="sizeXXL"
+                      <% if(products.sizes.includes("XXL")){ %>checked <% } %>
+                      value="XXL"
+                      onchange="updateSelectedSizes()"
+                    />
+                    <label class="form-check-label" for="sizeXXL">XXL</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      id="sizeXXXL"
+                      <% if(products.sizes.includes("XXXL")){ %>checked <% } %>
+                      value="XXXL"
+                      onchange="updateSelectedSizes()"
+                    />
+                    <label class="form-check-label" for="sizeXXXL">XXXL</label>
+                  </div>
                 </div>
               </div>
     
@@ -163,11 +241,21 @@
               <div class="form-group">
                 <label>Color Options</label>
                 <div class="form-check">
-                  <input type="color" value="#008000" id="colorPicker" />
-                  <button class="btn btn-success mb-3" type="button" onclick="addColor()">Add Color</button>
+                    <input type="color" value="#008000" id="colorPicker" />
+                    <button class="btn btn-success mb-3"  onclick="addColor()">Add Color</button>
+                  </div>
+                <div id="colorList">
+                    <% products.colors.forEach((data, index) => { %>
+                        <div id="color-<%= index %>" style="position: relative; width: 20px; border-radius: 50%; height: 20px; margin: 5px; background-color: <%= data %>;">
+                            <span onclick="removeColor(<%= index %>)" 
+                                  style="position: absolute; top: -5px; right: -5px; background: red; color: white; border-radius: 50%; cursor: pointer; font-size: 12px; width: 15px; height: 15px; display: flex; align-items: center; justify-content: center;">
+                                &times;
+                            </span>
+                        </div>
+                    <% }) %>
                 </div>
-                <div class="showColors" id="showColors"></div>
-              </div>
+            </div>
+            
     
               <!-- Price -->
               <div class="form-group">
@@ -177,6 +265,7 @@
                   class="form-control product-og-price"
                   id="productOgPrice"
                   placeholder="Original Price"
+                  value="<%= products.price %>"
                   required
                 />
                 <p class="error-message" id="ogPriceError"></p>
@@ -185,7 +274,7 @@
               <!-- Offer Price -->
               <div class="form-group">
                 <div class="form-check mb-3">
-                  <input type="checkbox" class="form-check-input" id="toggleOfferPrice" onclick="toggleOfferPriceInput()" />
+                  <input type="checkbox" class="form-check-input" id="toggleOfferPrice" onclick="toggleOfferPriceInput()" <% if(products.offerPrice){ %>checked <% } %> />
                   <label class="form-check-label" for="toggleOfferPrice">Add Offer Price</label>
                 </div>
                 <div class="offer-price-input mt-2" id="offerPriceDiv" style="display: none">
@@ -195,6 +284,7 @@
                     class="form-control product-offer-price"
                     id="productOfferPrice"
                     placeholder="Offer Price"
+                    value="<%= products.offerPrice  %>"
                   />
                   <p class="error-message" id="offerPriceError"></p>
                 </div>
@@ -208,6 +298,7 @@
                   class="form-control product-stock"
                   id="productStock"
                   placeholder="Stock"
+                  value="<%= products.stock  %>"
                   required
                 />
                 <p class="error-message" id="stockError"></p>
@@ -216,7 +307,7 @@
               <!-- Warranty -->
               <div class="form-group">
                 <div class="form-check mb-3">
-                  <input type="checkbox" class="form-check-input" id="toggleWarranty" onclick="toggleWarrantyInput()" />
+                  <input type="checkbox" class="form-check-input" id="toggleWarranty" onclick="toggleWarrantyInput()" <% if(products.warranty){ %>checked <% } %> />
                   <label class="form-check-label" for="toggleWarranty">Add Warranty</label>
                 </div>
                 <div class="warranty-input mt-2" id="warrantyDiv" style="display: none">
@@ -226,6 +317,7 @@
                     class="form-control product-warranty"
                     id="productWarranty"
                     placeholder="Warranty"
+                    value="<%=products.warranty %>"
                   />
                   <p class="error-message" id="warrantyError"></p>
                 </div>
@@ -239,6 +331,7 @@
                     class="form-check-input"
                     id="toggleReturnPolicy"
                     onclick="toggleReturnPolicyInput()"
+                    <% if(products.returnPolicy){ %>checked <% } %>
                   />
                   <label class="form-check-label" for="toggleReturnPolicy">Add Return Policy</label>
                 </div>
@@ -249,6 +342,7 @@
                     class="form-control product-return-policy"
                     id="productReturnPolicy"
                     placeholder="Return Policy"
+                    value="<%= products.returnPolicy  %>"
                   />
                   <p class="error-message" id="returnPolicyError"></p>
                 </div>
@@ -260,5 +354,11 @@
         </div>
       </section>
     </div>
+     
+    <script src="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.js"></script>
+    <script src="/js/admin/updateProduct.js"></script>
+   
+
+    
 </body>
 </html>

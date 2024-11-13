@@ -21210,5 +21210,19 @@ div.tagsinput {
 .forme:hover{
   background-color:transparent;
 }
+.product-update-image-div{
+  display: flex;
+  position: relative;
+
+}
+.product-update-image{
+  width: 100px;
+  height:100px;
+  border-radius: 50px;
+  margin: 12px;
+  cursor: pointer;
+}
+
+
 
 

@@ -66,3 +66,37 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 });
+
+function increaseQuantity() {
+  const quantityInput = document.getElementById("quantityInput");
+  const maxStock = parseInt(quantityInput.getAttribute("data-stock"), 10);
+  let currentQuantity = parseInt(quantityInput.value, 10);
+  
+  
+
+  if (currentQuantity < maxStock) {
+    quantityInput.value = currentQuantity + 1;
+  }
+}
+
+function decreaseQuantity() {
+  const quantityInput = document.getElementById("quantityInput");
+  let currentQuantity = parseInt(quantityInput.value, 10);
+
+  if (currentQuantity > 1) {
+    quantityInput.value = currentQuantity - 1;
+  }
+}
+
+function validateQuantity() {
+  const quantityInput = document.getElementById("quantityInput");
+  const maxStock = parseInt(quantityInput.getAttribute("data-stock"), 10);
+  // let currentQuantity = parseInt(quantityInput.value, 10);
+  // document.getElementById("QuantityError").innerHTML = ""
+  
+  if (currentQuantity > 1) {
+    // quantityInput.value = maxStock;
+    console.log("Limit reached")
+    // document.getElementById("QuantityError").innerHTML = "Quantity limit reached";
+  }
+}

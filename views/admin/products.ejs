@@ -342,14 +342,7 @@
                           <div data-id="<%= data._id  %>" class="badge btnListAndUnlist <%= data.isDeleted?'badge-outline-success':'badge-outline-primary' %>"><%= data.isDeleted?'List':'Unlist' %></div>
                         </td>
                         <td>
-                          <div
-                            class="badge btnUpdateProduct badge-outline-warning"
-                            data-bs-toggle="modal"
-                            data-id="<%= data._id %>"
-                            data-bs-target="#productUpdateModal"
-                          >
-                            Update
-                          </div>
+                          <a href="/admin/Product/update/<%= data._id %>"><button class="badge badge-outline-warning update-category-btn">Update</button></a>
                         </td>
                       </tr>
                       <% }) %> <% } %>

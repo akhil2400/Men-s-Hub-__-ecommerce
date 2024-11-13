@@ -4,7 +4,7 @@ const categoryModel = require('../models/categoryModel');
 const productModel = require('../models/productModel');
 const path = require('path');
 const { create } = require('../models/otpModel');
-
+const mongoose = require('mongoose');
 
 
 module.exports = {
@@ -260,17 +260,62 @@ async updateCategory (req, res) {
 },
 
 async loadupdateProducts (req, res) {
-const categories = await categoryModel.find({});
-
+  console.log("Yes you are here")
   const productId = req.params.id;
-  try {
-    const product = await productModel.findOne( productId );
-    if(!product) {
-      return res.redirect("/admin/productmanagement")
-  } res.render('updateProducts', { product : product, category : categories });
+
+  try{
+    const category = await categoryModel.find({});
+    const products = await productModel.findById( productId )
+    res.status(200).render('updateProducts', {  products,category });
   } catch (error) {
     console.log(error);
-  }  
+  }
+
+
+},
+
+async updateProduct (req, res) {
+  try {
+    const { name, description, category, tags, brand, price, offerPrice, stock, warranty, returnPolicy, sizes, colors } = req.body;
+
+    // Handle file uploads
+    let images = [];
+    if (req.files) {
+      images = Object.values(req.files).map(file => file[0].path); // Assuming upload is saving to file system
+    }
+
+    // Find the product by ID and update it
+    const updatedProduct = await productModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        name,
+        description,
+        category,
+        tags,
+        brand,
+        price,
+        offerPrice,
+        stock,
+        warranty,
+        returnPolicy,
+        sizes,
+        colors,
+        images: images.length > 0 ? images : undefined // Only update images if new ones are uploaded
+      },
+      { new: true } // Return the updated product
+    );
+
+    // If the product is updated, send success response
+    if (updatedProduct) {
+      return res.status(200).json({ success: true, message: 'Product updated successfully', product: updatedProduct });
+    } else {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+
+  } catch (error) {
+    console.error("Error updating product:", error);
+    return res.status(500).json({ success: false, message: 'Error updating product' });
+  }
 },
 
 }

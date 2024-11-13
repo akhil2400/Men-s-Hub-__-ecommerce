@@ -90,7 +90,7 @@
 
 
     <div class="container-fluid homebanner"></div>
-    <h3 class="dropoftheday" style="color: #000000">DROP OF THE DAY</h3>
+    <!-- <h3 class="dropoftheday" style="color: #000000">DROP OF THE DAY</h3>
     <div class="dropoftheday">
       <div class="col-12 col-md-4 col-lg-3">
         <a class="product-item" href="cart.html">
@@ -119,7 +119,7 @@
           />
         </a>
       </div>
-    </div>
+    </div> -->
 
     <!--  End Drop of the day -->
 
@@ -162,20 +162,17 @@
       <span style="color: #3b5d50">NEW </span>ARRRIVALS
     </h2>
     <div class="container-fluid">
-      <div class="row justify-content-center">
+      <div class="row ">
         <% products.forEach((data, index) => { %>
-          <div class="col-12 col-md-4 col-lg-3 mb-md-0 newarrnew text-center">
+          <div class="col-12 col-md-4 col-lg-3 mb-md-0 newarrnew text-center" style="margin-top: 20px;">
             <div class="newarrimg-box">
-              <img class="newarrimg" src="<%= data.images[0] %>" alt="" />
+              <img class="newarrimg" src="/<%= data.images[0] %>" alt="" />
               <i class="fa-regular fa-heart fa-xl mt-4 wishiconnew" style="color: #000000"></i>
             </div>
             <div class="newarrcolbox1new">
-              <a class="product-item" href="cart.html">
+              <a class="product-item" href="cart.html" style="text-decoration: none;" >
                 <div class="tittlesnew">
-                  <% if (index === 0) { %> SHIRTS <% } %>
-                  <% if (index === 1) { %> PANTS <% } %>
-                  <% if (index === 2) { %> OVERSIZED T-SHIRTS <% } %>
-                  <% if (index === 3) { %> FULL SLEEVE <% } %>
+                  <%= data.name  %>
                 </div>
               </a>
             </div>

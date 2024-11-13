@@ -21,8 +21,14 @@ router.get('/admin/products/unlist', adminController.productUnlist);
 router.get('/admin/users/view', adminController.viewUser);
 router.get('/admin/category/update/:id', adminController.loadupdatecategory);
 router.put('/admin/category/update/:id', adminController.updateCategory);
-router.get('/admin/updateProduct', adminController.loadupdateProducts);
-
+router.get('/admin/Product/update/:id', adminController.loadupdateProducts);
+router.put('/admin/products/update/:id', upload.fields([
+  { name: 'productImage1', maxCount: 1 },
+  { name: 'productImage2', maxCount: 1 },
+  { name: 'productImage3', maxCount: 1 },
+  { name: 'productImage4', maxCount: 1 },
+  { name: 'productImage5', maxCount: 1 }
+]), adminController.updateProduct);
 
 
 module.exports = router;

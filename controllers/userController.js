@@ -27,10 +27,10 @@ module.exports = {
   async loadhome(req, res) {
     console.log('shsh')
     try {
-      const category = await categoryModel.find({});
+      const category = await categoryModel.find({isDeleted: false});
       const products = await productModel.find({}).sort({ createdAt: -1 }).limit(9);
       console.log(category)
-      res.render('home', { category, products });
+      res.status(200).render('home', { category, products });
     } catch (err) {
       console.log(err);
     }
