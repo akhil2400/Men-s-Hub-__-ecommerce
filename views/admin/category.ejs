@@ -23,32 +23,32 @@
         </div>
         <ul class="nav">
           <li class="nav-item menu-items">
-            <a class="nav-link" href="index.html">
+            <a class="nav-link" href="#">
               <span class="menu-title">Dashboard</span>
             </a>
           </li>
           <li class="nav-item menu-items">
-            <a class="nav-link" href="users.html">
+            <a class="nav-link" href="/admin/usermanagement">
               <span class="menu-title">User Management</span>
             </a>
           </li>
           <li class="nav-item menu-items">
-            <a class="nav-link" href="products.html">
+            <a class="nav-link" href="/admin/products">
               <span class="menu-title">Products Management</span>
             </a>
           </li>
           <li class="nav-item menu-items">
-            <a class="nav-link" href="orders.html">
+            <a class="nav-link" href="#">
               <span class="menu-title">Order Management</span>
             </a>
           </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="category.html">
-              <span class="menu-title">Category Management</span>
+          <li class="nav-item menu-items forme" >
+            <a class="nav-link" href="/admin/categorymanagement">
+              <span class="menu-title" >Category Management</span>
             </a>
           </li>
           <li class="nav-item menu-items">
-            <a class="nav-link" href="coupens.html">
+            <a class="nav-link" href="#">
               <span class="menu-title">Coupen Management</span>
             </a>
           </li>
@@ -245,7 +245,7 @@
                           <td> <%= data.name  %> </td>
                           <td> <%= data.productCount  %> </td>
                           <td>
-                            <div data-id="<%= data._id  %>" class="badge btnListAndUnlist <%= data.isDeleted?'badge-outline-success':'badge-outline-primary' %>"><%= data.isDeleted?'List':'Unlist'%></div>
+                            <button data-id="<%= data._id  %>" class="badge btnListAndUnlist <%= data.isDeleted?'badge-outline-success':'badge-outline-primary' %>"><%= data.isDeleted?'List':'Unlist'%></button>
                             <td>
                               <button data-id="/admin/category/update/<%= data._id %>" class="badge badge-outline-warning update-category-btn">Update</button>
                             </td>

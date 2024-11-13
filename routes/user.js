@@ -21,6 +21,11 @@ router.get('/ban',userController.loadban)
 router.get('/shop',userController.shopPageLoad)
 router.get('/productDetails/:id',userController.productDetails)
 
+router.get('/about',userController.loadabout)
+router.get('/contact',userController.loadcontact)
+
+
+
 
 
 module.exports = router;

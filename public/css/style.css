@@ -1100,11 +1100,11 @@ textarea {
   text-align: center;
   padding: 5px;
 }
-.logoimg{
+.logoimg {
   width: 14%;
-  height: 20%;
+  height: 28%;
   position: absolute;
-  top: -13px;
+  top: -23px;
   right: 34px;
 }
 .paymentfooterimgdiv{
@@ -1120,13 +1120,12 @@ textarea {
   background-color: bisque;
   position: relative;
 }
-.wishicon2{
-  width: 20px; 
-  height: 20px;
+.wishicon2 {
+  width: 21px;
+  height: 23px;
   position: absolute;
   top: 29px;
-  right: 192px;
-  
+  right: 154px;
 }
 .bodylog{
   display: flex;
@@ -1757,6 +1756,8 @@ margin-top:9px
 .nav-link:hover {
   border-bottom: 3px solid  rgb(255, 222, 5); /* Optional: underline on hover */
 }
+
+
 
 
 

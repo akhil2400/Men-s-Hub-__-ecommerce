@@ -21,6 +21,7 @@ router.get('/admin/products/unlist', adminController.productUnlist);
 router.get('/admin/users/view', adminController.viewUser);
 router.get('/admin/category/update/:id', adminController.loadupdatecategory);
 router.put('/admin/category/update/:id', adminController.updateCategory);
+router.get('/admin/updateProduct', adminController.loadupdateProducts);
 
 
 

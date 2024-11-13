@@ -205,3 +205,26 @@
   border: 2px solid #ccc;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+/* Color Option Selection */
+.color-option.selected {
+  border-color: black; /* Black border to indicate selection */
+}
+
+/* Size Option Selection */
+.size-option.selected {
+  background-color: green; /* Green background for selected size */
+  color: white; /* White text for better visibility */
+  border-color: green; /* Match border to background color */
+}
+
+
+.heart-icon {
+    width: 22px;
+    position: absolute;
+    top: 568px;
+    right: 442px;
+    font-size: 20px;
+    cursor: pointer;
+}
+

@@ -45,3 +45,24 @@ mainImageContainer.addEventListener("mousemove", function (event) {
 mainImageContainer.addEventListener("mouseleave", function () {
   zoomCircle.style.display = "none";
 });
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  // Handle color option selection
+  const colorOptions = document.querySelectorAll(".color-option");
+  colorOptions.forEach(option => {
+    option.addEventListener("click", function() {
+      colorOptions.forEach(opt => opt.classList.remove("selected")); // Remove selected from all
+      this.classList.add("selected"); // Add selected to the clicked color
+    });
+  });
+
+  // Handle size option selection
+  const sizeOptions = document.querySelectorAll(".size-option input[type='radio']");
+  sizeOptions.forEach(option => {
+    option.addEventListener("change", function() {
+      sizeOptions.forEach(opt => opt.parentNode.classList.remove("selected")); // Remove from all
+      this.parentNode.classList.add("selected"); // Add to selected size
+    });
+  });
+});

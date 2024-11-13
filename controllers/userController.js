@@ -247,7 +247,7 @@ module.exports = {
       });
     }
   },
-  loadban(req, res) {
+ loadban(req, res) {
     res.render('ban');
   },
 
@@ -296,7 +296,15 @@ module.exports = {
       console.log(err);
       res.status(500).render("productDetails", { msg: "Error loading product details" });
     }
-  }
+  },
+
+
+   loadabout(req, res) {
+    res.render('about');
+  },  
+   loadcontact(req, res) {
+    res.render('contact');
+  },
 
 
 

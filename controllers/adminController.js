@@ -259,4 +259,18 @@ async updateCategory (req, res) {
     
 },
 
+async loadupdateProducts (req, res) {
+const categories = await categoryModel.find({});
+
+  const productId = req.params.id;
+  try {
+    const product = await productModel.findOne( productId );
+    if(!product) {
+      return res.redirect("/admin/productmanagement")
+  } res.render('updateProducts', { product : product, category : categories });
+  } catch (error) {
+    console.log(error);
+  }  
+},
+
 }

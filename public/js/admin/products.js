@@ -16,7 +16,7 @@ const cashOnDelivery = document.getElementById("cashOnDelivery");
 
 const nameRegex = /^[a-zA-Z0-9 ]{3,}$/;
 const priceRegex = /^\d+(\.\d{1,2})?$/;
-const stockRegex = /^\d+$/;
+const stockRegex = /^(0|[1-9]\d*)$/;
 const textRegex = /^[a-zA-Z0-9 ]+$/;
 const tagsRegex = /^(#\w+)(\s#\w+)*$/;
 

@@ -21201,4 +21201,14 @@ div.tagsinput {
   border-bottom-right-radius: 50%;
 }
 
+.forme{
+  width: 202px;
+  background-color: black; 
+  border-radius: 20px;
+  color: black;
+}
+.forme:hover{
+  background-color:transparent;
+}
+
 

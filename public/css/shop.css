@@ -57,18 +57,40 @@
   width:100%;
 }
 
-/* Add some padding on mobile to avoid cramped content */
-@media (max-width: 576px) {
-  .product-card {
-    padding: 10px;
-    flex: 0 0 calc(50% - 10px); /* 2 items per row on smaller screens */
-  }
+/* Styling for Breadcrumb */
+.breadcrumb {
+  background-color: transparent;
+  padding: 0;
+  margin-bottom: 1rem;
+}
 
-  .product-card p {
-    font-size: 14px;
-  }
+.breadcrumb-item + .breadcrumb-item::before {
+  content: ">";
+  color: #767676; /* Adjust separator color if needed */
+  margin: 0 0.5rem;
+}
 
-  .product-card span {
-    font-size: 16px;
+.breadcrumb-item a {
+  color: #007c89; /* Color for the link */
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-item a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-item .fa-home {
+  font-size: 18px;
+  color: #007c89; /* Home icon color */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .breadcrumb-item a {
+    font-size: 14px; /* Adjust font size for smaller screens */
   }
 }
+
+
