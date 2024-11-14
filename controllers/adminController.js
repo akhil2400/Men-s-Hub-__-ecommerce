@@ -5,6 +5,7 @@ const productModel = require('../models/productModel');
 const path = require('path');
 const { create } = require('../models/otpModel');
 const mongoose = require('mongoose');
+const adminModel = require('../models/adminModel');
 
 
 module.exports = {
@@ -12,6 +13,36 @@ module.exports = {
   async loadadminlogin(req, res) {
     res.render('adminlogin');
   },
+
+  async adminLogin(req, res) {
+    const { username, password } = req.body;
+
+    try {
+        // Find the admin by username
+        const admin = await adminModel.findOne({ username });
+
+        if (!admin) {
+            // Return error if admin doesn't exist
+            return res.status(400).json({ val: false, msg: "Admin not found" });
+        }
+
+        // Compare the entered password with the stored hash
+        const isMatch = await bcrypt.compare(password, admin.password);
+
+        if (isMatch) {
+            // If the password matches, send a success response (no redirect)
+            return res.status(200).json({ val: true, msg: 'Login successful' });
+        } else {
+            // If the password doesn't match, send an error message
+            return res.status(400).json({ val: false, msg: 'Invalid password' });
+        }
+    } catch (error) {
+        console.error('Error during login:', error);
+        return res.status(500).json({ val: false, msg: 'Internal Server Error' });
+    }
+},
+
+
   async loadusermanagement(req, res) {
     try {
       const users = await userModel.find({});

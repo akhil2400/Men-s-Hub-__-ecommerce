@@ -2,8 +2,10 @@ const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
 const upload = require('../utils/multer');
+const isAuthenticated = require('../middlewares/adminauth');  // Import middleware
 
 router.get("/admin", adminController.loadadminlogin);
+router.post("/admin", adminController.adminLogin);
 router.get("/admin/usermanagement", adminController.loadusermanagement);
 router.get("/admin/users/ban", adminController.banuser);
 router.get("/admin/categorymanagement", adminController.loadcategorymanagement);
@@ -29,6 +31,5 @@ router.put('/admin/products/update/:id', upload.fields([
   { name: 'productImage4', maxCount: 1 },
   { name: 'productImage5', maxCount: 1 }
 ]), adminController.updateProduct);
-
 
 module.exports = router;
