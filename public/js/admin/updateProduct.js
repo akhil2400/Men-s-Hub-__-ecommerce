@@ -51,8 +51,6 @@ function previewAndCrop(event, index) {
 
 
 
-const colorsOption = [];
-
 
 
 
@@ -79,16 +77,11 @@ function startCropping(index) {
   const canvas = cropper.getCroppedCanvas();
 
   if (canvas) {
-    // Convert the cropped canvas to a base64 data URL
     const croppedDataUrl = canvas.toDataURL("image/png");
-
-    // Find the image element in the preview area and update its src attribute
     const imageElement = document.querySelector(`.product-update-image-div label[for="productImage${index}"] img`);
     if (imageElement) {
-      imageElement.src = croppedDataUrl; // Update the image preview with the cropped image
+      imageElement.src = croppedDataUrl; 
     }
-
-    // Convert the cropped canvas to a blob and save as File for further processing if needed
     canvas.toBlob((blob) => {
       const croppedImageFile = new File(
         [blob],
@@ -99,8 +92,6 @@ function startCropping(index) {
         }
       );
       croppedImages[index] = croppedImageFile;
-
-      // Clean up the cropper instance and hide the crop preview
       cropper.destroy();
       cropperInstances[index] = null;
       document.getElementById(`cropPreviewSection${index}`).style.display = "none";
@@ -111,59 +102,6 @@ function startCropping(index) {
   }
 }
 
-function validateAndSubmit() {
-  const errorMsgs = document.querySelectorAll(".error-message");
-  errorMsgs.forEach((error) => error.remove());
-
-  if (!nameRegex.test(name.value)) {
-    showError(name, "Product name must be at least 3 characters long and alphanumeric.");
-  } else if (description.value.length < 5) {
-    showError(description, "Description must be at least 5 characters long.");
-  } else if (categorySelect.value === "") {
-    showError(categorySelect, "Please select a category.");
-  } else if (!tagsRegex.test(tags.value)) {
-    showError(tags, "Tags should start with #, have letters or numbers, and be separated by spaces.");
-  } else if (!textRegex.test(brand.value)) {
-    showError(brand, "Brand name must be alphanumeric.");
-  } else if (!priceRegex.test(ogPrice.value)) {
-    showError(ogPrice, "Original Price must be a valid number with up to 2 decimal places.");
-  } else if (!stockRegex.test(stock.value) || stock.value < 1) {
-    showError(stock, "Stock must be a positive integer.");
-  } else {
-    const formData = new FormData();
-    formData.append("name", name.value);
-    formData.append("description", description.value);
-    formData.append("category", categorySelect.value);
-    formData.append("brand", brand.value);
-    formData.append("price", parseFloat(ogPrice.value));
-    formData.append("tags", tags.value);
-    formData.append("sizes", selectedSizes);
-    formData.append("colors", colorsOption);
-    formData.append("cashOnDelivery", cashOnDelivery.checked);
-    formData.append("offerPrice", offerPrice.value !== "" ? offerPrice.value : null);
-    formData.append("stock", parseInt(stock.value));
-    formData.append("warranty", warranty.value !== "" ? warranty.value : null);
-    formData.append("returnPolicy", returnPolicy.value !== "" ? returnPolicy.value : null);
-    croppedImages.forEach((croppedImage, index) => {
-      if (croppedImage) {
-        formData.append(`productImage${index + 1}`,croppedImage);
-      }
-    });
-
-    (async function addData() {
-      try {
-        const response = await fetch("/admin/products/add", {
-          method: "POST",
-          body: formData,
-        });
-        const data = await response.json();
-        console.log(data.msg);
-      } catch (err) {
-        console.log("Error ::- " + err);
-      }
-    })();
-  }
-}
 
 function showError(input, message) {
   const error = document.createElement("p");
@@ -172,10 +110,6 @@ function showError(input, message) {
   error.textContent = message;
   input.parentElement.appendChild(error);
 }
-document.querySelector(".btn-CreateProduct").addEventListener("click", (event) => {
-  event.preventDefault();
-  validateAndSubmit();
-});
 function toggleOfferPriceInput() {
   const offerPriceDiv = document.getElementById("offerPriceDiv");
   const checkbox = document.getElementById("toggleOfferPrice");
@@ -190,37 +124,6 @@ function toggleReturnPolicyInput() {
   returnPolicyDiv.style.display = returnPolicyDiv.style.display === "none" ? "block" : "none";
 }
 
-
-const btnUnlist = document.querySelectorAll(".btnListAndUnlist");
-
-btnUnlist.forEach((elem) => {
-  elem.addEventListener("click", async () => {
-    try {
-      const productId = elem.getAttribute("data-id");
-      const res = await fetch(`/admin/products/unlist?id=${productId}&val=${elem.textContent}`);
-      const data = await res.json();
-      console.log(data);
-      if (data.val) {
-        if (elem.textContent === "Unlist") {
-          elem.classList.replace(
-            "badge-outline-primary",
-            "badge-outline-success"
-          );
-          elem.textContent = "List";
-        } else {
-          console.log(elem.textContent);
-          elem.classList.replace(
-            "badge-outline-success",
-            "badge-outline-primary"
-          );
-          elem.textContent = "Unlist";
-        }
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  });
-});
 
 
 
@@ -272,4 +175,68 @@ btnUnlist.forEach((elem) => {
 
 
 
+
+const updateButtons  = document.querySelector(".update-product-btn");
+
+console.log(croppedImages)
+
+updateButtons.addEventListener("click",async(event) => {  
+  event.preventDefault();
+
+  const productName = document.getElementById("productName")
+  const productDescription = document.getElementById("productDescription")
+  const productCategory = document.getElementById("productCategory")
+  const productBrand = document.getElementById("productBrand")
+  const productOgPrice = document.getElementById("productOgPrice")
+  const productOfferPrice = document.getElementById("productOfferPrice")
+  const productStock = document.getElementById("productStock")
+  const productTags = document.getElementById("productTags")
+  const productWarranty = document.getElementById("productWarranty")
+  const productReturnPolicy = document.getElementById("productReturnPolicy")
+  const cashOnDelivery = document.getElementById("cashOnDelivery")
+
+  console.log(productName.value);
+  console.log(productDescription.value);
+  console.log(productCategory.value);
+  console.log(productBrand.value);
+  console.log(productOgPrice.value);
+  console.log(productOfferPrice.value);
+  console.log(productStock.value);
+  console.log(productTags.value);
+  console.log(productWarranty.value);
+  console.log(productReturnPolicy.value);
+  // console.log(cashOnDelivery.checked);
+
+  const productId = event.target.getAttribute("data-id");
+  const formData = new FormData();
+
+  formData.append("name",productName.value);
+  formData.append("description",productDescription.value);
+  formData.append("category",productCategory.value);
+  formData.append("brand",productBrand.value);
+  formData.append("price",productOgPrice.value);
+  formData.append("offerPrice",productOfferPrice.value);
+  formData.append("stock",productStock.value);
+  formData.append("tags",productTags.value);
+  formData.append("warranty",productWarranty.value);
+  formData.append("returnPolicy",productReturnPolicy.value);
+  croppedImages.forEach((image,index) => {
+    formData.append(`image${index + 1}`,image);  
+  })
+  try{
+    const response = await fetch(`/admin/products/update/${productId}`,{
+      method:'PUT',
+      body:formData,
+    });
+    const data = await response.json();
+    if(!data.val){
+      console.log(data.msg);
+    }else{
+      window.location.href = "/admin/products";
+    }
+  }catch(err){
+    console.log(err);
+  }
+  
+})
 

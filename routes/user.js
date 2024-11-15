@@ -10,7 +10,7 @@ router.get('/login',userController.loadlogin);
 router.get ('/register',userController.loadregister);
 router.post('/register', userController.registerUser); 
 router.post('/login', userController.loginUser);
-router.get('/home',checkBan, userController.loadhome);
+router.get('/home', userController.loadhome);
 router.get('/otp-verify', userController.loadotp); 
 router.get('/dashboard', userController.loaddashboard)
 router.get('/forgotpasswordemailverification',userController.loademailverify)
@@ -19,11 +19,11 @@ router.get('/forgotpassword',userController.loadforgotpassword)
 router.post('/forgotpassword',userController.forgotpassword)
 router.get('/fotp-verify',userController.loadfotp)
 router.get('/ban',userController.loadban)
-router.get('/shop',checkBan,userController.shopPageLoad)
-router.get('/productDetails/:id',checkBan,userController.productDetails)
+router.get('/shop',userController.shopPageLoad)
+router.get('/productDetails/:id',userController.productDetails)
 
-router.get('/about',checkBan,userController.loadabout)
-router.get('/contact',checkBan,userController.loadcontact)
+router.get('/about',userController.loadabout)
+router.get('/contact',userController.loadcontact)
 
 
 

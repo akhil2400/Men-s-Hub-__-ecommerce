@@ -250,28 +250,21 @@ module.exports = {
  loadban(req, res) {
     res.render('ban');
   },
-
-  // In your product controller or app.js route file
   async shopPageLoad(req, res) {
     try {
-      // Fetch all products where isDeleted is false (i.e., only listed products)
-      const products = await productModel.find({ isDeleted: false });
-
-      // If products exist, render them to the shop page
-      return res.status(200).render("shop", {
-        val: products.length > 0,
-        msg: products.length ? null : "No products found",
-        products,
-      });
+      if(req.query.category){
+          const cat = await categoryModel.findOne({name: req.query.category});
+          const products = await productModel.find({category: cat._id});
+          return res.status(200).render("shop",{products});
+        }else{
+          const product = await productModel.find({});
+          return res.status(200).render("shop",{products:product});
+        }
     } catch (err) {
-      console.log(err);
-      res.status(500).render("shop", {
-        val: false,
-        msg: "Error loading products",
-        products: null,
-      });
+        console.log(err);
     }
-  },
+},
+
   // Route for product details page
   async productDetails(req, res) {
     try {

@@ -24,12 +24,20 @@ router.get('/admin/users/view', adminController.viewUser);
 router.get('/admin/category/update/:id', adminController.loadupdatecategory);
 router.put('/admin/category/update/:id', adminController.updateCategory);
 router.get('/admin/Product/update/:id', adminController.loadupdateProducts);
-router.put('/admin/products/update/:id', upload.fields([
-  { name: 'productImage1', maxCount: 1 },
-  { name: 'productImage2', maxCount: 1 },
-  { name: 'productImage3', maxCount: 1 },
-  { name: 'productImage4', maxCount: 1 },
-  { name: 'productImage5', maxCount: 1 }
+router.put('/admin/products/update/:productId', upload.fields([
+  { name: 'image1', maxCount: 1 },
+  { name: 'image2', maxCount: 1 },
+  { name: 'image3', maxCount: 1 },
+  { name: 'image4', maxCount: 1 },
+  { name: 'image5', maxCount: 1 }
 ]), adminController.updateProduct);
+// router.put('/update-product/:id')
+// router.put('/admin/products/update/:productId', 
+//   upload.fields([
+//     { name: 'croppedImage1', maxCount: 1 },
+//     { name: 'croppedImage2', maxCount: 1 },
+//     { name: 'croppedImage3', maxCount: 1 }
+//   ]), 
+//   adminController.updateProduct);
 
 module.exports = router;

@@ -127,8 +127,8 @@
               <div class="form-group">
                 <label for="productCategory">Category</label>
                 <select class="form-control" id="productCategory" name="cta">
+                  <option value="">select category</option>
                   <% category.forEach((data) => { %>
-                  <option value=""><%= data.name  %></option>
                     <option value="<%= data.name %>" <%= products.category === data.name ? 'selected' : '' %>>
                       <%= data.name %>
                     </option>
@@ -236,27 +236,6 @@
                   </div>
                 </div>
               </div>
-    
-              <!-- Color Options -->
-              <div class="form-group">
-                <label>Color Options</label>
-                <div class="form-check">
-                    <input type="color" value="#008000" id="colorPicker" />
-                    <button class="btn btn-success mb-3"  onclick="addColor()">Add Color</button>
-                  </div>
-                <div id="colorList">
-                    <% products.colors.forEach((data, index) => { %>
-                        <div id="color-<%= index %>" style="position: relative; width: 20px; border-radius: 50%; height: 20px; margin: 5px; background-color: <%= data %>;">
-                            <span onclick="removeColor(<%= index %>)" 
-                                  style="position: absolute; top: -5px; right: -5px; background: red; color: white; border-radius: 50%; cursor: pointer; font-size: 12px; width: 15px; height: 15px; display: flex; align-items: center; justify-content: center;">
-                                &times;
-                            </span>
-                        </div>
-                    <% }) %>
-                </div>
-            </div>
-            
-    
               <!-- Price -->
               <div class="form-group">
                 <label for="productOgPrice">Price</label>
@@ -348,16 +327,16 @@
                 </div>
               </div>
     
-              <button type="submit" class="btn btn-primary mt-3 btn-CreateProduct">Update Product</button>
+              <button data-id="<%= products._id %>" type="submit" class="btn btn-primary mt-3 btn-CreateProduct update-product-btn">Update Product</button>
             </form>
           </div>
         </div>
       </section>
     </div>
-     
+    
     <script src="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.js"></script>
     <script src="/js/admin/updateProduct.js"></script>
-   
+
 
     
 </body>

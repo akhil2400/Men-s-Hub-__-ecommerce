@@ -12,11 +12,12 @@ const adminRoutes = require("./routes/admin");
 require("./utils/googleAuth");
 const cors = require('cors');
 
-
+// const authCheck = require("./middlewares/auth");
 app.use(cors());
 
+// const adminauth = require("./middlewares/adminauth");
 
-const {checkBan}= require("./middlewares/checkban");
+const checkBan= require("./middlewares/checkban");
 
 // Set views directory and view engine
 app.set("view engine", "ejs");
@@ -46,13 +47,17 @@ app.use(session({
 }));
 
 //middleWares
-// app.use(checkBan);
+// app.use(adminauth);
+app.use(checkBan);
+// app.use(adminauth);
+
 
 // Use user routes
 app.use("/", userRoutes);
 app.use("/", authRoutes);
 app.use("/", otpRoutes);
 app.use("/", adminRoutes);
+
 
 
 // Connect to the database

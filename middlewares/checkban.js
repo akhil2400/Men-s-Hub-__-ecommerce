@@ -1,17 +1,14 @@
 const userModel = require('../models/userModel');
 
 let checkBan = async (req, res, next) => {
-  console.log(req.session);
   if (req.session.logedIn) {
-    const session = req.session.userData;
-    console.log(session.email);
-    const user = await userModel.findOne({ email:session.email });
-    if (user.isDeleted) {
+    const user = await userModel.findOne({ email: req.session.currentEmail });
+    if (user && user.isDeleted) {
       return res.render('ban');
     }
-    return next()
+    return next();
   }
-  next();
+  return next();
 }
 
-module.exports = { checkBan }
+module.exports = checkBan;
