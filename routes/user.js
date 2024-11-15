@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
-// const {checkSession}   = require('../middlewares/auth');
-const {checkBan} = require('../middlewares/checkban');
 
 
 router.get('/',userController.loadstartingpage);
@@ -21,6 +19,7 @@ router.get('/fotp-verify',userController.loadfotp)
 router.get('/ban',userController.loadban)
 router.get('/shop',userController.shopPageLoad)
 router.get('/productDetails/:id',userController.productDetails)
+router.get('/logout',userController.logout)
 
 router.get('/about',userController.loadabout)
 router.get('/contact',userController.loadcontact)

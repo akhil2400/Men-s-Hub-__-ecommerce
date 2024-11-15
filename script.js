@@ -15,7 +15,8 @@ const cors = require('cors');
 // const authCheck = require("./middlewares/auth");
 app.use(cors());
 
-// const adminauth = require("./middlewares/adminauth");
+const adminauth = require("./middlewares/adminauth");
+const auth = require("./middlewares/auth");
 
 const checkBan= require("./middlewares/checkban");
 
@@ -47,9 +48,9 @@ app.use(session({
 }));
 
 //middleWares
-// app.use(adminauth);
+app.use(adminauth);
+app.use(auth);
 app.use(checkBan);
-// app.use(adminauth);
 
 
 // Use user routes
