@@ -199,17 +199,35 @@ module.exports = {
   async categoryAdd(req, res) {
     const { categoryName } = req.body;
     try {
-      console.log('1')
+      // Check if a category with the same name already exists
+      const existingCategory = await categoryModel.findOne({ 
+        name: { 
+          $regex: new RegExp('^' + categoryName + '$', 'i') 
+        } 
+      });
+      if (existingCategory) {
+        return res.status(400).json({
+          val: false,
+          msg: 'Category name already exists. Please choose a different name.',
+        });
+      }
+  
+      // Process and store the image path
       const imagePath = path.relative(path.join(__dirname, '..', 'public'), req.file.path);
       console.log(imagePath);
-      await categoryModel.create({ name: categoryName, image: imagePath })
-      console.log('2')
+  
+      // Create the new category
+      await categoryModel.create({ name: categoryName, image: imagePath });
+      console.log('Category added successfully');
+  
       res.status(200).json({ val: true, msg: 'Category added successfully' });
     } catch (err) {
-      console.log(err)
-      res.status(200).json({ val: false, msg: 'Category add failed' });
+      console.log(err);
+      res.status(500).json({ val: false, msg: 'Category add failed due to an error.' });
     }
   },
+  
+  
   async categoryUnlist(req, res) {
     const { id, val } = req.query;
     console.log(id)
@@ -295,7 +313,7 @@ module.exports = {
 
     try {
       const category = await categoryModel.find({});
-      const products = await productModel.findById(productId)
+      const products = await productModel.findById(productId).populate("category")
       res.status(200).render('updateProducts', { products, category });
     } catch (error) {
       console.log(error);
@@ -304,79 +322,86 @@ module.exports = {
 
   },
 
-  async updateProduct(req, res) {
+  async  updateProduct(req, res) {
     console.log('Starting updateProduct');
-    
+  
     try {
       const { productId } = req.params;
-      const { name, description, category, price, offerPrice, stock, warranty, returnPolicy } = req.body;
+      const { name, description, category, price, offerPrice, stock, warranty, returnPolicy, existingImages } = req.body;
+  
       console.log('Received productId:', productId);
   
-      const imgArr = [];
+      // Array to store final image paths
+      let imgArr = [];
   
-      // Check if images are uploaded
-      if (!req.files || req.files.length === 0) {
-        console.log("No images uploaded");
-        return res.status(400).json({ val: false, msg: "Please select all images" });
+      // Check for uploaded images
+      if (req.files && req.files.length > 0) {
+        req.files.forEach((file) => {
+          const imagePath = `uploads/${file.filename}`;
+          imgArr.push(imagePath);
+        });
       }
   
-      // Process image paths
-      for (let i = 0; i < req.files.length; i++) {
-        const imagePath = path.relative(path.join(__dirname, '..', 'public'), req.files[i].path);
-        imgArr.push(imagePath);
+      console.log('Uploaded image paths:', imgArr);
+  
+      // Include existing images
+      if (existingImages) {
+        const parsedExistingImages = Array.isArray(existingImages)
+          ? existingImages
+          : JSON.parse(existingImages);
+        imgArr = [...parsedExistingImages, ...imgArr];
       }
   
-      console.log('Image paths:', imgArr);
+      console.log('Final image array:', imgArr);
   
       // Check if product exists
       const product = await productModel.findOne({ _id: productId });
       if (!product) {
-        console.log("Product not found");
-        return res.status(200).json({ val: false, msg: "Product not found" });
+        console.log('Product not found');
+        return res.status(404).json({ val: false, msg: 'Product not found' });
       }
   
       console.log('Product found:', product);
   
       // Check if category exists
-      const categoryMod = await categoryModel.findOne({ _id: product.category });
+      const categoryMod = await categoryModel.findOne({ _id: category });
       if (!categoryMod) {
-        console.log("Category not found");
-        return res.status(400).json({ val: false, msg: "Category not found for the product" });
+        console.log('Category not found');
+        return res.status(400).json({ val: false, msg: 'Category not found' });
       }
   
       console.log('Category found:', categoryMod);
   
-      // Update product with new data
+      // Update product
       const updateResult = await productModel.updateOne(
-        { _id: product._id },
+        { _id: productId },
         {
           $set: {
             name,
+            images: imgArr,
             description,
             category: categoryMod._id,
             price,
             offerPrice,
             stock,
-            images: imgArr,
             warranty,
             returnPolicy,
-          }
+          },
         }
       );
   
       console.log('Update result:', updateResult);
   
       if (updateResult.modifiedCount > 0) {
-        res.status(200).json({ val: true, msg: "Product updated successfully" });
+        res.status(200).json({ val: true, msg: 'Product updated successfully' });
       } else {
-        res.status(500).json({ val: false, msg: "Product update failed" });
+        res.status(500).json({ val: false, msg: 'Product update failed' });
       }
     } catch (error) {
       console.error('Error updating product:', error);
-      res.status(500).json({ val: false, msg: "Internal server error" });
+      res.status(500).json({ val: false, msg: 'Internal server error' });
     }
-  }
-  ,
+  },
 
 
 }

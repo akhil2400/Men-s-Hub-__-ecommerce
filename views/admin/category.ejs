@@ -10,6 +10,8 @@
     rel="stylesheet"
   />
   <link href="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     <!-- Layout styles -->
     <link rel="stylesheet" href="/css/admin.css">
   </head>
@@ -271,6 +273,7 @@
               <h5 class="modal-title" id="productUploadModalLabel">
                 Add New Category
               </h5>
+              <div id="alertMessage" class="alert" style="display: none;"></div>
               <button
                 type="button"
                 class="btn-close"

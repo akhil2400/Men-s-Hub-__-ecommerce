@@ -17,7 +17,6 @@ app.use(cors());
 
 const adminauth = require("./middlewares/adminauth");
 const auth = require("./middlewares/auth");
-
 const checkBan= require("./middlewares/checkban");
 
 // Set views directory and view engine

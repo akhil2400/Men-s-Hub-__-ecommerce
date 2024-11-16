@@ -77,8 +77,11 @@ document.getElementById("categoryForm").addEventListener("submit", function (eve
         });
         const data = await response.json();
         if (!data.val) {
+          swal ( "Oops" ,  data.msg ,  "error" )
           console.log(data.msg);
         } else {
+          swal ( "Success" ,  data.msg ,  "success" )
+          window.location.href = "/admin/categorymanagement";
           console.log(data.msg);
         }
       } catch (err) {

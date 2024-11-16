@@ -101,30 +101,31 @@ module.exports = {
   async loginUser(req, res) {
     const { emailuserName, password } = req.body;
     try {
-
-      let user;
-      let key = '';
-      if (emailuserName.includes('@')) {
-        user = await userModel.findOne({ email: emailuserName });
-        key = 'email';
-      } else {
-        user = await userModel.findOne({ userName: emailuserName });
-        key = 'userName';
-      }
-
-      if (key === 'email' && !user) {
+      let key = emailuserName.includes('@') ? 'email' : 'userName';
+  
+      // Fetch user based on email or username
+      const user = await userModel.findOne({ [key]: emailuserName });
+  
+      // Check if user exists
+      if (!user) {
         return res.status(400).json({
-          type: 'email',
+          type: key,
           st: false,
-          msg: 'Enter valid email',
+          msg: `Enter valid ${key === 'email' ? 'email' : 'username'}`,
         });
-      } else if (key === 'userName' && !user) {
-        return res.status(400).json({
-          type: 'username',
-          st: false,
-          msg: 'Enter valid username',
-        })
       }
+  
+      // Check if password exists for the user
+      if (!user.password) {
+        console.error("User found but password is missing in the database.");
+        return res.status(500).json({
+          type: 'password',
+          st: false,
+          msg: 'Password not set for this account.',
+        });
+      }
+  
+      // Compare the provided password with the stored hashed password
       const passwordMatch = await bcrypt.compare(password, user.password);
       if (!passwordMatch) {
         return res.status(400).json({
@@ -133,28 +134,33 @@ module.exports = {
           msg: 'Enter valid password',
         });
       }
+  
+      // Store essential user data in session (excluding password)
       req.session.userData = {
         userName: user.userName,
         email: user.email,
-        password: user.password,
         mobileNumber: user.mobileNumber,
-        gender: user.gender
-      }
+        gender: user.gender,
+      };
       req.session.logedIn = true;
+  
+      // Send success response
       return res.status(200).json({
         type: null,
         st: true,
         msg: 'Logged in successfully',
       });
     } catch (error) {
-      console.log(error);
-      res.status(500).json({
+      console.error("Error during login:", error);
+      return res.status(500).json({
         type: null,
         st: false,
         msg: 'Error logging in',
       });
     }
   },
+  
+  
 
 
   loaddashboard(req, res) {

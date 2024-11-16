@@ -8,7 +8,9 @@ let roleCheck = async (req, res, next) => {
         '/admin/categorymanagement',
         '/admin/dashboard',
         '/admin/coupens',
-        '/admin/orders'
+        '/admin/orders',
+        '/admin/Product/update/:id'
+
     ];
     if (adminRoutes.includes(req.url)) {
         if (!req.session.logedIn) {

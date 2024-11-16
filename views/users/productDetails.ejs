@@ -4,7 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= product.name %> - Product Details</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <link href="/css/tiny-slider.css" rel="stylesheet" />
     <link rel="stylesheet" href="/css/pdtDetails.css" />
     <link rel="stylesheet" href="/css/style.css" />
@@ -15,11 +21,15 @@
     <nav aria-label="breadcrumb" class="mb-4">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a href="/home" class="d-flex align-items-center">
-            Home
-          </a>
+          <a href="/home" class="d-flex align-items-center"> Home </a>
         </li>
-        <li class="breadcrumb-item active" aria-current="page" style="color: rgb(27, 94, 27);">Wishlists</li>
+        <li
+          class="breadcrumb-item active"
+          aria-current="page"
+          style="color: rgb(27, 94, 27)"
+        >
+          Wishlists
+        </li>
       </ol>
     </nav>
 
@@ -35,7 +45,8 @@
               class="img-fluid"
               alt="<%= product.name %>"
             />
-            <div class="zoom-circle" id="zoomCircle"></div> <!-- Zoom circle -->
+            <div class="zoom-circle" id="zoomCircle"></div>
+            <!-- Zoom circle -->
           </div>
           <div class="thumbnail-images d-flex">
             <% product.images.forEach((image, index) => { %>
@@ -57,10 +68,12 @@
               product.price %></span
             >
             <span class="original-price">&#8377;<%= product.price %></span>
-            <% if (product.offerPrice && product.offerPrice < product.price) { %>
-              <span class="discount">
-                <%= Math.round(((product.price - product.offerPrice) / product.price) * 100) %>% Off
-              </span>
+            <% if (product.offerPrice && product.offerPrice < product.price) {
+            %>
+            <span class="discount">
+              <%= Math.round(((product.price - product.offerPrice) /
+              product.price) * 100) %>% Off
+            </span>
             <% } %>
           </p>
           <p class="description"><%= product.description %></p>
@@ -68,7 +81,10 @@
           <ul class="features">
             <li><%= product.warranty%></li>
             <li><%= product. returnPolicy%></li>
-            <li>Cash On Delivery: <% if (product.cashOnDelivery === true) { %>Available<% } else { %>Not Available<% } %></li>
+            <li>
+              Cash On Delivery: <% if (product.cashOnDelivery === true) {
+              %>Available<% } else { %>Not Available<% } %>
+            </li>
           </ul>
 
           <!-- Color and Size Options -->
@@ -94,40 +110,52 @@
           </div>
           <div>
             <% if(product.stock > 0) { %>
-              <p style="color: green;">In Stock: <%= product.stock %></p>
+            <p style="color: green">In Stock: <%= product.stock %></p>
             <% } else { %>
-              <p style="color: red;">Out of Stock</p>
+            <p style="color: red">Out of Stock</p>
             <% } %>
           </div>
-          
+
           <div class="wrap-num-product flex-w m-r-20 m-tb-10">
-            <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m" onclick="decreaseQuantity()">
+            <div
+              class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m"
+              onclick="decreaseQuantity()"
+            >
               <i class="fs-16 zmdi zmdi-minus"></i>
             </div>
-            <div style="display: flex; ">
-              <p style="margin-top: 8px; margin-right: 8px;">Quantity</p>
-            <input 
-            class="mtext-104 cl3 txt-center num-product " 
-            style="width: 66px; height: 32px; margin-top: 4px;" 
-            type="number" 
-              name="num-product" 
-              value="1" 
-              data-stock="<%= product.stock %>" 
-              id="quantityInput"
-              min="1"
-              max="<%= product.stock %>">
-          
-            <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m" oninput="validateQuantity()" onclick="increaseQuantity()">
-              <i class="fs-16 zmdi zmdi-plus"></i>
+            <div style="display: flex">
+              <p style="margin-top: 8px; margin-right: 8px">Quantity</p>
+              <input
+                class="mtext-104 cl3 txt-center num-product"
+                style="width: 66px; height: 32px; margin-top: 4px"
+                type="number"
+                name="num-product"
+                value="1"
+                data-stock="<%= product.stock %>"
+                id="quantityInput"
+                min="1"
+                max="<%= product.stock %>"
+              />
+
+              <div
+                class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m"
+                oninput="validateQuantity()"
+                onclick="increaseQuantity()"
+              >
+                <i class="fs-16 zmdi zmdi-plus"></i>
+              </div>
+              <p id="QuantityError" style="color: red"></p>
             </div>
-            <p id="QuantityError" style="color: red;"></p>
           </div>
-          </div>
-            <!-- Add to Cart and Buy Now -->
-            <div class="actions mt-3">
+          <!-- Add to Cart and Buy Now -->
+          <div class="actions mt-3">
             <button class="btn btn-primary">Add to Cart</button>
             <button class="btn btn-warning">Buy Now</button>
-            <img class="heart-icon" src="/images/img/wishicon/icons8-heart-64.png" alt="">
+            <img
+              class="heart-icon"
+              src="/images/img/wishicon/icons8-heart-64.png"
+              alt=""
+            />
           </div>
         </div>
       </div>
@@ -164,9 +192,9 @@
       <% } %>
     </div>
     <%- include("./layouts/footer.ejs") %>
-    
+
     <script src="/js/jquery.min.js"></script>
-  <script src="/js/users/pDetails.js"></script>
+    <script src="/js/users/pDetails.js"></script>
     <script src="/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

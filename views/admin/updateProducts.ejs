@@ -76,13 +76,13 @@
                   name="name"
                   placeholder="Product Name"
                   required
-                  value="<%= products.name %>"
-                />
+                  value="<%= products?.name %>"
+                />            
                 <p class="error-message" id="productNameError"></p>
               </div>
               <p>Product Images</p>
               <div class="product-update-image-div">
-                <% products.images.forEach((data, index) => { %>
+                <% products?.images.forEach((data, index) => { %>
                   <label for="productImage<%= index %>">
                     <img class="product-update-image" src="/<%= data %>" alt="Product Image" />
                   </label>
@@ -117,7 +117,7 @@
                   id="productDescription"
                   name="description"
                   placeholder="Product Description"
-                  value="<%= products.description %>"
+                  value="<%= products?.description %>"
                   required
                 />
                 <p class="error-message" id="descError"></p>
@@ -126,16 +126,19 @@
               <!-- Category -->
               <div class="form-group">
                 <label for="productCategory">Category</label>
-                <select class="form-control" id="productCategory" name="cta">
-                  <option value="">select category</option>
+                <select class="form-control" id="productCategory" name="cta" >
+                  <option >select category</option>
                   <% category.forEach((data) => { %>
-                    <option value="<%= data.name %>" <%= products.category === data.name ? 'selected' : '' %>>
+                    <option 
+                      value="<%= data.name %>" 
+                      <%= (products?.category && products?.category.name && products?.category.name.trim().toLowerCase() === data.name.trim().toLowerCase()) ? 'selected' : '' %>>
                       <%= data.name %>
                     </option>
                   <% }) %>
                 </select>
                 <p class="error-message" id="categoryError"></p>
               </div>
+              
               
     
               <!-- Tags -->
@@ -146,7 +149,7 @@
                   class="form-control product-tags"
                   id="productTags"
                   placeholder="Product tags"
-                  value="#<%=products.tags %>"
+                  value="#<%=products?.tags %>"
                   required
                 />
               </div>
@@ -159,7 +162,7 @@
                   class="form-control product-brand"
                   id="productBrand"
                   placeholder="Product brand"
-                  value="<%= products.brand %>"
+                  value="<%= products?.brand %>"
                   required
                 />
               </div>
@@ -173,7 +176,7 @@
                       type="checkbox"
                       class="form-check-input"
                       id="sizeSmall"
-                      <% if(products.sizes.includes("S")){ %>checked <% } %>
+                      <% if(products?.sizes.includes("S")){ %>checked <% } %>
                       value="S"
                       onchange="updateSelectedSizes()"
                     />
@@ -184,7 +187,7 @@
                       type="checkbox"
                       class="form-check-input"
                       id="sizeMedium"
-                      <% if(products.sizes.includes("M")){ %>checked <% } %>
+                      <% if(products?.sizes.includes("M")){ %>checked <% } %>
                       value="M"
                       onchange="updateSelectedSizes()"
                     />
@@ -195,7 +198,7 @@
                       type="checkbox"
                       class="form-check-input"
                       id="sizeLarge"
-                      <% if(products.sizes.includes("L")){ %>checked <% } %>
+                      <% if(products?.sizes.includes("L")){ %>checked <% } %>
                       value="L"
                       onchange="updateSelectedSizes()"
                     />
@@ -206,7 +209,7 @@
                       type="checkbox"
                       class="form-check-input"
                       id="sizeXL"
-                      <% if(products.sizes.includes("XL")){ %>checked <% } %>
+                      <% if(products?.sizes.includes("XL")){ %>checked <% } %>
                       value="XL"
                       onchange="updateSelectedSizes()"
                     />
@@ -217,7 +220,7 @@
                       type="checkbox"
                       class="form-check-input"
                       id="sizeXXL"
-                      <% if(products.sizes.includes("XXL")){ %>checked <% } %>
+                      <% if(products?.sizes.includes("XXL")){ %>checked <% } %>
                       value="XXL"
                       onchange="updateSelectedSizes()"
                     />
@@ -228,7 +231,7 @@
                       type="checkbox"
                       class="form-check-input"
                       id="sizeXXXL"
-                      <% if(products.sizes.includes("XXXL")){ %>checked <% } %>
+                      <% if(products?.sizes.includes("XXXL")){ %>checked <% } %>
                       value="XXXL"
                       onchange="updateSelectedSizes()"
                     />
@@ -244,7 +247,7 @@
                   class="form-control product-og-price"
                   id="productOgPrice"
                   placeholder="Original Price"
-                  value="<%= products.price %>"
+                  value="<%= products?.price %>"
                   required
                 />
                 <p class="error-message" id="ogPriceError"></p>
@@ -263,7 +266,7 @@
                     class="form-control product-offer-price"
                     id="productOfferPrice"
                     placeholder="Offer Price"
-                    value="<%= products.offerPrice  %>"
+                    value="<%= products?.offerPrice  %>"
                   />
                   <p class="error-message" id="offerPriceError"></p>
                 </div>
@@ -277,7 +280,7 @@
                   class="form-control product-stock"
                   id="productStock"
                   placeholder="Stock"
-                  value="<%= products.stock  %>"
+                  value="<%= products?.stock  %>"
                   required
                 />
                 <p class="error-message" id="stockError"></p>
@@ -296,7 +299,7 @@
                     class="form-control product-warranty"
                     id="productWarranty"
                     placeholder="Warranty"
-                    value="<%=products.warranty %>"
+                    value="<%=products?.warranty %>"
                   />
                   <p class="error-message" id="warrantyError"></p>
                 </div>
@@ -310,7 +313,7 @@
                     class="form-check-input"
                     id="toggleReturnPolicy"
                     onclick="toggleReturnPolicyInput()"
-                    <% if(products.returnPolicy){ %>checked <% } %>
+                    <% if(products?.returnPolicy){ %>checked <% } %>
                   />
                   <label class="form-check-label" for="toggleReturnPolicy">Add Return Policy</label>
                 </div>
@@ -321,13 +324,13 @@
                     class="form-control product-return-policy"
                     id="productReturnPolicy"
                     placeholder="Return Policy"
-                    value="<%= products.returnPolicy  %>"
+                    value="<%= products?.returnPolicy  %>"
                   />
                   <p class="error-message" id="returnPolicyError"></p>
                 </div>
               </div>
     
-              <button data-id="<%= products._id %>" type="submit" class="btn btn-primary mt-3 btn-CreateProduct update-product-btn">Update Product</button>
+              <button data-id="<%= products?._id %>" type="submit" class="btn btn-primary mt-3 btn-CreateProduct update-product-btn">Update Product</button>
             </form>
           </div>
         </div>
