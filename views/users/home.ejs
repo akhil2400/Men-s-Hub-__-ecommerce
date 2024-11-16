@@ -22,9 +22,14 @@
       <div class="container">
         <div id="navlogo">
           <a href=""><img src="/images/img/logo/A_logo_with_the_letters_M_and_H_together_with_a_cap_on_M-removebg-preview.png" alt=""></a>
-        </div>
-        <a class="navbar-brand" href="#"><span class="brandname">Men's Hub </span></a>
-
+        </div>        
+        <% if(isAdmin) { %>
+          <a href="/admin/usermanagement">
+              <img src="/images/img/adminlogo/admip.png" alt="ADMIN" style="width: 65px; height: 61px; position: absolute; top: 3px; left: 277px;">
+          </a>
+       <% } %>
+       
+        <a class="navbar-brand" href="/home"><span class="brandname">Men's Hub </span></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni" aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -45,13 +50,13 @@
         </div>
       </div>
     </nav>
-
     <div class="container-fluid homebanner"></div>
 
     <!-- Start Product Section -->
     <div class="product-section">
       <div class="container">
         <div class="row">
+          
           <h3 class="populcoll" style="margin-bottom: 50px"><span style="color: #3b5d50">POPULAR</span> CATEGORIES</h3>
           <% category.forEach((data) => { %>
             <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">

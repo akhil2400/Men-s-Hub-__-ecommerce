@@ -12,8 +12,14 @@ const categoryModel = require('../models/categoryModel');
 
 module.exports = {
 
-  loadstartingpage(req, res) {
-    res.render('starting');
+  async loadstartingpage(req, res) {
+    try {
+      const category = await categoryModel.find({ isDeleted: false });
+      const products = await productModel.find({}).sort({ createdAt: -1 }).limit(9);
+      res.status(200).render('starting', { category, products });
+    } catch (err) {
+      console.log(err);
+    }
   },
 
   async loadlogin(req, res) {
@@ -27,14 +33,27 @@ module.exports = {
   async loadhome(req, res) {
     console.log('shsh')
     try {
-      const category = await categoryModel.find({isDeleted: false});
+
+      if (!req.session.userData || !req.session.userData.email) {
+        return res.status(403).redirect('/login');
+      }
+
+      const category = await categoryModel.find({ isDeleted: false });
       const products = await productModel.find({}).sort({ createdAt: -1 }).limit(9);
-      console.log(category)
-      res.status(200).render('home', { category, products });
+
+
+      const user = await userModel.findOne({ email: req.session.userData.email });
+
+      const isAdmin = user && user.role === "admin";
+
+      console.log("User Data:", user);
+      res.status(200).render('home', { category, products, isAdmin });
     } catch (err) {
-      console.log(err);
+      console.error("Error loading home page:", err);
+      res.status(500).send("Internal Server Error");
     }
   },
+
 
   async registerUser(req, res) {
     const { otp } = req.body;
@@ -102,10 +121,10 @@ module.exports = {
     const { emailuserName, password } = req.body;
     try {
       let key = emailuserName.includes('@') ? 'email' : 'userName';
-  
+
       // Fetch user based on email or username
       const user = await userModel.findOne({ [key]: emailuserName });
-  
+
       // Check if user exists
       if (!user) {
         return res.status(400).json({
@@ -114,7 +133,7 @@ module.exports = {
           msg: `Enter valid ${key === 'email' ? 'email' : 'username'}`,
         });
       }
-  
+
       // Check if password exists for the user
       if (!user.password) {
         console.error("User found but password is missing in the database.");
@@ -124,7 +143,7 @@ module.exports = {
           msg: 'Password not set for this account.',
         });
       }
-  
+
       // Compare the provided password with the stored hashed password
       const passwordMatch = await bcrypt.compare(password, user.password);
       if (!passwordMatch) {
@@ -134,7 +153,7 @@ module.exports = {
           msg: 'Enter valid password',
         });
       }
-  
+
       // Store essential user data in session (excluding password)
       req.session.userData = {
         userName: user.userName,
@@ -143,7 +162,7 @@ module.exports = {
         gender: user.gender,
       };
       req.session.logedIn = true;
-  
+
       // Send success response
       return res.status(200).json({
         type: null,
@@ -159,8 +178,8 @@ module.exports = {
       });
     }
   },
-  
-  
+
+
 
 
   loaddashboard(req, res) {
@@ -253,23 +272,23 @@ module.exports = {
       });
     }
   },
- loadban(req, res) {
+  loadban(req, res) {
     res.render('ban');
   },
   async shopPageLoad(req, res) {
     try {
-      if(req.query.category){
-          const cat = await categoryModel.findOne({name: req.query.category});
-          const products = await productModel.find({category: cat._id});
-          return res.status(200).render("shop",{products});
-        }else{
-          const product = await productModel.find({});
-          return res.status(200).render("shop",{products:product});
-        }
+      if (req.query.category) {
+        const cat = await categoryModel.findOne({ name: req.query.category });
+        const products = await productModel.find({ category: cat._id });
+        return res.status(200).render("shop", { products });
+      } else {
+        const product = await productModel.find({});
+        return res.status(200).render("shop", { products: product });
+      }
     } catch (err) {
-        console.log(err);
+      console.log(err);
     }
-},
+  },
 
   // Route for product details page
   async productDetails(req, res) {
@@ -298,17 +317,17 @@ module.exports = {
   },
 
 
-   loadabout(req, res) {
+  loadabout(req, res) {
     res.render('about');
-  },  
-   loadcontact(req, res) {
+  },
+  loadcontact(req, res) {
     res.render('contact');
   },
   logout(req, res) {
     req.session.destroy((err) => {
-      if(err){
+      if (err) {
         console.log(err);
-      }else{
+      } else {
         res.redirect('/');
       }
     })

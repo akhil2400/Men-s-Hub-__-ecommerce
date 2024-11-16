@@ -41,9 +41,9 @@
     <nav class="custom-navbar navbar navbar navbar-expand-md" arial-label="Furni navigation bar" >
       <div class="container">
         <div id="navlogo" >
-          <a href=""><img src="/images/img/logo/A_logo_with_the_letters_M_and_H_together_with_a_cap_on_M-removebg-preview.png" alt=""></a>
+          <a href="/home"><img src="/images/img/logo/A_logo_with_the_letters_M_and_H_together_with_a_cap_on_M-removebg-preview.png" alt=""></a>
         </div>
-        <a class="navbar-brand" href="index.html"><span class="brandname">Men's Hub </span></a>
+        <a class="navbar-brand" href="/home"><span class="brandname">Men's Hub </span></a>
     
         <button
           class="navbar-toggler"
@@ -94,376 +94,51 @@
 
 
     <div class="container-fluid homebanner"></div>
-    <h3 class="dropoftheday" style="color: #000000">DROP OF THE DAY</h3>
-    <div class="dropoftheday">
-      <div class="col-12 col-md-4 col-lg-3">
-        <a class="product-item" href="cart.html">
-          <img
-            id="shirt-img"
-            src="/images/img/Drop of the day/Most-Loved-Tile-drop-star-wars_01_jFydaUU.webp"
-            class="img-fluid product-thumbnail"
-          />
-        </a>
-      </div>
-      <div class="col-12 col-md-4 col-lg-3 ms-5">
-        <a class="product-item" href="cart.html">
-          <img
-            id="shirt-img"
-            src="/images/img/Drop of the day/gftrg.jpg"
-            class="img-fluid product-thumbnail"
-          />
-        </a>
-      </div>
-      <div class="col-12 col-md-4 col-lg-3 ms-5">
-        <a class="product-item" href="cart.html">
-          <img
-            id="shirt-img"
-            src="/images/img/Drop of the day/Most-Loved-Tile-drop-2_01_1.webp"
-            class="img-fluid product-thumbnail"
-          />
-        </a>
-      </div>
-    </div>
-
-    <!--  End Drop of the day -->
+    
 
     <!-- Start Product Section -->
     <div class="product-section">
       <div class="container">
         <div class="row">
-          <!-- Start Column 1 -->
-          <h3 class="populcoll" style="margin-bottom: 50px">
-            <span style="color: #3b5d50">POPULAR</span> CATEGORIES
-          </h3>
-          <br />
-          <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
-            <a class="product-item" href="cart.html">
-              <img
-                src="/images/img/T-shirts/newt/Apogee-black-tshirt-001__1_-removebg-preview.png"
-                class="img-fluid product-thumbnail"
-              />
-
-              <h3 class="product-title">T-shirts</h3>
-
-              <span class="icon-cross">
-                <img src="/images/cross.svg" class="img-fluid" />
-              </span>
-            </a>
-          </div>
-          <!-- End Column 1 -->
-
-          <!-- Start Column 2 -->
-          <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
-            <a class="product-item" href="cart.html">
-              <img
-                id="shirt-img"
-                src="/images/img/shirts/check-corduroy-blue-shirt-model-17-removebg-preview.png"
-                class="img-fluid product-thumbnail"
-              />
-              <h3 class="product-title">Shirts</h3>
-
-              <span class="icon-cross">
-                <img src="/images/cross.svg" class="img-fluid" />
-              </span>
-            </a>
-          </div>
-          <!-- End Column 2 -->
-
-          <!-- Start Column 3 -->
-          <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
-            <a class="product-item" href="cart.html">
-              <img
-                src="/images/img/pants/cargos/J2A3952-removebg-preview.png"
-                class="img-fluid product-thumbnail"
-              />
-              <h3 class="product-title">cargos</h3>
-
-              <span class="icon-cross">
-                <img src="/images/cross.svg" class="img-fluid" />
-              </span>
-            </a>
-          </div>
-          <!-- End Column 3 -->
-
-          <!-- Start Column 4 -->
-          <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
-            <a class="product-item" href="cart.html">
-              <img
-                src="/images/img/shorts/denim-shorts-black-03-removebg-preview.png"
-                class="img-fluid product-thumbnail"
-              />
-              <h3 class="product-title">Shorts</h3>
-
-              <span class="icon-cross">
-                <img src="/images/cross.svg" class="img-fluid" />
-              </span>
-            </a>
-          </div>
-          <!-- End Column 4 -->
+          <h3 class="populcoll" style="margin-bottom: 50px"><span style="color: #3b5d50">POPULAR</span> CATEGORIES</h3>
+          <% category.forEach((data) => { %>
+            <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
+              <a class="product-item" href="/login">
+                <img src="<%= data.image %>" class="img-fluid product-thumbnail" />
+                <h3 class="product-title"><%= data.name %></h3>
+                <span class="icon-cross"><img src="/images/cross.svg" class="img-fluid" /></span>
+              </a>
+            </div>
+          <% }) %>
         </div>
       </div>
     </div>
 
-    <!-- start New arrivals -->
-    <h2 class="ms-3 newarrival">
-      <span style="color: #3b5d50">NEW </span>ARRRIVALS
-    </h2>
-    <div class="container-fluid  " >
-      <div style="display: flex;">
-        <div class="col-12 col-md-4 col-lg-3 mb-md-0 newarr">
-          <i
-            class="fa-regular fa-heart fa-xl mt-4 wishicon"
-            style="color: #000000"
-          ></i>
-          <div class="newarrcolbox1">
-          <a class="product-item" href="cart.html">
-            <div class="tittles">SHIRTS</div>
-          </a>
-        </div>
-        </div>
-        <div class="col-12 col-md-4 col-lg-3 mb-md-0 newarr">
-          <i
-            class="fa-regular fa-heart fa-xl mt-4 wishicon"
-            style="color: #000000"
-          ></i>
-          <div class="newarrcolbox2">
-          <a class="product-item" href="cart.html">
-            <div class="tittles">PANTS</div>
-          </a>
-        </div>
-        </div>
-        <div class="col-12 col-md-4 col-lg-3 mb-md-0 newarr">
-          <i
-            class="fa-regular fa-heart fa-xl mt-4 wishicon"
-            style="color: #000000"
-          ></i>
-          <div class="newarrcolbox3">
-            <a class="product-item" href="cart.html">
-              <div class="tittles">OVER SIZED T-SHIRTS</div>
-            </a>
-          </div>
-        </div>
-        <div class="col-12 col-md-4 col-lg-3 mb-md-0 newarr">
-          <i
-            class="fa-regular fa-heart fa-xl mt-4 wishicon"
-            style="color: #000000"
-          ></i>
-          <div class="newarrcolbox4">
-            <a class="product-item" href="cart.html">
-              <div class="tittles">OVER FULL SLEEVE</div>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div style="display: flex">
-        <div class="col-12 col-md-4 col-lg-3 mb-md-0 newarr">
-          <i
-            class="fa-regular fa-heart fa-xl mt-4 wishicon"
-            style="color: #000000"
-          ></i>
-          <div class="newarrcolbox5">
-            <a class="product-item" href="cart.html">
-              <div class="tittles">HOODIES</div>
-            </a>
-          </div>
-        </div>
-        <div class="col-12 col-md-4 col-lg-3 mb-md-0 newarr">
-          <i
-            class="fa-regular fa-heart fa-xl mt-4 wishicon"
-            style="color: #000000"
-          ></i>
-          <div class="newarrcolbox6">
-            <a class="product-item" href="cart.html">
-              <div class="tittles">HOODED T-SHIRTS</div>
-            </a>
-          </div>
-        </div>
-        <div class="col-12 col-md-4 col-lg-3 mb-md-0 newarr">
-          <i
-            class="fa-regular fa-heart fa-xl mt-4 wishicon"
-            style="color: #000000"
-          ></i>
-          <div class="newarrcolbox7">
-            <a class="product-item" href="cart.html">
-              <div class="tittles">JACKETS</div>
-            </a>
-          </div>
-        </div>
-        <div class="col-12 col-md-4 col-lg-3 mb-md-0 newarr">
-          <i
-            class="fa-regular fa-heart fa-xl mt-4 wishicon"
-            style="color: #000000"
-          ></i>
-          <div class="newarrcolbox8">
-            <a class="product-item" href="cart.html">
-              <div class="tittles">JOGGERS</div>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div style="display: flex">
-        <div class="col-12 col-md-4 col-lg-3 mb-md-0 newarr">
-          <i
-            class="fa-regular fa-heart fa-xl mt-4 wishicon"
-            style="color: #000000"
-          ></i>
-          <div class="newarrcolbox9">
-            <a class="product-item" href="cart.html">
-              <div class="tittles">CASUAL PANTS</div>
-            </a>
-          </div>
-          </a>
-        </div>
-        <div class="col-12 col-md-4 col-lg-3 mb-md-0 newarr">
-          <i
-            class="fa-regular fa-heart fa-xl mt-4 wishicon"
-            style="color: #000000"
-          ></i>
-          <div class="newarrcolbox10">
-            <a class="product-item" href="cart.html">
-              <div class="tittles">POLOS</div>
-            </a>
-          </div>
-        </div>
-        <div class="col-12 col-md-4 col-lg-3 mb-md-0 newarr">
-          <i
-            class="fa-regular fa-heart fa-xl mt-4 wishicon"
-            style="color: #000000"
-          ></i>
-          <div class="newarrcolbox11">
-            <a class="product-item" href="cart.html">
-              <div class="tittles">SHORTS</div>
-            </a>
-          </div>
-        </div>
-        <div class="col-12 col-md-4 col-lg-3 mb-md-0 newarr">
-          <i
-            class="fa-regular fa-heart fa-xl mt-4 wishicon"
-            style="color: #000000"
-          ></i>
-          <div class="newarrcolbox12">
-            <a class="product-item" href="cart.html">
-              <div class="tittles">SWEAT T-SHIRTS</div>
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="viewmoreBtnDiv">
-        <button class="newviewmoreBtn">View More</button>
-      </div>
-    </div>
-    <br>
-    <br>
-
-    <!-- caps -->
-    <h2 class="ms-3 newarrival">
-      <span style="color: #3b5d50">CAPS <span style="color: black;">&</span> HATS </span>
-    </h2>
-
+    <!-- Start New Arrivals -->
+    <h2 class="ms-3 newarrivalnew"><span style="color: #3b5d50">NEW </span>ARRIVALS</h2>
     <div class="container-fluid">
-      <div class="row justify-content-center">
-    
+      <div class="row">
+        <% products.forEach((data, index) => { %>
+          <div class="col-12 col-md-4 col-lg-3 mb-md-0 newarrnew text-center" style="margin-top: 20px;">
+            <div class="newarrimg-box">
+              <a href="/login">
+                <img class="newarrimg" src="/<%= data.images[0] %>" alt="<%= data.name %>" />
+              </a>
+              <i class="fa-regular fa-heart fa-xl mt-4 wishiconnew" style="color: #000000"></i>
+            </div>
+            <div class="newarrcolbox1new">
+              <a class="product-item" href="/login" style="text-decoration: none;">
+                <div class="tittlesnew"><%= data.name %></div>
+              </a>
+            </div>
+          </div>
+        <% }) %>
         
-        <div class="col-12 col-md-4 col-lg-3 mb-3 newarr2 d-flex justify-content-center">
-          <i class="fa-regular fa-heart fa-xl mt-4 wishicon" style="color: #000000"></i>
-          <div class="newarrcolboxc1">
-            <a class="product-item" href="cart.html">
-              <div class="tittlesc">BASE BALL CAPS</div>
-            </a>
-          </div>
-        </div>
-    
-        
-        <div class="col-12 col-md-4 col-lg-3 mb-3 newarr2 d-flex justify-content-center">
-          <i class="fa-regular fa-heart fa-xl mt-4 wishicon" style="color: #000000"></i>
-          <div class="newarrcolboxc2">
-            <a class="product-item" href="cart.html">
-              <div class="tittlesc">SNAP BACK CAPS</div>
-            </a>
-          </div>
-        </div>
-    
-        
-        <div class="col-12 col-md-4 col-lg-3 mb-3 newarr2 d-flex justify-content-center">
-          <i class="fa-regular fa-heart fa-xl mt-4 wishicon" style="color: #000000"></i>
-          <div class="newarrcolboxc3">
-            <a class="product-item" href="cart.html">
-              <div class="tittlesc">TRUCKER CAPS</div>
-            </a>
-          </div>
-        </div>
-    
-        
-        <div class="col-12 col-md-4 col-lg-3 mb-3 newarr2 d-flex justify-content-center">
-          <i class="fa-regular fa-heart fa-xl mt-4 wishicon" style="color: #000000"></i>
-          <div class="newarrcolboxc4">
-            <a class="product-item" href="cart.html">
-              <div class="tittlesc">DAD CAPS</div>
-            </a>
-          </div>
-        </div>
-    
-        
-        <div class="col-12 col-md-4 col-lg-3 mb-3 newarr2 d-flex justify-content-center">
-          <i class="fa-regular fa-heart fa-xl mt-4 wishicon" style="color: #000000"></i>
-          <div class="newarrcolboxc5">
-            <a class="product-item" href="cart.html">
-              <div class="tittlesc">BUCKET HATS</div>
-            </a>
-          </div>
-        </div>
-    
-      
-        <div class="col-12 col-md-4 col-lg-3 mb-3 newarr2 d-flex justify-content-center">
-          <i class="fa-regular fa-heart fa-xl mt-4 wishicon" style="color: #000000"></i>
-          <div class="newarrcolboxc6">
-            <a class="product-item" href="cart.html">
-              <div class="tittlesc">BEANIES</div>
-            </a>
-          </div>
-        </div>
-    
-        
-        <div class="col-12 col-md-4 col-lg-3 mb-3 newarr2 d-flex justify-content-center">
-          <i class="fa-regular fa-heart fa-xl mt-4 wishicon" style="color: #000000"></i>
-          <div class="newarrcolboxc7">
-            <a class="product-item" href="cart.html">
-              <div class="tittlesc">DOCKER HATS</div>
-            </a>
-          </div>
-        </div>
-    
-        
-        <div class="col-12 col-md-4 col-lg-3 mb-3 newarr2 d-flex justify-content-center">
-          <i class="fa-regular fa-heart fa-xl mt-4 wishicon" style="color: #000000"></i>
-          <div class="newarrcolboxc8">
-            <a class="product-item" href="cart.html">
-              <div class="tittlesc">FIVE PANEL CAPS</div>
-            </a>
-          </div>
-        </div>
-    
-        
-        <div class="col-12 col-md-4 col-lg-3 mb-3 newarr2 d-flex justify-content-center">
-          <i class="fa-regular fa-heart fa-xl mt-4 wishicon" style="color: #000000"></i>
-          <div class="newarrcolboxc9">
-            <a class="product-item" href="cart.html">
-              <div class="tittlesc">COPPOLA CAPS</div>
-            </a>
-          </div>
-        </div>
-    
       </div>
     </div>
-    
-        
-      <div class="viewmoreBtnDiv">
-        <button class="newviewmoreBtn">View More</button>
-      </div>
-    </div>
-  </div>
+
+    <br>
+    <br>
 <%- include ("./layouts/footer.ejs") %>    
 
     <script src="js/bootstrap.bundle.min.js"></script>
