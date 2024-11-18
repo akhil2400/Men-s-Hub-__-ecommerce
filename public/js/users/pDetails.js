@@ -100,3 +100,42 @@ function validateQuantity() {
     // document.getElementById("QuantityError").innerHTML = "Quantity limit reached";
   }
 }
+
+//Adding to cart
+
+document.addEventListener("DOMContentLoaded", () => {
+  const addToCartButtons = document.querySelectorAll(".add-to-cart-btn");
+
+  addToCartButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      const productId = button.dataset.id;
+      const productName = button.dataset.name;
+      const productPrice = parseFloat(button.dataset.price);
+      const productImage = button.dataset.image;
+
+      // Get existing cart from localStorage
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      // Check if the product already exists in the cart
+      const existingProduct = cart.find((item) => item.id === productId);
+      if (existingProduct) {
+        existingProduct.quantity += 1;
+      } else {
+        cart.push({
+          id: productId,
+          name: productName,
+          price: productPrice,
+          image: productImage,
+          quantity: 1,
+        });
+      }
+
+      // Save updated cart to localStorage
+      localStorage.setItem("cart", JSON.stringify(cart));
+
+      // Show confirmation alert
+      alert(`${productName} has been added to the cart.`);
+    });
+  });
+});
+

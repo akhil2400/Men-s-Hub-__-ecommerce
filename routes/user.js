@@ -20,7 +20,7 @@ router.get('/ban',userController.loadban)
 router.get('/shop',userController.shopPageLoad)
 router.get('/productDetails/:id',userController.productDetails)
 router.get('/logout',userController.logout)
-
+router.get('/cart',userController.loadcart)
 router.get('/about',userController.loadabout)
 router.get('/contact',userController.loadcontact)
 

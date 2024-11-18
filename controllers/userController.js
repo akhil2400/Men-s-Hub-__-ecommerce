@@ -333,7 +333,9 @@ module.exports = {
     })
   },
 
-
+  loadcart(req, res) {
+    res.render('cart');
+  }
 
 
 

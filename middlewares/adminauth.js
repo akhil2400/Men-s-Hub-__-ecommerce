@@ -1,7 +1,6 @@
 const userModal = require('../models/userModel');
 
 let roleCheck = async (req, res, next) => {
-    // console.log("roleCheck Middleware: ", req.url);
     const adminRoutes = [
         '/admin/products',
         '/admin/usermanagement',

@@ -21222,6 +21222,18 @@ div.tagsinput {
   margin: 12px;
   cursor: pointer;
 }
+.category-update-image{
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+  margin: 12px;
+  cursor: pointer;
+  border: 1px solid white
+}
+.category-update-image-section{
+  display: flex;
+  justify-content: start;
+}
 
 
 

@@ -3,6 +3,13 @@ let isCropped = false;
 let cropper;
 function previewAndCrop(event) {
   const file = event.target.files[0];
+  if (!file) return;
+  if (!["image/png", "image/jpg", "image/jpeg"].includes(file.type)) {
+    const categoryUpdateImageError =  document.getElementById("categoryImageError");
+    categoryUpdateImageError.style.display = "block";
+    categoryUpdateImageError.textContent = "Only jpg, png, and jpeg allowed";
+    return;
+  }
   if (file) {
     const reader = new FileReader();
     reader.onload = function (e) {
@@ -77,10 +84,10 @@ document.getElementById("categoryForm").addEventListener("submit", function (eve
         });
         const data = await response.json();
         if (!data.val) {
-          swal ( "Oops" ,  data.msg ,  "error" )
+          swal("Oops", data.msg, "error")
           console.log(data.msg);
         } else {
-          swal ( "Success" ,  data.msg ,  "success" )
+          swal("Success", data.msg, "success")
           window.location.href = "/admin/categorymanagement";
           console.log(data.msg);
         }

@@ -149,7 +149,17 @@
           </div>
           <!-- Add to Cart and Buy Now -->
           <div class="actions mt-3">
-            <button class="btn btn-primary">Add to Cart</button>
+
+            <button
+              class="btn btn-primary add-to-cart-btn"
+              data-id="<%= product._id %>"
+              data-name="<%= product.name %>"
+              data-price="<%= product.offerPrice || product.price %>"
+              data-image="/<%= product.images[0] %>"
+            >
+              Add to Cart
+            </button>
+            
             <button class="btn btn-warning">Buy Now</button>
             <img
               class="heart-icon"
@@ -164,6 +174,7 @@
       <div class="row mt-5">
         <div class="col-12">
           <h3>Reviews</h3>
+
           <!-- Add Reviews Section Here -->
 
           <h3 class="mt-5">Related Products</h3>

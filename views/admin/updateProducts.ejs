@@ -5,15 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Admin Panel</title>
 
+    <style>
+      .productsImages {
+  display: flex;
+  justify-content: start;
+}
+
+.productsImages .image-container {
+  position: relative;
+  width: 60px; 
+  height: 60px;
+  margin: 10px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.productsImages img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+}
+.image-container .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.4); 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(3px); 
+}
+
+.image-container:hover .overlay {
+  opacity: 1; 
+}
+
+.add-icon {
+  font-size: 20px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+    </style>
     <!-- cropper.js -->
     <link
     href="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.css"
     rel="stylesheet"
   />
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <link rel="stylesheet" href="/css/admin.css">
   </head>
   <body>
+    <input type="hidden"  value="<%= products._id  %>" name="" id="productId">
     <div class="container-scroller">
       <!-- Sidebar -->
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
@@ -81,29 +132,30 @@
                 <p class="error-message" id="productNameError"></p>
               </div>
               <p>Product Images</p>
-              <div class="product-update-image-div">
-                <% products?.images.forEach((data, index) => { %>
-                  <label for="productImage<%= index %>">
-                    <img class="product-update-image" src="/<%= data %>" alt="Product Image" />
-                  </label>
+              <label for="productImgaesView">Product images</label>
+              <div class="productsImages">
+                <% products.images.forEach((imageSrc, index) => { %>
+                  <div class="image-container">
+                    <label for="productUpdateImage<%= index %>">
+                      <img class="image<%= index %>" src="/<%= imageSrc %>" alt="" />
+                      <div class="overlay">
+                        <span class="add-icon">+</span>
+                      </div>
+                    </label>
+                  </div>
                 <% }) %>
               </div>
-              
-              <!-- Images Section -->
               <% for (let i = 0; i < 4; i++) { %>
-                <div class="form-group">
-                  <input
-                    style="display: none;"
-                    type="file"
-                    class="form-control product-image"
-                    id="productImage<%= i %>"
-                    accept="image/*"
-                    onchange="previewAndCrop(event, <%= i %>)"
-                  />
-                  <div class="cropPreviewSection" id="cropPreviewSection<%= i %>" style="display: none; width: 500px;">
-                    <img id="cropPreview<%= i %>" style="max-width: 500px" />
-                    <button type="button" onclick="startCropping(<%= i %>)">Crop Image <%= i+1 %></button>
-                  </div>
+                <input
+                  type="file"
+                  id="productUpdateImage<%= i %>"
+                  style="display: none;"
+                  accept="image/*"
+                  onchange="previewAndCrop(event, <%= i %>)"
+                />
+                <div id="cropPreviewUpdateSection<%= i %>" style="display: none; width: 500px; height: 430px;">
+                  <img id="cropPreviewUpdate<%= i %>" style="width: 500px; height: 430px;" />
+                  <button style="    margin-left: 401px;" type="button" onclick="startCroppingUpdate(<%= i %>)">Crop Image</button>
                 </div>
               <% } %>
               
@@ -130,7 +182,7 @@
                   <option >select category</option>
                   <% category.forEach((data) => { %>
                     <option 
-                      value="<%= data.name %>" 
+                      value="<%= data._id %>" 
                       <%= (products?.category && products?.category.name && products?.category.name.trim().toLowerCase() === data.name.trim().toLowerCase()) ? 'selected' : '' %>>
                       <%= data.name %>
                     </option>
@@ -330,7 +382,9 @@
                 </div>
               </div>
     
-              <button data-id="<%= products?._id %>" type="submit" class="btn btn-primary mt-3 btn-CreateProduct update-product-btn">Update Product</button>
+              <button data-id="<%= products?._id %>" type="submit" class="btn btn-primary mt-3 btn-CreateProduct update-product-btn" 
+                id="updateProductBtn"
+                >Update Product</button>
             </form>
           </div>
         </div>

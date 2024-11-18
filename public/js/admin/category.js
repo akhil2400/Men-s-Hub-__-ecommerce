@@ -2,30 +2,30 @@ document.addEventListener('DOMContentLoaded', function () {
   // Handling the category update button click
   const updateButtons = document.querySelectorAll('.update-category-btn');
 
-  updateButtons.forEach(button => {
-    button.addEventListener('click', function () {
-      const categoryId = this.getAttribute('data-id'); // get the category ID from data-id
-      const updateUrl = `/admin/category/${categoryId}`; // endpoint to fetch the category data
+  // updateButtons.forEach(button => {
+  //   button.addEventListener('click', function () {
+  //     const categoryId = this.getAttribute('data-id'); // get the category ID from data-id
+  //     const updateUrl = `/admin/category/${categoryId}`; // endpoint to fetch the category data
 
-      // Fetch the category data for pre-filling the update modal
-      fetch(updateUrl)
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            // Pre-fill the update modal fields with category data
-            document.getElementById('updateCategoryName').value = data.category.name;
-            // You can also pre-fill the image field if you need (image URL handling can be added here)
+  //     // Fetch the category data for pre-filling the update modal
+  //     fetch(updateUrl)
+  //       .then(response => response.json())
+  //       .then(data => {
+  //         if (data.success) {
+  //           // Pre-fill the update modal fields with category data
+  //           document.getElementById('updateCategoryName').value = data.category.name;
+  //           // You can also pre-fill the image field if you need (image URL handling can be added here)
 
-            // Show the update modal
-            const updateModal = new bootstrap.Modal(document.getElementById('categoryUpdateModal'));
-            updateModal.show();
-          } else {
-            console.error('Failed to fetch category data');
-          }
-        })
-        .catch(err => console.error('Error fetching category data:', err));
-    });
-  });
+  //           // Show the update modal
+  //           const updateModal = new bootstrap.Modal(document.getElementById('categoryUpdateModal'));
+  //           updateModal.show();
+  //         } else {
+  //           console.error('Failed to fetch category data');
+  //         }
+  //       })
+  //       .catch(err => console.error('Error fetching category data:', err));
+  //   });
+  // });
 
   // Handling the category update form submission
   document.getElementById('submitUpdateCategory').addEventListener('click', async function(event) {
