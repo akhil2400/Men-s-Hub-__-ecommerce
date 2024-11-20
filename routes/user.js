@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 const noCache = require('../middlewares/noCache');
+const productController = require('../controllers/productController');
 
 
 router.get('/',noCache,userController.loadstartingpage);
@@ -18,8 +19,8 @@ router.get('/forgotpassword',noCache,userController.loadforgotpassword)
 router.post('/forgotpassword',userController.forgotpassword)
 router.get('/fotp-verify',noCache,userController.loadfotp)
 router.get('/ban',userController.loadban)
-router.get('/shop',userController.shopPageLoad)
-router.get('/productDetails/:id',userController.productDetails)
+router.get('/shop',productController.shopPageLoad)
+router.get('/productDetails/:id',productController.productDetails)
 router.get('/logout',userController.logout)
 router.get('/about',userController.loadabout)
 router.get('/contact',userController.loadcontact)

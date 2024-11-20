@@ -39,13 +39,13 @@ if(valid){
       const response = await fetch('/login', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          emailuserName: emailuserName,
-          password: password
-        })
-      });
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            emailuserName: emailuserName,
+            password: password
+          })
+        });
       const data = await response.json();
       if (data.st === false) {
         if (data.type === "username" || data.type === "email") {

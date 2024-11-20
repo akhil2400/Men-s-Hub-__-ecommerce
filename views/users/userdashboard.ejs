@@ -12,11 +12,15 @@
       <!-- Bootstrap CSS and updated Font Awesome for icons -->
       <link href="css/bootstrap.min.css" rel="stylesheet" />
       <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+      
     
       <!-- Google Fonts and other stylesheets -->
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Marmelad&display=swap" rel="stylesheet">
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marmelad&display=swap" rel="stylesheet">
       <link href="/css/tiny-slider.css" rel="stylesheet" />
       <link rel="stylesheet" href="/css/style.css">
       <link href="/css/bootstrap.min.css" rel="stylesheet" />
@@ -36,8 +40,16 @@
             </ul>
         </div>
         <div class="content">
-            <h2>Hello Rosie</h2>
-            <p>From your account dashboard, you can easily check & view your recent order, manage your shipping and billing addresses and edit your password and account details.</p>
+          <div style="border: 1px solid black;background-color: rgba(209, 209, 209, 0.713);padding: 5px;border-radius: 5px;">
+          <p style=" font-family: Marmelad, serif; font-style: normal; "><%= user.userName%></p></div>
+          <div style="border: 1px solid black;padding: 2%; border-radius: 5px;"> 
+            <p><strong>User name:</strong><%= user.userName %></p>
+            <p><strong>Email:</strong> <%= user.email %></p>
+            <% if(user.mobileNumber){ %>
+                  <p><strong>Mobile Number:</strong> <%= user.mobileNumber %></p>
+                <% } %>
+            <p><strong>Created At:</strong> <%= user.createdAt %></p>
+          </div>
         </div>
     </div>
 
