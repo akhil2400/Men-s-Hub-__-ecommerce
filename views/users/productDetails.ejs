@@ -3,7 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= product.name %> - Product Details</title>
+    <% if (product) { %>
+      <title><%= product.name %> - Product Details</title>
+      <% } else { %>
+      <title>Product Not Found</title>
+      <% } %>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
@@ -15,6 +19,7 @@
     <link rel="stylesheet" href="/css/pdtDetails.css" />
     <link rel="stylesheet" href="/css/style.css" />
     <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   </head>
   <body>
     <%- include("./layouts/header.ejs") %>
@@ -28,7 +33,7 @@
           aria-current="page"
           style="color: rgb(27, 94, 27)"
         >
-          Wishlists
+          Shop View
         </li>
       </ol>
     </nav>
@@ -41,7 +46,7 @@
           <div class="main-image mb-3" id="mainImageContainer">
             <img
               id="mainImage"
-              src="/<%= product.images[0] %>"
+              src="/<%= product?.images[0] %>"
               class="img-fluid"
               alt="<%= product.name %>"
             />
@@ -102,7 +107,7 @@
               <label>Size:</label>
               <% product.sizes.forEach(size => { %>
               <label class="size-option"
-                ><input type="radio" name="size" value="<%= size %>" /> <%= size
+                ><input class="size-selection" type="radio" name="size" value="<%= size %>" /> <%= size
                 %></label
               >
               <% }) %>
@@ -159,7 +164,7 @@
             >
               Add to Cart
             </button>
-            
+
             <button class="btn btn-warning">Buy Now</button>
             <img
               class="heart-icon"

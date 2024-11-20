@@ -6,6 +6,7 @@ const { generateOTP, otpExpire } = require('../utils/otpGenerator');
 const { sendOTP } = require('../utils/mailSender');
 const productModel = require('../models/productModel');
 const categoryModel = require('../models/categoryModel');
+const cartModel = require('../models/cartModel');
 
 
 
@@ -279,10 +280,10 @@ module.exports = {
     try {
       if (req.query.category) {
         const cat = await categoryModel.findOne({ name: req.query.category });
-        const products = await productModel.find({ category: cat._id });
+        const products = await productModel.find({ category: cat._id, isDeleted: false  });
         return res.status(200).render("shop", { products });
       } else {
-        const product = await productModel.find({});
+        const product = await productModel.find({ isDeleted: false });
         return res.status(200).render("shop", { products: product });
       }
     } catch (err) {
@@ -293,30 +294,55 @@ module.exports = {
   // Route for product details page
   async productDetails(req, res) {
     try {
-      const productId = req.params.id;
-      const product = await productModel.findById(productId);
-
+      const { id: productId } = req.params;
+      console.log('Fetching product details for ID:', productId);
+  
+      // Fetch product from the database
+      const product = await productModel.findById(productId).lean();
       if (!product || product.isDeleted) {
         return res.status(404).render("productDetails", { msg: "Product not found" });
       }
-
+  
       // Fetch related products (example logic based on category)
       const relatedProducts = await productModel.find({
         category: product.category,
         _id: { $ne: productId } // Exclude the current product
-      }).limit(4); // Adjust the limit as per your need
-
-      return res.status(200).render("productDetails", {
-        product,
-        relatedProducts
-      });
+      }).limit(4).lean(); // Adjust the limit as per your need
+  
+      return res.status(200).render("productDetails", { product, relatedProducts });
     } catch (err) {
-      console.log(err);
+      console.error('Error loading product details:', err.stack);
       res.status(500).render("productDetails", { msg: "Error loading product details" });
     }
   },
-
-
+  
+  updateCartItem  (req, res) {
+    const { index, quantity } = req.body;
+  
+    if (req.session.cart && req.session.cart[index]) {
+      const item = req.session.cart[index];
+      
+      if (quantity > 0) {
+        item.quantity = quantity; // Update the quantity
+        res.status(200).json({ success: true });
+      } else {
+        res.status(400).json({ success: false, message: 'Invalid quantity' });
+      }
+    } else {
+      res.status(404).json({ success: false, message: 'Item not found in cart' });
+    }
+  },
+   removeCartItem(req, res) {
+    const { index } = req.body;
+  
+    if (req.session.cart && req.session.cart[index]) {
+      req.session.cart.splice(index, 1); // Remove the item from cart
+      res.status(200).json({ success: true });
+    } else {
+      res.status(404).json({ success: false, message: 'Item not found in cart' });
+    }
+  },
+  
   loadabout(req, res) {
     res.render('about');
   },
@@ -333,12 +359,102 @@ module.exports = {
     })
   },
 
-  loadcart(req, res) {
-    res.render('cart');
+
+async loadcart(req, res) {
+  try {
+    const userId = req.session.userId; 
+
+    
+    const cart = await cartModel.findOne({ userId }).populate('items.productId');
+
+    if (!cart) {
+      return res.render('cart', { cart: { items: [], cartTotal: 0 } });
+    }
+
+    res.render('cart', { cart });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred while loading the cart');
+  } 
+},
+
+
+async addToCart(req, res) {
+  console.log('dduhdhdjd')
+  console.log('Add to cart endpoint hit');
+  try {
+    if (!req.session.logedIn) {
+      return res.status(401).send('User not authenticated');
+    }
+    const {email} = req.session.userData ;
+    const user = await userModel.findOne({ email });
+    console.log(email)
+    const { productId, productSize, quantity } = req.body;
+    console.log(productId, productSize, quantity)
+    if (!productId || !productSize || !quantity) {
+      return res.status(400).send('All fields are required');
+    }
+
+    const parsedQuantity = parseInt(quantity, 10);
+    if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
+      return res.status(400).send('Invalid quantity');
+    }
+
+    const product = await productModel.findById(productId);
+    if (!product) {
+      return res.status(404).send('Product not found');
+    }
+
+    let cart = await cartModel.findOne({ userId:user._id });
+    const productTotal = product.price * parsedQuantity;
+
+    if (cart) {
+      const existingItem = cart.items.find(
+        (item) =>
+          item.productId.toString() === productId &&
+          item.size === size &&
+          item.color === color
+      );
+
+      if (existingItem) {
+        existingItem.quantity += parsedQuantity;
+        existingItem.total += productTotal;
+      } else {
+        cart.items.push({
+          productId,
+          quantity: parsedQuantity,
+          price: product.price,
+          size,
+          color,
+          total: productTotal,
+        });
+      }
+
+      cart.cartTotal += productTotal;
+      await cart.save();
+    } else {
+      await cartModel.create({
+        userId: user._id,
+        items: [
+          {
+            productId,
+            quantity: parsedQuantity,
+            price: product.price,
+            size:'Z',
+            color:'blue',
+            total: productTotal,
+          },
+        ],
+        cartTotal: productTotal,
+      });
+    }
+
+    res.status(200).redirect('/cart');
+  } catch (error) {
+    console.error('Error in addToCart:', error);
+    res.status(500).send('An error occurred while adding to cart');
   }
-
-
-
+},
 
 }
 

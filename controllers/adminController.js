@@ -141,9 +141,7 @@ module.exports = {
 
     try {
       if (!req.files || req.files.length === 0) {
-        return res
-          .status(400)
-          .json({ val: false, msg: "No files were uploaded" });
+        return res.status(400).json({ val: false, msg: "No files were uploaded" });
       }
       const categoryObject = await categoryModel.findOne({ name: category });
       if (!categoryObject) {
@@ -366,23 +364,23 @@ module.exports = {
     console.log('Starting updateProduct');
 
     try {
-      const { productId } = req.params;
+      const  {productId}  = req.params;
       console.log('Received productId:', productId);
       const { name, description, category, price, offerPrice, stock, warranty, returnPolicy, existingImages } = req.body;
 
       console.log('Received productId:', productId, category);
 
-      // // Array to store final image paths
-      // let imgArr = [];
+      // Array to store final image paths
+      let imgArr = [];
 
-      // console.log(req.files);
-      // // Check for uploaded images
-      // if (req.files && req.files.length > 0) {
-      //   req.files.forEach((file) => {
-      //     const imagePath = `uploads/${file.filename}`;
-      //     imgArr.push(imagePath);
-      //   });
-      // }
+      console.log(req.files);
+      // Check for uploaded images
+      if (req.files && req.files.length > 0) {
+        req.files.forEach((file) => {
+          const imagePath = `uploads/${file.filename}`;
+          imgArr.push(imagePath);
+        });
+      }
 
       // console.log('Uploaded image paths:', imgArr);
 

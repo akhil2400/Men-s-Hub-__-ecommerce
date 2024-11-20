@@ -339,7 +339,7 @@
                         <td><%= data.stock %></td>
                         <td>
                           <td>
-                          <div data-id="<%= data._id  %>" class="badge btnListAndUnlist <%= data.isDeleted?'badge-outline-success':'badge-outline-primary' %>"><%= data.isDeleted?'List':'Unlist' %></div>
+                          <button data-id="<%= data._id  %>" class="badge btnListAndUnlist <%= data.isDeleted?'badge-outline-success':'badge-outline-primary' %>"><%= data.isDeleted?'List':'Unlist' %></button>
                         </td>
                         <td>
                           <a href="/admin/Product/update/<%= data._id %>"><button class="badge badge-outline-warning update-category-btn">Update</button></a>

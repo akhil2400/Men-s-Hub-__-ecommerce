@@ -78,6 +78,8 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!fileType.startsWith('image/')) {
         errorElement.textContent = 'Only image files are allowed.';
         errorElement.style.display = 'block';
+        fileInput.value = null;
+        fileInput.files[0]=null;
         return false;
       }
       if (fileSize > 5 * 1024 * 1024) {

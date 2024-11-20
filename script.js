@@ -52,6 +52,8 @@ app.use(auth);
 app.use(checkBan);
 
 
+
+
 // Use user routes
 app.use("/", userRoutes);
 app.use("/", authRoutes);

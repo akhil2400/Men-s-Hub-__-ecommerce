@@ -47,11 +47,11 @@ mainImageContainer.addEventListener("mouseleave", function () {
 });
 
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   // Handle color option selection
   const colorOptions = document.querySelectorAll(".color-option");
   colorOptions.forEach(option => {
-    option.addEventListener("click", function() {
+    option.addEventListener("click", function () {
       colorOptions.forEach(opt => opt.classList.remove("selected")); // Remove selected from all
       this.classList.add("selected"); // Add selected to the clicked color
     });
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function() {
   // Handle size option selection
   const sizeOptions = document.querySelectorAll(".size-option input[type='radio']");
   sizeOptions.forEach(option => {
-    option.addEventListener("change", function() {
+    option.addEventListener("change", function () {
       sizeOptions.forEach(opt => opt.parentNode.classList.remove("selected")); // Remove from all
       this.parentNode.classList.add("selected"); // Add to selected size
     });
@@ -71,8 +71,8 @@ function increaseQuantity() {
   const quantityInput = document.getElementById("quantityInput");
   const maxStock = parseInt(quantityInput.getAttribute("data-stock"), 10);
   let currentQuantity = parseInt(quantityInput.value, 10);
-  
-  
+
+
 
   if (currentQuantity < maxStock) {
     quantityInput.value = currentQuantity + 1;
@@ -93,7 +93,7 @@ function validateQuantity() {
   const maxStock = parseInt(quantityInput.getAttribute("data-stock"), 10);
   // let currentQuantity = parseInt(quantityInput.value, 10);
   // document.getElementById("QuantityError").innerHTML = ""
-  
+
   if (currentQuantity > 1) {
     // quantityInput.value = maxStock;
     console.log("Limit reached")
@@ -103,39 +103,46 @@ function validateQuantity() {
 
 //Adding to cart
 
+const sizes = document.querySelectorAll(".size-selection");
+console.log(sizes)
+let productSize = "S";
+sizes.forEach(size => {
+  console.log(size)
+  size.addEventListener("change", () => {
+    productSize = size.value
+  })
+}
+)
+
+console.log(productSize);
+
 document.addEventListener("DOMContentLoaded", () => {
-  const addToCartButtons = document.querySelectorAll(".add-to-cart-btn");
+  const addToCartButtons = document.querySelector(".add-to-cart-btn");
 
-  addToCartButtons.forEach((button) => {
-    button.addEventListener("click", (e) => {
-      const productId = button.dataset.id;
-      const productName = button.dataset.name;
-      const productPrice = parseFloat(button.dataset.price);
-      const productImage = button.dataset.image;
+  addToCartButtons.addEventListener("click", (e) => {
+    const productId = e.target.getAttribute('data-id');
+    const productName = e.target.getAttribute('data-name');
+    const productPrice = e.target.getAttribute('data-price');
+    const productImage = e.target.getAttribute('data-image');
 
-      // Get existing cart from localStorage
-      let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-      // Check if the product already exists in the cart
-      const existingProduct = cart.find((item) => item.id === productId);
-      if (existingProduct) {
-        existingProduct.quantity += 1;
-      } else {
-        cart.push({
-          id: productId,
-          name: productName,
-          price: productPrice,
-          image: productImage,
-          quantity: 1,
-        });
-      }
+    console.log(productId);
+    console.log(productName);
+    console.log(productPrice);
 
-      // Save updated cart to localStorage
-      localStorage.setItem("cart", JSON.stringify(cart));
+    const quantity = document.getElementById("quantityInput").value;
 
-      // Show confirmation alert
-      alert(`${productName} has been added to the cart.`);
-    });
+    fetch("/add-to-cart", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ productId, productSize, quantity}) })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          console.log("Product added to cart");
+          swal("Success", "Product added to cart", "success");
+        } else {
+      console.log("Error adding product to cart");
+      swal("Error", data.message, "error");
+    }})
+
   });
 });
 
