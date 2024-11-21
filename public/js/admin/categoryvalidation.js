@@ -1,13 +1,20 @@
 let croppedImageFile;
 let isCropped = false;
 let cropper;
+
+
 function previewAndCrop(event) {
   const file = event.target.files[0];
   if (!file) return;
+  console.log(file)
   if (!["image/png", "image/jpg", "image/jpeg"].includes(file.type)) {
+    console.log(event.target.files[0])
+    event.target.files[0]=null
+    event.target.value=null
     const categoryUpdateImageError =  document.getElementById("categoryImageError");
     categoryUpdateImageError.style.display = "block";
     categoryUpdateImageError.textContent = "Only jpg, png, and jpeg allowed";
+    
     return;
   }
   if (file) {

@@ -148,3 +148,7 @@ async function removeItem(e) {
 function updateCart() {
   loadCart();
 }
+
+
+
+

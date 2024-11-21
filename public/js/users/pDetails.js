@@ -114,35 +114,55 @@ sizes.forEach(size => {
 }
 )
 
-console.log(productSize);
+const addToCartButtons = document.querySelector(".add-to-cart-btn");
 
-document.addEventListener("DOMContentLoaded", () => {
-  const addToCartButtons = document.querySelector(".add-to-cart-btn");
-
-  addToCartButtons.addEventListener("click", (e) => {
-    const productId = e.target.getAttribute('data-id');
-    const productName = e.target.getAttribute('data-name');
-    const productPrice = e.target.getAttribute('data-price');
-    const productImage = e.target.getAttribute('data-image');
+addToCartButtons.addEventListener("click", (e) => {
+  const productId = e.target.getAttribute('data-id');
+  // const productName = e.target.getAttribute('data-name');
+  // const productPrice = e.target.getAttribute('data-price');
+  // const productImage = e.target.getAttribute('data-image');
 
 
-    console.log(productId);
-    console.log(productName);
-    console.log(productPrice);
+  const quantity = document.getElementById("quantityInput").value;
 
-    const quantity = document.getElementById("quantityInput").value;
 
-    fetch("/add-to-cart", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ productId, productSize, quantity}) })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          console.log("Product added to cart");
-          swal("Success", "Product added to cart", "success");
-        } else {
-      console.log("Error adding product to cart");
-      swal("Error", data.message, "error");
-    }})
+  async function addToCart(req, res) {
+    try {
+      const response = await fetch('/add-to-cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId: productId,
+          productSize:productSize,
+          color:'blue',
+          quantity:quantity
+        })
+      });
+      const data = await response.json();
+      if(data.val){
+        swal.fire({
+          position: "centre",
+          icon: "success",
+          title: data.msg,
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }else{
+        
+        swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: data.msg
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
-  });
+  addToCart();
+
 });
 

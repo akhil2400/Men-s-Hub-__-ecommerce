@@ -1,59 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <head>
-      <meta charset="utf-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-      <meta name="author" content="Untree.co" />
-      <link rel="shortcut icon" href="favicon.png" />
-      <meta name="description" content="" />
-      <meta name="keywords" content="bootstrap, bootstrap4" />
-    
-      <!-- Bootstrap CSS and updated Font Awesome for icons -->
-      <link href="css/bootstrap.min.css" rel="stylesheet" />
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
-      
-    
-      <!-- Google Fonts and other stylesheets -->
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link href="https://fonts.googleapis.com/css2?family=Marmelad&display=swap" rel="stylesheet">
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Marmelad&display=swap" rel="stylesheet">
-      <link href="/css/tiny-slider.css" rel="stylesheet" />
-      <link rel="stylesheet" href="/css/style.css">
-      <link href="/css/bootstrap.min.css" rel="stylesheet" />
-    </head>
-<body>
-  <%- include("./layouts/header.ejs") %>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="author" content="Untree.co" />
+    <link rel="shortcut icon" href="favicon.png" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="bootstrap, bootstrap4" />
+
+    <!-- Bootstrap CSS and Font Awesome -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Marmelad&display=swap" rel="stylesheet">
+    <link href="/css/tiny-slider.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/dash.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+      .errormessagedash {
+        color: red;
+        font-size: 14px;
+        margin-top: 5px;
+      }
+    </style>
+
+  </head>
+  <body>
+    <%- include("./layouts/header.ejs") %>
     <div class="containerdac">
-        <div class="sidebar">
-            <ul>
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Orders</a></li>
-                <li><a href="#">Update Profile</a></li>
-                <li><a href="#">My Address</a></li>
-                <li><a href="#">Change Password</a></li>
-                <li><a href="#">Wallet</a></li>
-                <li><a href="#">Logout</a></li>
-            </ul>
+      <div class="sidebar">
+        <ul>
+          <li><a class="sdashbord" href="/dashboard"><span style="color: white;"><i class="fa-solid fa-user" style="color: #ffffff;"></i> Dashboard</span></a></li>
+          <li><a href="/orders"><i class="fa-solid fa-briefcase" style="color: #000000;"></i><span style="margin-left: 3px;">Orders</span></a></li>
+          <li><a href="/my-address"><i class="fa-solid fa-location-dot" style="color: #000000;"></i><span style="margin-left: 3px;">My Address</span></a></li>
+          <% if(user.isGoogleLogin === false){ %>
+          <li><a href="/change-password"><i class="fa-solid fa-key" style="color: #000000;"></i><span style="margin-left: 3px;">Change Password</span></a></li>
+          <% } %>
+          <li><a href="/wallet"><i class="fa-solid fa-wallet" style="color: #000000;"></i><span style="margin-left: 3px;">Wallet</span></a></li>
+          <li><a href="/logout"><i class="fa-solid fa-arrow-right-from-bracket" style="color: #000000;"></i><span style="margin-left: 3px;">Logout</span></a></li>
+        </ul>
+      </div>
+      <div class="content">
+        <div class="dash-box">
+          <p class="dashP"><%= user.userName %></p>
         </div>
-        <div class="content">
-          <div style="border: 1px solid black;background-color: rgba(209, 209, 209, 0.713);padding: 5px;border-radius: 5px;">
-          <p style=" font-family: Marmelad, serif; font-style: normal; "><%= user.userName%></p></div>
-          <div style="border: 1px solid black;padding: 2%; border-radius: 5px;"> 
-            <p><strong>User name:</strong><%= user.userName %></p>
-            <p><strong>Email:</strong> <%= user.email %></p>
-            <% if(user.mobileNumber){ %>
-                  <p><strong>Mobile Number:</strong> <%= user.mobileNumber %></p>
-                <% } %>
-            <p><strong>Created At:</strong> <%= user.createdAt %></p>
+        <div class="dashpbox">
+          <div class="dashpbox1">
+          <p><strong>User name:</strong> <%= user.userName %></p>
+          <p><strong>Email:</strong> <%= user.email %></p>
+          <% if (user.mobileNumber) { %>
+            <p><strong>Mobile Number:</strong> <%= user.mobileNumber %></p>
+          <% } %>
+          <p><strong>Created At:</strong> <%= user.createdAt %></p>
+
+          <button class="dasaddedit" id="edit-profile" onclick="editProfile(event)">Edit</button>
+          <br><br>
           </div>
+
+          <!-- Add 'onsubmit' directly to the form -->
+          <form style="display: none;" id="form" onsubmit="return detailsFormvalidation(event)">
+            <input type="text" id="userName" placeholder="Username" value="<%= user.userName %>">
+            <p id="userNameError" style="color: red; font-size: 14px; margin-top: 5px;" class="errormessagedash"></p>
+
+            <input type="text" id="email" placeholder="Email" value="<%= user.email %>">
+            <p id="emailError" style="color: red; font-size: 14px; margin-top: 5px;"  class="errormessagedash"></p>
+
+            <input type="text" id="mobileNumber" placeholder="Mobile Number" value="<%= user.mobileNumber %>">
+            <p id="mobileNumberError" style="color: red; font-size: 14px; margin-top: 5px;"  class="errormessagedash"></p>
+
+            <button type="submit" class="dasaddedit">Submit</button>
+          </form>
         </div>
+      </div>
     </div>
 
     <%- include("./layouts/footer.ejs") %>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Fix the script path -->
+    <script src="js/users/userdashboard.js"></script>
 
-</body>
+    
+  </body>
 </html>

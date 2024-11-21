@@ -7,6 +7,7 @@ const { sendOTP } = require('../utils/mailSender');
 const productModel = require('../models/productModel');
 const categoryModel = require('../models/categoryModel');
 const cartModel = require('../models/cartModel');
+const addressModel = require('../models/addressModel')
 
 
 
@@ -60,12 +61,11 @@ module.exports = {
     const { otp } = req.body;
     const { userName, email, password, mobileNumber, gender } = req.session.userData;
     try {
-      console.log('1')
-      console.log('2')
+     
       const otpData = await Otp.findOne({ email });
       console.log(otpData.otp);
       console.log(otp);
-      console.log('3')
+      
       if (!otpData) {
         console.log('4')
         return res.status(400).json({
@@ -181,12 +181,10 @@ module.exports = {
   },
 
 
-
-
   async loaddashboard(req, res) {
-    const email = req.session.userData.email;
+    const {email} = req.session.userData;
     try {
-      const user = await userModel.findOne({ email: email });
+      const user = await userModel.findOne({ email });
       res.render('userdashboard', { user });
     } catch (err) {
       console.error("Error loading dashboard:", err);
@@ -194,6 +192,50 @@ module.exports = {
     }
   },
 
+  async loadmyaddress(req, res) {
+    const {email} = req.session.userData;
+    try {
+      const user = await userModel.findOne({ email });
+      const address = await addressModel.find({ userId: user._id });
+      console.log(address)
+      res.render('myaddress', { user,address });
+    } catch (err) {
+      console.error("Error loading myaddress:", err);
+      res.status(500).send("Error loading my address");
+    }
+  },
+
+  async myAddAddress(req, res) {
+    const {houseNumber,street,city,landmark,district,state,country,pinCode} = req.body;
+    const {email}=req.session.userData
+  try{
+    const user = await userModel.findOne({email});
+    await addressModel.create({
+      userId:user._id,
+      houseNumber,
+      street,
+      city,
+      landmark,
+      district,
+      state,
+      country,
+      pinCode
+    });
+    return res.status(200).json({
+      type: null,
+      st: true,
+      msg:"Address added successfully"
+      }); 
+  
+  } catch (err) {
+      console.error("Error adding address:", err);
+      res.status(500).json({
+        type: "error",
+        st: false,
+        msg:"Error in adding address"
+      });
+  }
+  },
   loademailverify(req, res) {
     res.render('forgotpasswordemailverification');
   },
@@ -329,12 +371,16 @@ module.exports = {
 
 
   async loadcart(req, res) {
+    console.log('dggd')
     try {
-      const userId = req.session.userId;
+      const {email} = req.session.userData;
+      console.log(email)
+      const user = await userModel.findOne({email}).lean();
 
+      console.log(user)
 
-      const cart = await cartModel.findOne({ userId }).populate('items.productId');
-
+      const cart = await cartModel.findOne({ userId:user._id }).populate('items.productId');
+      console.log(cart)
       if (!cart) {
         return res.render('cart', { cart: { items: [], cartTotal: 0 } });
       }
@@ -348,29 +394,29 @@ module.exports = {
 
 
   async addToCart(req, res) {
-    console.log('dduhdhdjd')
     console.log('Add to cart endpoint hit');
     try {
       if (!req.session.logedIn) {
-        return res.status(401).send('User not authenticated');
+        return res.status(401).json({val:false,msg:'Please login first'});
       }
       const { email } = req.session.userData;
       const user = await userModel.findOne({ email });
       console.log(email)
-      const { productId, productSize, quantity } = req.body;
-      console.log(productId, productSize, quantity)
-      if (!productId || !productSize || !quantity) {
-        return res.status(400).send('All fields are required');
+      const { productId, productSize,color, quantity } = req.body;
+      console.log(productId, productSize,color, quantity)
+      if (!productId || !productSize || !color || !quantity) {
+        return res.status(400).json({val:false,msg:'All fields are required'});
       }
 
-      const parsedQuantity = parseInt(quantity, 10);
-      if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
-        return res.status(400).send('Invalid quantity');
-      }
+      const parsedQuantity = parseInt(quantity);
 
       const product = await productModel.findById(productId);
       if (!product) {
-        return res.status(404).send('Product not found');
+        return res.status(404).json({val:false,msg:'Product not found'});
+      }
+
+      if(parsedQuantity>product.stock){
+        return res.status(400).json({val:false,msg:'Quantity exceeds stock'});
       }
 
       let cart = await cartModel.findOne({ userId: user._id });
@@ -392,7 +438,7 @@ module.exports = {
             productId,
             quantity: parsedQuantity,
             price: product.price,
-            size,
+            size:productSize,
             color,
             total: productTotal,
           });
@@ -408,8 +454,8 @@ module.exports = {
               productId,
               quantity: parsedQuantity,
               price: product.price,
-              size: 'Z',
-              color: 'blue',
+              size: productSize,
+              color: color,
               total: productTotal,
             },
           ],
@@ -417,7 +463,7 @@ module.exports = {
         });
       }
 
-      res.status(200).redirect('/cart');
+      res.status(200).json({val:true,msg:'Added to cart'});
     } catch (error) {
       console.error('Error in addToCart:', error);
       res.status(500).send('An error occurred while adding to cart');

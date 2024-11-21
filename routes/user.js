@@ -13,6 +13,8 @@ router.post('/login', userController.loginUser);
 router.get('/home',noCache, userController.loadhome);
 router.get('/otp-verify', noCache ,userController.loadotp); 
 router.get('/dashboard', userController.loaddashboard)
+router.get('/my-address',userController.loadmyaddress)
+router.post('/my-address',userController.myAddAddress)
 router.get('/forgotpasswordemailverification',userController.loademailverify)
 router.post('/forgotpasswordemailverification',userController.emailverify)
 router.get('/forgotpassword',noCache,userController.loadforgotpassword)

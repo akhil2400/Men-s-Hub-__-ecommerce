@@ -67,8 +67,8 @@
                 <% } else { %>
                   <% cart.items.forEach((item, index) => { %>
                     <tr>
-                      <td class="product-thumbnail"><img src="<%= item.image %>" alt="<%= item.name %>" class="img-fluid"></td>
-                      <td class="product-name"><h2 class="h5 text-black"><%= item.name %></h2></td>
+                      <td class="product-thumbnail"><img src="/<%= item.productId.images[0] %>" alt="<%= item.name %>" class="img-fluid"></td>
+                      <td class="product-name"><h2 class="h5 text-black"><%= item.productId.name %></h2></td>
                       <td><%= item.price %></td>
                       <td><%= item.quantity %></td>
                       <td><%= (item.price * item.quantity).toFixed(2) %></td>
@@ -109,7 +109,7 @@
                   <span class="text-black">Subtotal</span>
                 </div>
                 <div class="col-md-6 text-right">
-                  <strong class="text-black" id="subtotal">$0.00</strong>
+                  <strong class="text-black" id="subtotal">&#8377;<%= cart.cartTotal%></strong>
                 </div>
               </div>
               <div class="row mb-5">
@@ -117,7 +117,7 @@
                   <span class="text-black">Total</span>
                 </div>
                 <div class="col-md-6 text-right">
-                  <strong class="text-black" id="total">$0.00</strong>
+                  <strong class="text-black" id="total">&#8377;<%= cart.cartTotal%></strong>
                 </div>
               </div>
 
