@@ -44,18 +44,41 @@ module.exports = {
 
   async loadusermanagement(req, res) {
     try {
-      const users = await userModel.find({});
-      console.log(users)
-      if (!users) {
-        return res.status(200).render('usermanagement', { msg: 'No users found' });
+      const page = parseInt(req.query.page) || 1; // Current page number
+      const limit = 10; // Number of users per page
+      const skip = (page - 1) * limit;
+  
+      // Count total users for pagination
+      const totalUsers = await userModel.countDocuments({});
+      const totalPages = Math.ceil(totalUsers / limit);
+  
+      // Fetch paginated users
+      const users = await userModel.find({})
+        .skip(skip)
+        .limit(limit).sort({ createdAt: -1 });
+  
+      console.log(users);
+  
+      if (!users || users.length === 0) {
+        return res.status(200).render('usermanagement', { 
+          msg: 'No users found', 
+          user: [], 
+          currentPage: page, 
+          totalPages: totalPages 
+        });
       }
-      return res.status(200).render('usermanagement', { user: users });
+  
+      return res.status(200).render('usermanagement', { 
+        user: users, 
+        currentPage: page, 
+        totalPages: totalPages 
+      });
     } catch (err) {
-      console.log(err)
+      console.log(err);
+      return res.status(500).render('usermanagement', { msg: 'Error loading users' });
     }
-    res.render('usermanagement.');
-
   },
+  
 
   async banuser(req, res) {
     console.log("23445---")

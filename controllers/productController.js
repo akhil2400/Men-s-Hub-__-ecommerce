@@ -8,27 +8,44 @@ module.exports = {
 
   //admin side
 
-async productsPageLoad(req, res) {
-  try {
-    const category = await categoryModel.find({});
-    const products = await productModel.find({});
-
-    return res.status(200).render("products", {
-      val: products.length > 0,
-      msg: products.length ? null : "No products found",
-      products,
-      category,
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(500).render("products", {
-      val: false,
-      msg: "Error loading products",
-      products: null,
-      category: null,
-    });
-  }
-},
+  async productsPageLoad(req, res) {
+    try {
+      const page = parseInt(req.query.page) || 1; 
+      const limit = 6; 
+      const skip = (page - 1) * limit;
+  
+      
+      const category = await categoryModel.find({});
+  
+      
+      const totalProducts = await productModel.countDocuments({});
+      const totalPages = Math.ceil(totalProducts / limit);
+  
+      
+      const products = await productModel.find({})
+        .skip(skip)
+        .limit(limit)
+        
+  
+      return res.status(200).render("products", {
+        val: products.length > 0,
+        msg: products.length ? null : "No products found",
+        products,
+        category,
+        currentPage: page,
+        totalPages: totalPages,
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).render("products", {
+        val: false,
+        msg: "Error loading products",
+        products: null,
+        category: null,
+      });
+    }
+  },
+  
 async productsAdd(req, res) {
   let {
     name,

@@ -12,6 +12,20 @@
     <link rel="stylesheet" href="/css/admin.css">
     <!-- End layout styles -->
     <!-- <link rel="shortcut icon" href="assets/images/favicon.png" /> -->
+
+    <style>
+      .pagination {
+  margin-top: 20px;
+}
+.pagination .page-item.active .page-link {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+.pagination .page-link {
+  color: #007bff;
+}
+
+    </style>
   </head>
   <body>
     <div class="container-scroller">
@@ -249,8 +263,34 @@
         </div>
         <!-- main-panel ends -->
       </div>
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          <% if (currentPage > 1) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+          <% } %>
+      
+          <% for (let i = 1; i <= totalPages; i++) { %>
+            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+              <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+            </li>
+          <% } %>
+      
+          <% if (currentPage < totalPages) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          <% } %>
+        </ul>
+      </nav>
       <!-- page-body-wrapper ends -->
-    </div>>
+    </div>
+    
     <!-- Custom js for this page -->
     <script src="/js/admin/usermanagement.js"></script>
     <!-- End custom js for this page -->
