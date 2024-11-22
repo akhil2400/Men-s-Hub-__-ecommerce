@@ -20,6 +20,8 @@
         <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
           <a class="sidebar-brand brand-logo" href="#">MEN'S HUB </a>
           <a class="sidebar-brand brand-logo-mini" href="#"><img src="/images/logo-mini.svg" alt="logo" /></a>
+          <a href="/home"><img style="width: 30px;height: 30px;" src="/images/img/home-logo/home2.png" alt="To home"></a>
+          
         </div>
         <ul class="nav">
           <li class="nav-item menu-items">
@@ -222,6 +224,7 @@
                     </thead>
                     <tbody>
                       <% user.forEach((value) => { %>
+                        <% if(value.role==='user'){ %>
                         <tr>
                           <td> <%= value.userName %> </td>
                           <td> <%= value.email %> </td>
@@ -231,6 +234,7 @@
                           <td>
                             <button data-id="<%= value.email  %>" class="badge badge-outline-warning btn-view">View</button></td>
                         </tr>
+                        <% } %>
                       <% }); %>
                     </tbody>
                   </table>

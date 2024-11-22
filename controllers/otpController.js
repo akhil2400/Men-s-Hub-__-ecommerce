@@ -22,11 +22,12 @@ module.exports = {
           createdAt: Date.now(),
           expiresAt: otpExpire
         });
-
+        req.session.logedIn = true
         return res.status(200).json({
           st: true,
           msg: "OTP sent successfully....",
         });
+       
       }else{
         const { userName, email, password, mobileNumber, gender } = req.body;
         const userExist = await User.findOne({ userName });

@@ -33,7 +33,7 @@ module.exports = {
   },
 
   async loadhome(req, res) {
-    console.log('shsh')
+    
     try {
 
       if (!req.session.userData || !req.session.userData.email) {
@@ -143,6 +143,10 @@ module.exports = {
           st: false,
           msg: 'Password not set for this account.',
         });
+      }
+
+      if(user.isDeleted){
+        return res.status(400).json({type:'ban',st:false,msg:'Your account has been banned'});
       }
 
       // Compare the provided password with the stored hashed password

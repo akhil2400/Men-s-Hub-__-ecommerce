@@ -52,6 +52,12 @@ if(valid){
           document.getElementById("emailusernameError").innerText = data.msg;
         } else if (data.type === "password") {
           document.getElementById("passwordError").innerText = data.msg;
+        }else if(data.type==='ban'){
+          Swal.fire({
+            title: "Sorry!",
+            text: data.msg,
+            icon: "error"
+          });
         }
       } else {
         console.log(data.msg);
