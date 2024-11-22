@@ -47,7 +47,7 @@ document.querySelector('.resendBtn').addEventListener('click', async () => {
         setTimeout(() => {
           document.querySelector('.otp-btn-text').textContent = "Verifiy-OTP";
         }, 3000);
-       startCountdown(59);
+      startCountdown(59);
       }
     } catch (error) {
       console.log(error);

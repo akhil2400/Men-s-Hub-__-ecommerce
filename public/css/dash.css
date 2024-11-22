@@ -85,6 +85,47 @@
   padding: 5px;
   margin-bottom: 5px;
 }
+.address-box{
+  border: 1px solid black;
+  padding:2%;
+  border-radius: 5px;
+  margin-bottom: 5px;
+
+}
 .add-address:hover{
-  background-color: rgb(83, 131, 83) ;
+  background-color: rgb(83, 131, 83);
+  
+}
+.edit-remove-div{
+  display: flex;  
+  width: 15%;
+  justify-content: space-between;
+  border: none;
+}
+
+.edit-address{
+  background-color: rgb(50, 109, 50);
+  border: 1px solid black;
+  width: 76px;
+  border-radius: 5px;
+  color:white ;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+.edit-address:hover{
+  background-color: rgb(83, 131, 83);
+  
+}
+.remove-address{
+  background-color: rgb(184, 51, 51);
+  border: 1px solid black;
+  width: 76px;
+  border-radius: 5px;
+  color:white ;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+.remove-address:hover{
+  background-color: rgb(186, 65, 65);
+  
 }

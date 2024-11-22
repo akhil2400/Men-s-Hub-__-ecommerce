@@ -47,7 +47,7 @@
         <p style="color: #000000; font-weight: bold;">Address</p>
         </div>
         <div class="dashpbox">
-          <button class="add-address" onclick="addressAddForm(event)">Add</button>
+          <button class="add-address" id="addAddress" onclick="addressAddForm(event)">Add New</button>
           <br>
           <form id="addressForm" style="display: none;" onsubmit="addressFormValidation(event)">
           <input type="text" name="" id="houseNumber" placeholder="House Number">
@@ -69,14 +69,21 @@
           <button class="add-address">Create</button>
         </form>
         <% address.forEach(data=>{ %>
-          <p>House Number: 8382</p>
-          <p>Street: ktr</p>
-          <p>Landmark: kirfra techno park</p>
-          <p>City: Abdu Rahiman Nagar</p>
-          <p>District: malappuram</p>
-          <p>State: kerala</p>
-          <p>Country: india</p>
-          <p>Pin Code:676305</p>
+          <div class="address-box">
+          <p>House Number: <%= data.houseNumber %></p>
+          <p>Street: <%= data.street %></p>
+          <p>Landmark: <%= data.landmark %></p>
+          <p>City: <%= data.city %></p>
+          <p>District: <%= data.district %></p>
+          <p>State: <%= data.state %></p>
+          <p>Country: <%= data.country %></p>
+          <p>Pin Code: <%= data.pinCode %></p>
+          <div>
+            <button class="edit-address">EDIT</button>
+            <button class="remove-address">REMOVE</button>
+          </div>
+         
+        </div>
         <% }) %>
         </div>
       </div>

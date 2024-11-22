@@ -1,6 +1,7 @@
 function addressAddForm(e) {
   e.preventDefault();
   document.querySelector("#addressForm").style.display = "block";
+  document.querySelector("#addAddress").style.display = "none"
 
 }
 
