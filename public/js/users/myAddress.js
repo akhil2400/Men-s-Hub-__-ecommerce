@@ -5,6 +5,7 @@ function addressAddForm(e) {
 
 }
 
+
 function addressFormValidation(e) {
   e.preventDefault();
   console.log("Validation triggered");
@@ -183,3 +184,93 @@ function addressFormValidation(e) {
   }
   return valid;
 }
+
+  function addressEditForm(e) {
+    e.preventDefault();
+    document.querySelector("#editaddressForm").style.display = "block";
+    document.querySelector(".address-boxes").style.display = "none";
+    document.querySelector(".edit-address").style.display = "none";
+    document.querySelector(".remove-address").style.display = "none";
+  }
+
+  function editaddressFormValidation(e) {
+    e.preventDefault();
+    console.log("Validation triggered");
+  
+    // Clear previous error messages
+    document.getElementById("EhouseNumberError").innerText = "";
+    document.getElementById("EstreetError").innerText = "";
+    document.getElementById("EcityError").innerText = "";
+    document.getElementById("ElandmarkError").innerText = "";
+    document.getElementById("EdistrictError").innerText = "";
+    document.getElementById("EstateError").innerText = "";
+    document.getElementById("ECountryError").innerText = "";
+    document.getElementById("EpinCodeError").innerText = "";
+  
+    // Get input values
+    const EhouseNumber = document.getElementById("EhouseNumber").value.trim();
+    const Estreet = document.getElementById("Estreet").value.trim();
+    const Ecity = document.getElementById("Ecity").value.trim();
+    const Elandmark = document.getElementById("Elandmark").value.trim();
+    const Edistrict = document.getElementById("Edistrict").value.trim();
+    const Estate = document.getElementById("Estate").value.trim();
+    const Ecountry = document.getElementById("ECountry").value.trim();
+    const EpinCode = document.getElementById("EpinCode").value.trim();
+  
+    let valid = true;
+
+    // Validation patterns
+    const EhouseNumberPattern = /^[a-zA-Z0-9\s]+$/; // Letters, numbers, and spaces
+    const EstreetPattern = /^[a-zA-Z\s]+$/; // Letters and spaces
+    const EcityPattern = /^[a-zA-Z\s]+$/; // Letters and spaces
+    const ElandmarkPattern = /^[a-zA-Z0-9\s]+$/; // Letters, numbers, and spaces
+    const EdistrictPattern = /^[a-zA-Z\s]+$/; // Letters and spaces
+    const EstatePattern = /^[a-zA-Z\s]+$/; // Letters and spaces
+    const EcountryPattern = /^[a-zA-Z\s]+$/; // Letters and spaces
+    const EpinCodePattern = /^\d{6}$/; // Exactly 6 digits
+  
+    // Check for empty fields
+    if (!EhouseNumber || !Estreet || !Ecity || !Elandmark || !Edistrict || !Estate || !Ecountry || !EpinCode) {
+      swal.fire({
+        title: "Error",
+        text: "All fields are required",
+        icon: "error",
+        timer: 3000,
+        showConfirmButton: false,
+      });
+      valid = false;
+    }
+    if (!EhouseNumberPattern.test(EhouseNumber)) {
+      document.getElementById("EhouseNumberError").innerText = "Invalid house number. Only letters, numbers, and spaces are allowed.";
+      valid = false;
+    }
+    if (!EstreetPattern.test(Estreet)) {
+      document.getElementById("EstreetError").innerText = "Invalid street. Only letters and spaces are allowed.";
+      valid = false;
+    }
+    if (!EcityPattern.test(Ecity)) {
+      document.getElementById("EcityError").innerText = "Invalid city. Only letters and spaces are allowed.";
+      valid = false;
+    }
+    if (!ElandmarkPattern.test(Elandmark)) {
+      document.getElementById("ElandmarkError").innerText = "Invalid landmark. Only letters, numbers, and spaces are allowed.";
+      valid = false;
+    }
+    if (!EdistrictPattern.test(Edistrict)) {
+      document.getElementById("EdistrictError").innerText = "Invalid district. Only letters and spaces are allowed.";
+      valid = false;
+      }
+    if (!EstatePattern.test(Estate)) {
+      document.getElementById("EstateError").innerText = "Invalid state. Only letters and spaces are allowed.";
+      valid = false;
+    }
+    if (!EcountryPattern.test(Ecountry)) {
+      document.getElementById("ECountryError").innerText = "Invalid country. Only letters and spaces are allowed.";
+      valid = false;
+    }
+    if (!EpinCodePattern.test(EpinCode)) {
+      document.getElementById("EpinCodeError").innerText = "Invalid pin code. Only 6 digits are allowed.";
+      valid = false;
+    }
+    return valid;
+  }

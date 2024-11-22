@@ -69,7 +69,8 @@
           <button class="add-address">Create</button>
         </form>
         <% address.forEach(data=>{ %>
-          <div class="address-box">
+          <div class="address-box" >
+            <div class="address-boxes">
           <p>House Number: <%= data.houseNumber %></p>
           <p>Street: <%= data.street %></p>
           <p>Landmark: <%= data.landmark %></p>
@@ -78,11 +79,31 @@
           <p>State: <%= data.state %></p>
           <p>Country: <%= data.country %></p>
           <p>Pin Code: <%= data.pinCode %></p>
+        </div>
           <div>
-            <button class="edit-address">EDIT</button>
+            <button class="edit-address" onclick="addressEditForm(event)">EDIT</button>
             <button class="remove-address">REMOVE</button>
           </div>
-         
+        
+          <form id="editaddressForm" style="display: none;" onsubmit="editaddressFormValidation(event)">
+            <input type="text" name="" id="EhouseNumber" placeholder="House Number" value="<%= data.houseNumber %>">
+            <p id="EhouseNumberError" style="color: red; font-size: 14px; margin-top: 5px;" ></p>
+            <input type="text" name="" id="Estreet" placeholder="Street" value="<%= data.street %>">
+            <p id="EstreetError" style="color: red; font-size: 14px; margin-top: 5px;" ></p>
+            <input type="text" name="" id="Ecity" placeholder="City" value="<%= data.city %>"><br>
+            <p id="EcityError" style="color: red; font-size: 14px; margin-top: 5px;" ></p>
+            <input type="text" name="" id="Elandmark" placeholder="Landmark" value="<%= data.landmark %>">
+            <p id="ElandmarkError" style="color: red; font-size: 14px; margin-top: 5px;" ></p>
+            <input type="text" name="" id="Edistrict" placeholder="District" value="<%= data.district %>">
+            <p id="EdistrictError" style="color: red; font-size: 14px; margin-top: 5px;" ></p>
+            <input type="text" name="" id="Estate" placeholder="State" value="<%= data.state %>">
+            <p id="EstateError" style="color: red; font-size: 14px; margin-top: 5px;" ></p>
+            <input type="text" name="" id="ECountry" placeholder="Country" value="<%= data.country %>">
+            <p id="ECountryError" style="color: red; font-size: 14px; margin-top: 5px;" ></p>
+            <input type="text" name="" id="EpinCode" placeholder="Pin Code" value="<%= data.pinCode %>">
+            <p id="EpinCodeError" style="color: red; font-size: 14px; margin-top: 5px;" ></p>
+            <button class="edit-address">Create</button>
+          </form>
         </div>
         <% }) %>
         </div>

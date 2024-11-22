@@ -61,7 +61,7 @@ module.exports = {
     const { otp } = req.body;
     const { userName, email, password, mobileNumber, gender } = req.session.userData;
     try {
-     
+    
       const otpData = await Otp.findOne({ email });
       console.log(otpData.otp);
       console.log(otp);

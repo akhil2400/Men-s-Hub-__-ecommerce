@@ -255,7 +255,12 @@ async loadupdateProducts(req, res) {
         const products = await productModel.find({ category: cat._id, isDeleted: false  });
         return res.status(200).render("shop", { products });
       } else {
-        const product = await productModel.find({ isDeleted: false });
+        console.log("hellsdfs")
+      const listedCategories = await categoryModel.find({ isDeleted: false  });
+      console.log(listedCategories)
+      const listed = listedCategories.map((category) => category._id);
+      console.log(listed)
+        const product = await productModel.find({  isDeleted: false ,category : { $in: listed } });
         return res.status(200).render("shop", { products: product });
       }
     } catch (err) {
