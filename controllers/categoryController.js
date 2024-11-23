@@ -1,7 +1,7 @@
 const userModel = require('../models/userModel');
 const productModel = require('../models/productModel');
 const categoryModel = require('../models/categoryModel');
-
+const path = require('path');
 
 module.exports = {
   // admin side
@@ -26,7 +26,7 @@ module.exports = {
     }
   },
 
- 
+
 
   async categoryAdd(req, res) {
     const { categoryName } = req.body;

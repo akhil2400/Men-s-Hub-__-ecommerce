@@ -1,5 +1,6 @@
 // Start the countdown when the page loads
-startCountdown(59);
+startCountdown(5);
+
 
 const otpText = document.querySelector('.otpText'); // Get the span element
 
@@ -27,6 +28,9 @@ function otpExpired() {
 }
 
 document.querySelector('.resendBtn').addEventListener('click', async () => {
+    document.querySelector('.resendTimer').style.display = 'none';
+    document.querySelector('.resendBtn').style.display = 'none';
+    document.querySelector('.loader1').style.display = 'block';
   async function fetchData() {
     try {
       const response = await fetch('/register/request-otp', {
@@ -35,19 +39,32 @@ document.querySelector('.resendBtn').addEventListener('click', async () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
+          otp: otp,
           isResend: true
         })
-        
+
       })
       const data = await response.json();
       if (data.st === false) {
         document.getElementById("otpError").innerText = data.msg;
       } else {
-        document.querySelector('.otp-btn-text').textContent = data.msg;
-        setTimeout(() => {
+        swal.fire({
+          title: 'OTP Sent',
+          text: data.msg,
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false ,
+        })
+        // alert(data.msg);
+        // document.querySelector('.otp-btn-text').textContent = data.msg;
+        
           document.querySelector('.otp-btn-text').textContent = "Verifiy-OTP";
-        }, 3000);
-      startCountdown(59);
+        
+        console.log("countdown started");
+        document.querySelector('.resendTimer').style.display = 'block';
+        document.querySelector('.resendBtn').style.display = 'none';
+        document.querySelector('.loader1').style.display = 'none';
+        startCountdown(59);
       }
     } catch (error) {
       console.log(error);
@@ -70,7 +87,8 @@ document.querySelector('.resendBtn').addEventListener('click', async () => {
 document.getElementById('Verifiy-OTP-btn').addEventListener('click', validateOTP);
 function validateOTP(e) {
   e.preventDefault();
-
+  document.querySelector(".otp-btn-text").style.display = "none";
+  document.querySelector(".loader").style.display = "block";
   // to clear all previous error messages
   document.getElementById("otpError").innerText = "";
 
@@ -82,10 +100,14 @@ function validateOTP(e) {
 
   if (!otpPattern.test(otp)) {
     document.getElementById("otpError").innerText = "Otp must be 6 digits long.";
+    document.querySelector(".otp-btn-text").style.display = "block";
+    document.querySelector(".loader").style.display = "none";
     valid = false;
   }
 
   if (valid) {
+    document.querySelector(".otp-btn-text").style.display = "block";
+    document.querySelector(".loader").style.display = "none";
     async function fetchData() {
       try {
         const response = await fetch('/register', {
@@ -94,14 +116,22 @@ function validateOTP(e) {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            otp: otp
+            otp: otp,
+            isResand: false
           })
         })
         const data = await response.json();
         if (data.st === false) {
+          document.querySelector(".otp-btn-text").style.display = "block";
+          document.querySelector(".loader").style.display = "none";
           document.getElementById("otpError").innerText = data.msg;
         } else {
-          window.location.href = "/home";
+          document.querySelector(".otp-btn-text").style.display = "none";
+          document.querySelector(".loader").style.display = "block";
+          console.log("iam here otp")
+          setTimeout(() => {
+            window.location.href = "/home";
+          },3000)
         }
       } catch (error) {
         console.log(error);

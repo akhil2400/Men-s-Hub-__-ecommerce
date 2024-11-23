@@ -1432,6 +1432,9 @@ margin-top:9px
   color:#406350 ;
 }
 .Verifiy-OTP-btn{
+  display: flex;
+  justify-content: center;
+  width: 120px;
   background-color: rgb(59, 93, 80);
   color: white;
   padding: 10px 10px 10px 10px;
@@ -1725,6 +1728,46 @@ margin-top:9px
 .nav-link:hover {
   border-bottom: 3px solid  rgb(255, 222, 5); /* Optional: underline on hover */
 }
+
+.loader {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: inline-block;
+  border-top: 3px solid #FFF;
+  border-right: 3px solid transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+} 
+.loader1 {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  display: inline-block;
+  border-top: 3px solid #3f803d;
+  border-right: 3px solid transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 
 
 

@@ -1,7 +1,7 @@
 
 
 function showAlert(message, type = 'error') {
-    Swal.fire({
+    swal.fire({
         icon: type,
         title: type === 'error' ? 'Error!' : 'Success!',
         text: message,
@@ -16,9 +16,13 @@ function showAlert(message, type = 'error') {
 }
 
 document.getElementById("registerBtn").addEventListener("click", regFormvalidation);
+
 function regFormvalidation(e) {
     // Prevent default form submission
     e.preventDefault();
+
+    document.querySelector(".getotp").style.display = "none";
+    document.querySelector(".loader").style.display = "block";
 
     // Clear previous error messages
     document.getElementById("userNameError").innerText = "";
@@ -43,6 +47,8 @@ function regFormvalidation(e) {
     // Check if any field is empty
     if (!userName || !email || !password || !confirmPassword || !mobileNumber || !gender1 || !gender2 || !gender3) {
         showAlert("All fields are required!", 'error');
+        document.querySelector(".getotp").style.display = "block";
+        document.querySelector(".loader").style.display = "none";
         return;
     }
 
@@ -57,32 +63,42 @@ function regFormvalidation(e) {
     // userName validation
     if (!userNamePattern.test(userName)) {
         document.getElementById("userNameError").innerText = "The username must start with a letter, can contain letters, numbers, and underscores, and must be 3 to 16 characters long.";
+        document.querySelector(".getotp").style.display = "block";
+        document.querySelector(".loader").style.display = "none";
         valid = false;
     }
     // Email validation
     if (!emailPattern.test(email)) {
         document.getElementById("emailError").innerText = "Invalid email format.";
+        document.querySelector(".getotp").style.display = "block";
+        document.querySelector(".loader").style.display = "none";
         valid = false;
     }
 
     // Password validation
     if (!passwordPattern.test(password)) {
         document.getElementById("passwordError").innerText = "Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character.";
+        document.querySelector(".getotp").style.display = "block";
+        document.querySelector(".loader").style.display = "none";
         valid = false;
     }
 
     // Confirm Password validation
     if (password !== confirmPassword) {
         document.getElementById("confirmPasswordError").innerText = "Passwords do not match.";
+        document.querySelector(".getotp").style.display = "block";
+        document.querySelector(".loader").style.display = "none";
         valid = false;
     }
 
     // Mobile Number validation
     if (!mobilePattern.test(mobileNumber)) {
         document.getElementById("mobileNumberError").innerText = "Mobile number should contain exactly 10 digits.";
+        document.querySelector(".getotp").style.display = "block";
+        document.querySelector(".loader").style.display = "none";
         valid = false;
     }
-     
+
 
     let gendertest = "";
 
@@ -90,7 +106,7 @@ function regFormvalidation(e) {
         gendertest = gender1;
     } else if (gender2) {
         gendertest = gender2;
-    } else if (gender3) {   
+    } else if (gender3) {
         gendertest = gender3;
     } else {
         document.getElementById("genderError").innerText = "Please select a gender.";
@@ -112,16 +128,20 @@ function regFormvalidation(e) {
                         gender: gendertest,
                         isResend: false,
 
-                    }) 
+                    })
                 })
                 const data = await response.json();
                 if (data.st === false) {
+                    document.querySelector(".getotp").style.display = "block";
+                    document.querySelector(".loader").style.display = "none";
                     if (data.type === "userName") {
                         document.getElementById("userNameError").innerText = data.msg;
                     } else if (data.type === "email") {
                         document.getElementById("emailError").innerText = data.msg;
-                    }      
-                }else{
+                    }
+                } else {
+                    document.querySelector(".getotp").style.display = "none";
+                    document.querySelector(".loader").style.display = "block";
                     console.log(data.msg);
                     window.location.href = "/otp-verify";
                 }
@@ -138,6 +158,8 @@ function regFormvalidation(e) {
 
     return valid;
 }
+
+
 
 
 

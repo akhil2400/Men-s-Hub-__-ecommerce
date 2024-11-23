@@ -27,7 +27,7 @@ module.exports = {
           st: true,
           msg: "OTP sent successfully....",
         });
-       
+      
       }else{
         const { userName, email, password, mobileNumber, gender } = req.body;
         const userExist = await User.findOne({ userName });

@@ -39,12 +39,18 @@
                 <input  name="otp" type="text" id="otp" class="form-control form-control-lg" />
               </div>
               <p id="otpError" class="errormessage"></p>
-              <div style="display: flex;">
-                <p  class="small mb-5 pb-lg-2 text-muted resendBtn" style=" display: none;" >Resend OTP</p>
+              <div style="display: flex;position: relative;">
+                <p  class="small mb-5 pb-lg-2 text-muted resendBtn" style=" display: none;" >
+                  <span class="resendotp">Resend OTP</span>
+                </p>
                 <p  class="small mb-5 pb-lg-2 text-muted resendTimer" >Resend OTP in : <span class="otpText">00:59</span></p>
               </div>
+              <span style="display: none;"  class="loader1"></span>
               <div class="pt-1 mb-4" style="display: flex; justify-content: center;">
-                <button id="Verifiy-OTP-btn"  data-mdb-button-init data-mdb-ripple-init class="Verifiy-OTP-btn" ><span class="otp-btn-text">Verifiy-OTP</span></button>
+                <button id="Verifiy-OTP-btn"  data-mdb-button-init data-mdb-ripple-init class="Verifiy-OTP-btn" >
+                  <span class="otp-btn-text">Verify-OTP</span>
+                  <span style="display:none;" class="loader"></span>
+                </button>
               </div>
             </form>
           </div>
@@ -52,7 +58,7 @@
     </div>
   </section>
   <%- include("./layouts/footer.ejs") %>
-
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="js/tiny-slider.js"></script>
   <script src="js/custom.js"></script>

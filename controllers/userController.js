@@ -59,9 +59,11 @@ module.exports = {
 
   async registerUser(req, res) {
     const { otp } = req.body;
+    console.log("otp1:",otp)
     const { userName, email, password, mobileNumber, gender } = req.session.userData;
+    console.log(userName, email, password, mobileNumber, gender)
     try {
-    
+       console.log('1')
       const otpData = await Otp.findOne({ email });
       console.log(otpData.otp);
       console.log(otp);

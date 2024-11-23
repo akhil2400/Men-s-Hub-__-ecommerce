@@ -77,7 +77,10 @@
             <label><input type="radio" id="gender3" name="gender" value="Other"> Other</label>
         </div>
         <p id="genderError" class="errormessage"></p>
-        <button id="registerBtn" class="register-btn">GET OTP</button>
+        <button id="registerBtn" class="register-btn" style="display: flex;justify-content: center;align-items: center;">
+          <span class="getotp">GET OTP</span>
+          <span style="display: none;" class="loader"></span>
+        </button>
         <p class="login-link">Already a Customer? <a href="/login">Login</a></p>
     </form>
     
