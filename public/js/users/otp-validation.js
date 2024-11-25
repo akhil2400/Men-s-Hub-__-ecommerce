@@ -44,6 +44,7 @@ document.querySelector('.resendBtn').addEventListener('click', async () => {
         })
 
       })
+      console.log(response)
       const data = await response.json();
       if (data.st === false) {
         document.getElementById("otpError").innerText = data.msg;
@@ -78,14 +79,10 @@ document.querySelector('.resendBtn').addEventListener('click', async () => {
 
 
 
-
-
-
-
-
-
 document.getElementById('Verifiy-OTP-btn').addEventListener('click', validateOTP);
+
 function validateOTP(e) {
+  console.log('thus ')
   e.preventDefault();
   document.querySelector(".otp-btn-text").style.display = "none";
   document.querySelector(".loader").style.display = "block";
@@ -109,6 +106,8 @@ function validateOTP(e) {
     document.querySelector(".otp-btn-text").style.display = "block";
     document.querySelector(".loader").style.display = "none";
     async function fetchData() {
+      console.log("iam here otp")
+      console.log(otp)
       try {
         const response = await fetch('/register', {
           method: 'POST',
@@ -117,10 +116,17 @@ function validateOTP(e) {
           },
           body: JSON.stringify({
             otp: otp,
-            isResand: false
+            isResend: false
           })
-        })
+        });
+        console.log(response)
+        // if (!response.ok) {
+        //   const errorText = await response.text(); // Read as text to avoid JSON parse error
+        //   console.error('Server Error:', errorText);
+        //   throw new Error('Failed to verify OTP. Check server logs for details.');
+        // }
         const data = await response.json();
+        console.log(`error found : ${data}`)
         if (data.st === false) {
           document.querySelector(".otp-btn-text").style.display = "block";
           document.querySelector(".loader").style.display = "none";
@@ -129,9 +135,10 @@ function validateOTP(e) {
           document.querySelector(".otp-btn-text").style.display = "none";
           document.querySelector(".loader").style.display = "block";
           console.log("iam here otp")
-          setTimeout(() => {
-            window.location.href = "/home";
-          },3000)
+            setTimeout(() => {
+              window.location.href = "/home";
+            },2000)
+          
         }
       } catch (error) {
         console.log(error);

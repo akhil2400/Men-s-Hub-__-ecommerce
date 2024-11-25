@@ -28,8 +28,7 @@ router.get('/about',userController.loadabout)
 router.get('/contact',userController.loadcontact)
 router.get('/cart',userController.loadcart)
 router.post('/add-to-cart',userController.addToCart)
-router.post('/cart/update', userController.updateCartItem);
-router.post('/cart/remove', userController.removeCartItem);
+router.delete('/cart/remove', userController.removeCartItem);
 
 
 

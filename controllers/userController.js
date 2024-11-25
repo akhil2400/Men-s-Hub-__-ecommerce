@@ -8,6 +8,7 @@ const productModel = require('../models/productModel');
 const categoryModel = require('../models/categoryModel');
 const cartModel = require('../models/cartModel');
 const addressModel = require('../models/addressModel')
+const mongoose = require('mongoose');
 
 
 
@@ -58,12 +59,20 @@ module.exports = {
 
 
   async registerUser(req, res) {
+    console.log('Kamira wovo ');
     const { otp } = req.body;
     console.log("otp1:",otp)
+    if(!req.session.userData){
+      console.log('User data cleared ')
+      return res.status(400).json({
+        st: false,
+        msg: 'sessiron expired',
+      })
+    }
     const { userName, email, password, mobileNumber, gender } = req.session.userData;
     console.log(userName, email, password, mobileNumber, gender)
     try {
-       console.log('1')
+      console.log('1')
       const otpData = await Otp.findOne({ email });
       console.log(otpData.otp);
       console.log(otp);
@@ -332,33 +341,32 @@ module.exports = {
     res.render('ban');
   },
 
-  updateCartItem(req, res) {
-    const { index, quantity } = req.body;
 
-    if (req.session.cart && req.session.cart[index]) {
-      const item = req.session.cart[index];
-
-      if (quantity > 0) {
-        item.quantity = quantity; // Update the quantity
-        res.status(200).json({ success: true });
-      } else {
-        res.status(400).json({ success: false, message: 'Invalid quantity' });
+  
+  async removeCartItem(req, res) {
+    try {
+      const { cartId } = req.body;
+      console.log(cartId)
+      if(!cartId){
+        res.status(400).json({
+          st: false,
+          msg: 'Invalid cartId',
+        })
       }
-    } else {
-      res.status(404).json({ success: false, message: 'Item not found in cart' });
+      await cartModel.updateOne(
+        { 'items._id': new mongoose.Types.ObjectId(cartId) },
+        { $pull: { items: { _id: new mongoose.Types.ObjectId(cartId) } } }
+      );
+      res.status(200).json({st:true});
+    } catch (error) {
+      console.error('Error removing item from cart:', error);
+      res.status(500).json({
+        success: false,
+        message: 'An error occurred while removing the item',
+      });
     }
   },
-  removeCartItem(req, res) {
-    const { index } = req.body;
-
-    if (req.session.cart && req.session.cart[index]) {
-      req.session.cart.splice(index, 1); // Remove the item from cart
-      res.status(200).json({ success: true });
-    } else {
-      res.status(404).json({ success: false, message: 'Item not found in cart' });
-    }
-  },
-
+  
   loadabout(req, res) {
     res.render('about');
   },
@@ -469,6 +477,7 @@ module.exports = {
         });
       }
 
+      console.log('kuku mama suuii');
       res.status(200).json({val:true,msg:'Added to cart'});
     } catch (error) {
       console.error('Error in addToCart:', error);

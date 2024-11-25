@@ -16,86 +16,126 @@
 
     <!-- Styles -->
     <style>
-      html,
-      body {
-        background-color: #ffffff;
-        color: #000000;
-        font-family: "Nunito", sans-serif;
-        font-weight: 200;
-        height: 100vh;
-        margin: 0;
-      }
+      * {
+  box-sizing: border-box;
+}
 
-      .full-height {
-        height: 100vh;
-      }
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  background-color: #f0f0f0;
+}
 
-      .flex-center {
-        align-items: center;
-        display: flex;
-        justify-content: center;
-      }
+.quantity {
+  display: flex;
+  border: 2px solid #070707;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-      .position-ref {
-        position: relative;
-      }
+.quantity button {
+  background-color: #000000;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  width: 30px;
+  height: auto;
+  text-align: center;
+  transition: background-color 0.2s;
+}
 
-      .top-right {
-        position: absolute;
-        right: 10px;
-        top: 18px;
-      }
+.quantity button:hover {
+  background-color: #2980b9;
+}
 
-      .content {
-        text-align: center;
-      }
+.input-box {
+  width: 40px;
+  text-align: center;
+  border: none;
+  padding: 8px 10px;
+  font-size: 16px;
+  outline: none;
+}
 
-      .title {
-        font-size: 84px;
-        font-weight: bold;
-        color: rgb(255, 0, 0);
-      }
+/* Hide the number input spin buttons */
+.input-box::-webkit-inner-spin-button,
+.input-box::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
-      .links > a {
-        color: #636b6f;
-        padding: 0 25px;
-        font-size: 12px;
-        font-weight: 600;
-        letter-spacing: 0.1rem;
-        text-decoration: none;
-        text-transform: uppercase;
-      }
+.input-box[type="number"] {
+  -moz-appearance: textfield;
+}
 
-      .m-b-md {
-        margin-bottom: 30px;
-      }
-
-      .loader {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        display: inline-block;
-        border-top: 3px solid #315f23;
-        border-right: 3px solid transparent;
-        box-sizing: border-box;
-        animation: rotation 1s linear infinite;
-      }
-
-      @keyframes rotation {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
     </style>
   </head>
   <body>
-    <div class="flex-center position-ref full-height">
-      <div class="content">
-        <span class="loader"></span>
-      </div>
+    <div class="quantity">
+      <button class="minus" aria-label="Decrease">&minus;</button>
+      <input type="number" class="input-box" value="1" min="1" max="10">
+      <button class="plus" aria-label="Increase">&plus;</button>
     </div>
+
+    <script>
+    (function () {
+      const quantityContainer = document.querySelector(".quantity");
+      const minusBtn = quantityContainer.querySelector(".minus");
+      const plusBtn = quantityContainer.querySelector(".plus");
+      const inputBox = quantityContainer.querySelector(".input-box");
+    
+      updateButtonStates();
+    
+      quantityContainer.addEventListener("click", handleButtonClick);
+      inputBox.addEventListener("input", handleQuantityChange);
+    
+      function updateButtonStates() {
+        const value = parseInt(inputBox.value);
+        minusBtn.disabled = value <= 1;
+        plusBtn.disabled = value >= parseInt(inputBox.max);
+      }
+    
+      function handleButtonClick(event) {
+        if (event.target.classList.contains("minus")) {
+          decreaseValue();
+        } else if (event.target.classList.contains("plus")) {
+          increaseValue();
+        }
+      }
+    
+      function decreaseValue() {
+        let value = parseInt(inputBox.value);
+        value = isNaN(value) ? 1 : Math.max(value - 1, 1);
+        inputBox.value = value;
+        updateButtonStates();
+        handleQuantityChange();
+      }
+    
+      function increaseValue() {
+        let value = parseInt(inputBox.value);
+        value = isNaN(value) ? 1 : Math.min(value + 1, parseInt(inputBox.max));
+        inputBox.value = value;
+        updateButtonStates();
+        handleQuantityChange();
+      }
+    
+      function handleQuantityChange() {
+        let value = parseInt(inputBox.value);
+        value = isNaN(value) ? 1 : value;
+    
+        // Execute your code here based on the updated quantity value
+        console.log("Quantity changed:", value);
+      }
+    })();
+    
+    </script>
+
+    
   </body>
 </html>

@@ -45,7 +45,7 @@
   <div class="untree_co-section before-footer-section">
     <div class="container">
       <div class="row mb-5">
-        <form class="col-md-12" method="post">
+        <div class="col-md-12" >
           <div class="site-blocks-table">
             <table class="table">
               <thead>
@@ -67,22 +67,34 @@
                 <% } else { %>
                   <% cart.items.forEach((item, index) => { %>
                     <tr>
-                      <td class="product-thumbnail"><img src="/<%= item.productId.images[0] %>" alt="<%= item.name %>" class="img-fluid"></td>
-                      <td class="product-name"><h2 class="h5 text-black"><%= item.productId.name %></h2></td>
+                      <td class="product-thumbnail">
+                        <img src="/<%= item.productId.images[0] %>" alt="<%= item.name %>" class="img-fluid">
+                      </td>
+                      <td class="product-name">
+                        <h2 class="h5 text-black"><%= item.productId.name %></h2>
+                      </td>
                       <td><%= item.price %></td>
                       <td><%= item.quantity %></td>
                       <td><%= (item.price * item.quantity).toFixed(2) %></td>
-                      <td><button class="btn btn-black btn-sm remove" data-index="<%= index %>">X</button></td>
+                      <td>
+                          <button
+                            class="btn btn-black btn-sm remove"
+                            onclick="confirmRemoveCartItem(event)"
+                          >
+                            <i data-id="<%= item._id %>" class="fa-solid fa-trash"></i>
+                          </button>
+                      </td>
                     </tr>
                   <% }); %>
                 <% } %>
               </tbody>
               
+              
                 
               
             </table>
           </div>
-        </form>
+        </div>
       </div>
 
       <div class="row">
@@ -134,7 +146,7 @@
   </div>
 
   <%- include("./layouts/footer.ejs") %>
-
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="js/tiny-slider.js"></script>
   <script src="js/custom.js"></script>

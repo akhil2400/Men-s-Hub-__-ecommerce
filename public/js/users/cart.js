@@ -124,31 +124,69 @@ async function updateQuantity(e) {
 }
 
 // Remove an item from the cart
-async function removeItem(e) {
-  const index = e.target.dataset.index;
+// async function removeItem(e) {
+//   const index = e.target.dataset.index;
 
-  try {
-    const response = await fetch('/cart/remove', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ index })
-    });
-    const result = await response.json();
-    if (result.success) {
-      loadCart();
-    } else {
-      alert(result.message);
-    }
-  } catch (error) {
-    console.error('Error removing item:', error);
-  }
-}
+//   try {
+//     const response = await fetch('/cart/remove', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({ index })
+//     });
+//     const result = await response.json();
+//     if (result.success) {
+//       loadCart();
+//     } else {
+//       alert(result.message);
+//     }
+//   } catch (error) {
+//     console.error('Error removing item:', error);
+//   }
+// }
 
 // Update cart view after changes
-function updateCart() {
-  loadCart();
-}
+// function updateCart() {
+//   loadCart();
+// }
 
+async function confirmRemoveCartItem(e) {
+  const cartId = e.target.getAttribute('data-id');
+  console.log(cartId)
+  const result = await swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you want to remove this item from your cart?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, remove it!',
+  });
+
+  if (result.isConfirmed) {
+    try {
+      const response = await fetch('/cart/remove', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ cartId }),
+      });
+
+      const data = await response.json();
+      console.log('Response from server:', data); // Debug response
+
+      if (data.st) {
+        await swal.fire('Removed!', 'The item has been removed from your cart.', 'success');
+        location.reload(); // Reload the page to reflect changes
+      } else {
+        await swal.fire('Error!', data.message, 'error');
+      }
+    } catch (err) {
+      console.error('Fetch error:', err); // Debug fetch error
+      await swal.fire('Error!', 'Something went wrong. Please try again.', 'error');
+    }
+  }
+}
 
 
 

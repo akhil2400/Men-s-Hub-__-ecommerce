@@ -42,7 +42,11 @@
           <i class="fa fa-eye-slash toggle-password log-toggle" id="togglePassword" onclick="togglePasswordVisibility()"></i>
         </div>
         <p id="passwordError" class="errormessage"></p>
-        <button class="login-btn" id="loginBtn">Login</button>
+        <button class="login-btn" id="loginBtn" style="display: flex;justify-content: center;">
+          <span class="login-btn-text">Login</span>
+          <span style="display:none;" class="loader"></span>
+          
+        </button>
       </form>
       <p><a href="/forgotpasswordemailverification">Forgot password?</a></p>
       <p>Don't have an account? <a href="/register">Sign up</a></p>

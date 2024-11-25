@@ -1,5 +1,5 @@
 let authCheck = (req, res, next) => {
-    console.log(req.session);
+    // console.log(req.session);
     // console.log("authCheck Middleware: ", req.url);
 
     if (['/home', '/dashboard', '/wishlist', '/cart'].includes(req.url)) {
