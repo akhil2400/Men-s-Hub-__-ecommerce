@@ -13,8 +13,11 @@ router.post('/login', userController.loginUser);
 router.get('/home',noCache, userController.loadhome);
 router.get('/otp-verify', noCache ,userController.loadotp); 
 router.get('/dashboard', userController.loaddashboard)
+router.put('/dashboard/update', userController.updateProfile);
 router.get('/my-address',userController.loadmyaddress)
 router.post('/my-address',userController.myAddAddress)
+router.get('/my-address-edit/:id',userController.preloadAddress)
+router.put('/my-address-edit/:address_id', userController.myAddAddressEdit);
 router.get('/forgotpasswordemailverification',userController.loademailverify)
 router.post('/forgotpasswordemailverification',userController.emailverify)
 router.get('/forgotpassword',noCache,userController.loadforgotpassword)

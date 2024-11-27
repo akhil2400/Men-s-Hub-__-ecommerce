@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
-      .errormessagedash {
+      .errormessagedash1 {
         color: red;
         font-size: 14px;
         margin-top: 5px;
@@ -61,18 +61,19 @@
           </div>
 
           <!-- Add 'onsubmit' directly to the form -->
-          <form style="display: none;" id="form" onsubmit="return detailsFormvalidation(event)">
+          <form id="form" style="display: none;" onsubmit="return detailsFormvalidation(event)">
             <input type="text" id="userName" placeholder="Username" value="<%= user.userName %>">
-            <p id="userNameError" style="color: red; font-size: 14px; margin-top: 5px;" class="errormessagedash"></p>
-
+            <p id="userNameError" class="errormessagedash1" style="color: red; font-size: 14px;margin-top: 5px;"></p>
+          
             <input type="text" id="email" placeholder="Email" value="<%= user.email %>">
-            <p id="emailError" style="color: red; font-size: 14px; margin-top: 5px;"  class="errormessagedash"></p>
-
+            <p id="emailError" class="errormessagedash1" style="color: red; font-size: 14px;margin-top: 5px;"></p>
+          
             <input type="text" id="mobileNumber" placeholder="Mobile Number" value="<%= user.mobileNumber %>">
-            <p id="mobileNumberError" style="color: red; font-size: 14px; margin-top: 5px;"  class="errormessagedash"></p>
-
+            <p id="mobileNumberError" class="errormessagedash1" style="color: red; font-size: 14px;margin-top: 5px;"></p>
+          
             <button type="submit" class="dasaddedit">Submit</button>
           </form>
+          
         </div>
       </div>
     </div>

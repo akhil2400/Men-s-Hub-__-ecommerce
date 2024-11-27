@@ -171,10 +171,10 @@ function addressFormValidation(e) {
         } else {
           swal.fire("Address Added Successfully");
           console.log(data.msg);
-          setTimeout(()=>{
+          setTimeout(() => {
 
             window.location.href = "/my-address";
-          },2000)
+          }, 2000)
         }
       } catch (error) {
         console.error('Error:', error);
@@ -185,92 +185,169 @@ function addressFormValidation(e) {
   return valid;
 }
 
-  function addressEditForm(e) {
-    e.preventDefault();
-    document.querySelector("#editaddressForm").style.display = "block";
-    document.querySelector(".address-boxes").style.display = "none";
-    document.querySelector(".edit-address").style.display = "none";
-    document.querySelector(".remove-address").style.display = "none";
-  }
+// Edit address button click listener
+const editAddressBtns = document.querySelectorAll(".edit-address");
 
-  function editaddressFormValidation(e) {
-    e.preventDefault();
-    console.log("Validation triggered");
-  
-    // Clear previous error messages
-    document.getElementById("EhouseNumberError").innerText = "";
-    document.getElementById("EstreetError").innerText = "";
-    document.getElementById("EcityError").innerText = "";
-    document.getElementById("ElandmarkError").innerText = "";
-    document.getElementById("EdistrictError").innerText = "";
-    document.getElementById("EstateError").innerText = "";
-    document.getElementById("ECountryError").innerText = "";
-    document.getElementById("EpinCodeError").innerText = "";
-  
-    // Get input values
-    const EhouseNumber = document.getElementById("EhouseNumber").value.trim();
-    const Estreet = document.getElementById("Estreet").value.trim();
-    const Ecity = document.getElementById("Ecity").value.trim();
-    const Elandmark = document.getElementById("Elandmark").value.trim();
-    const Edistrict = document.getElementById("Edistrict").value.trim();
-    const Estate = document.getElementById("Estate").value.trim();
-    const Ecountry = document.getElementById("ECountry").value.trim();
-    const EpinCode = document.getElementById("EpinCode").value.trim();
-  
-    let valid = true;
+editAddressBtns.forEach((btn) => {
+  btn.addEventListener("click", async (e) => {
+    const addressId = e.target.getAttribute("data-id"); // Get the address ID
+    const addressBox = e.target.closest('.address-box'); // Get the closest address box
+    const editForm = addressBox.querySelector(".edit-address-form"); // Find the specific edit form
 
-    // Validation patterns
-    const EhouseNumberPattern = /^[a-zA-Z0-9\s]+$/; // Letters, numbers, and spaces
-    const EstreetPattern = /^[a-zA-Z\s]+$/; // Letters and spaces
-    const EcityPattern = /^[a-zA-Z\s]+$/; // Letters and spaces
-    const ElandmarkPattern = /^[a-zA-Z0-9\s]+$/; // Letters, numbers, and spaces
-    const EdistrictPattern = /^[a-zA-Z\s]+$/; // Letters and spaces
-    const EstatePattern = /^[a-zA-Z\s]+$/; // Letters and spaces
-    const EcountryPattern = /^[a-zA-Z\s]+$/; // Letters and spaces
-    const EpinCodePattern = /^\d{6}$/; // Exactly 6 digits
-  
-    // Check for empty fields
-    if (!EhouseNumber || !Estreet || !Ecity || !Elandmark || !Edistrict || !Estate || !Ecountry || !EpinCode) {
-      swal.fire({
-        title: "Error",
-        text: "All fields are required",
-        icon: "error",
-        timer: 3000,
-        showConfirmButton: false,
-      });
-      valid = false;
+    // Toggle visibility of the edit form and hide the address details
+    editForm.style.display = "block"; // Show the edit form
+    addressBox.querySelector(".address-boxes").style.display = "none"; // Hide the address details
+    addressBox.querySelector(".edit-address").style.display = "none"; // Hide the "EDIT" button
+    addressBox.querySelector(".remove-address").style.display = "none"; // Hide the "REMOVE" button
+
+    try {
+      // Fetch the existing address details for editing using async/await
+      const response = await fetch(`/my-address-edit/${addressId}`);
+      const data = await response.json();
+
+      // Pre-fill the form with the existing data
+      addressBox.querySelector(".EhouseNumber").value = data.houseNumber;
+      addressBox.querySelector(".Estreet").value = data.street;
+      addressBox.querySelector(".Ecity").value = data.city;
+      addressBox.querySelector(".Elandmark").value = data.landmark;
+      addressBox.querySelector(".Edistrict").value = data.district;
+      addressBox.querySelector(".Estate").value = data.state;
+      addressBox.querySelector(".ECountry").value = data.country;
+      addressBox.querySelector(".EpinCode").value = data.pinCode;
+    } catch (error) {
+      console.error("Error fetching address data:", error);
     }
-    if (!EhouseNumberPattern.test(EhouseNumber)) {
-      document.getElementById("EhouseNumberError").innerText = "Invalid house number. Only letters, numbers, and spaces are allowed.";
-      valid = false;
-    }
-    if (!EstreetPattern.test(Estreet)) {
-      document.getElementById("EstreetError").innerText = "Invalid street. Only letters and spaces are allowed.";
-      valid = false;
-    }
-    if (!EcityPattern.test(Ecity)) {
-      document.getElementById("EcityError").innerText = "Invalid city. Only letters and spaces are allowed.";
-      valid = false;
-    }
-    if (!ElandmarkPattern.test(Elandmark)) {
-      document.getElementById("ElandmarkError").innerText = "Invalid landmark. Only letters, numbers, and spaces are allowed.";
-      valid = false;
-    }
-    if (!EdistrictPattern.test(Edistrict)) {
-      document.getElementById("EdistrictError").innerText = "Invalid district. Only letters and spaces are allowed.";
-      valid = false;
+  });
+});
+
+// Add validation and submit the form
+document.querySelectorAll('.edit-address-form').forEach(form => {
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const addressId = form.getAttribute('data-id');
+    const updatedData = {
+      houseNumber: form.querySelector(".EhouseNumber").value,
+      street: form.querySelector(".Estreet").value,
+      city: form.querySelector(".Ecity").value,
+      landmark: form.querySelector(".Elandmark").value,
+      district: form.querySelector(".Edistrict").value,
+      state: form.querySelector(".Estate").value,
+      country: form.querySelector(".ECountry").value,
+      pinCode: form.querySelector(".EpinCode").value
+    };
+
+    // Validation function
+    async function editaddressFormValidation(e) {
+      e.preventDefault();
+      console.log("Validation triggered");
+
+      // Clear previous error messages
+      const errorMessages = document.querySelectorAll('.EhouseNumberError, .EstreetError, .EcityError, .ElandmarkError, .EdistrictError, .EstateError, .ECountryError, .EpinCodeError');
+      errorMessages.forEach(msg => msg.innerText = "");
+
+      // Get input values
+      const EhouseNumber = form.querySelector(".EhouseNumber").value.trim();
+      const Estreet = form.querySelector(".Estreet").value.trim();
+      const Ecity = form.querySelector(".Ecity").value.trim();
+      const Elandmark = form.querySelector(".Elandmark").value.trim();
+      const Edistrict = form.querySelector(".Edistrict").value.trim();
+      const Estate = form.querySelector(".Estate").value.trim();
+      const Ecountry = form.querySelector(".ECountry").value.trim();
+      const EpinCode = form.querySelector(".EpinCode").value.trim();
+
+      let valid = true;
+
+      // Validation patterns
+      const EhouseNumberPattern = /^[a-zA-Z0-9\s]+$/; // Letters, numbers, and spaces
+      const EstreetPattern = /^[a-zA-Z\s]+$/; // Letters and spaces
+      const EcityPattern = /^[a-zA-Z\s]+$/; // Letters and spaces
+      const ElandmarkPattern = /^[a-zA-Z0-9\s]+$/; // Letters, numbers, and spaces
+      const EdistrictPattern = /^[a-zA-Z\s]+$/; // Letters and spaces
+      const EstatePattern = /^[a-zA-Z\s]+$/; // Letters and spaces
+      const EcountryPattern = /^[a-zA-Z\s]+$/; // Letters and spaces
+      const EpinCodePattern = /^\d{6}$/; // Exactly 6 digits
+
+      // Check for empty fields and regex validation
+      if (!EhouseNumber || !Estreet || !Ecity || !Elandmark || !Edistrict || !Estate || !Ecountry || !EpinCode) {
+        swal.fire({
+          title: "Error",
+          text: "All fields are required",
+          icon: "error",
+          timer: 3000,
+          showConfirmButton: false,
+        });
+        valid = false;
       }
-    if (!EstatePattern.test(Estate)) {
-      document.getElementById("EstateError").innerText = "Invalid state. Only letters and spaces are allowed.";
-      valid = false;
+      if (!EhouseNumberPattern.test(EhouseNumber)) {
+        document.querySelector(".EhouseNumberError").innerText = "Invalid house number. Only letters, numbers, and spaces are allowed.";
+        valid = false;
+      }
+      if (!EstreetPattern.test(Estreet)) {
+        document.querySelector(".EstreetError").innerText = "Invalid street. Only letters and spaces are allowed.";
+        valid = false;
+      }
+      if (!EcityPattern.test(Ecity)) {
+        document.querySelector(".EcityError").innerText = "Invalid city. Only letters and spaces are allowed.";
+        valid = false;
+      }
+      if (!ElandmarkPattern.test(Elandmark)) {
+        document.querySelector(".ElandmarkError").innerText = "Invalid landmark. Only letters, numbers, and spaces are allowed.";
+        valid = false;
+      }
+      if (!EdistrictPattern.test(Edistrict)) {
+        document.querySelector(".EdistrictError").innerText = "Invalid district. Only letters and spaces are allowed.";
+        valid = false;
+      }
+      if (!EstatePattern.test(Estate)) {
+        document.querySelector(".EstateError").innerText = "Invalid state. Only letters and spaces are allowed.";
+        valid = false;
+      }
+      if (!EcountryPattern.test(Ecountry)) {
+        document.querySelector(".ECountryError").innerText = "Invalid country. Only letters and spaces are allowed.";
+        valid = false;
+      }
+      if (!EpinCodePattern.test(EpinCode)) {
+        document.querySelector(".EpinCodeError").innerText = "Invalid pin code. Only 6 digits are allowed.";
+        valid = false;
+      }
+
+      if (valid) {
+        // Proceed with updating address if validation passes
+        try {
+          const response = await fetch(`/my-address-edit/${addressId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedData)
+          });
+
+          const result = await response.json();
+          console.log(result);
+          if (result.st) {
+            // On success, update the UI accordingly and hide the form
+            swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Address updated successfully",
+              showConfirmButton: false,
+              timer: 1500
+            });
+            form.style.display = "none";
+            setTimeout(() => {
+              window.location.reload();
+            }, 1500);
+            form.closest('.address-box').querySelector(".address-boxes").style.display = "block";
+          } else {
+            swal.fire("Failed to update the address.");
+          }
+        } catch (error) {
+          console.error("Error updating address:", error);
+          swal.fire("An error occurred while updating the address.");
+        }
+      }
     }
-    if (!EcountryPattern.test(Ecountry)) {
-      document.getElementById("ECountryError").innerText = "Invalid country. Only letters and spaces are allowed.";
-      valid = false;
-    }
-    if (!EpinCodePattern.test(EpinCode)) {
-      document.getElementById("EpinCodeError").innerText = "Invalid pin code. Only 6 digits are allowed.";
-      valid = false;
-    }
-    return valid;
-  }
+
+
+    editaddressFormValidation(e);
+  });
+});

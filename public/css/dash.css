@@ -129,3 +129,12 @@
   background-color: rgb(186, 65, 65);
   
 }
+.edit-address-btn{
+  background-color: rgb(50, 109, 50);
+  border: 1px solid black;
+  width: 76px;
+  border-radius: 5px;
+  color:white ;
+  padding: 5px;
+  margin-bottom: 5px;
+}
