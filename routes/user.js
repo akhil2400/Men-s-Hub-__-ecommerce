@@ -30,10 +30,12 @@ router.get('/logout',userController.logout)
 router.get('/about',userController.loadabout)
 router.get('/contact',userController.loadcontact)
 router.get('/cart',userController.loadcart)
+router.get('/fetch-cart',userController.fetchCart);
 router.post('/add-to-cart',userController.addToCart)
 router.delete('/cart/remove', userController.removeCartItem);
+router.post ('/cart/update', userController.updateCartItemQuantity);
 
-
+router.get('/checkout',userController.loadcheckout)
 
 
 

@@ -73,9 +73,18 @@
                       <td class="product-name">
                         <h2 class="h5 text-black"><%= item.productId.name %></h2>
                       </td>
-                      <td><%= item.price %></td>
-                      <td><%= item.quantity %></td>
-                      <td><%= (item.price * item.quantity).toFixed(2) %></td>
+                      <td><%= item.offerPrice %></td>
+                      <td>
+                        <div class="input-group">
+                          <button class="btn btn-outline-secondary decrease" data-index="<%= index %>">-</button>
+                          <input type="number" class="form-control quantity-input" data-index="<%= index %>" 
+                            value="<%= item.quantity %>" min="1" style="width: 60px; text-align: center;">
+                          <button class="btn btn-outline-secondary increase" data-index="<%= index %>">+</button>
+                        </div>
+                      </td>
+                      <td class="item-total" id="item-total-<%= index %>">
+                        ₹<%= (item.offerPrice * item.quantity).toFixed(2) %>
+                      </td>
                       <td>
                           <button
                             class="btn btn-black btn-sm remove"
@@ -104,7 +113,7 @@
               <button class="btn btn-black btn-sm btn-block" onclick="updateCart()">Update Cart</button>
             </div>
             <div class="col-md-6">
-              <button class="btn btn-outline-black btn-sm btn-block">Continue Shopping</button>
+              <a href="/shop"><button class="btn btn-outline-black btn-sm btn-block">Continue Shopping</button></a>
             </div>
           </div>
         </div>
