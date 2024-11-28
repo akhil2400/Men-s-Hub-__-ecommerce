@@ -101,105 +101,95 @@ document.querySelectorAll('.color-option').forEach((button) => {
 
 
 
-async function updateQuantity(e) {
-  const index = e.target.dataset.index;
-  const quantityInput = e.target.closest('.quantity-container').querySelector('.quantity-amount');
-  let quantity = parseInt(quantityInput.value);
+// async function updateQuantity(e) {
+//   const index = e.target.dataset.index;
+//   const quantityInput = e.target.closest('.quantity-container').querySelector('.quantity-amount');
+//   let quantity = parseInt(quantityInput.value);
 
-  if (e.target.classList.contains('decrease') && quantity > 1) {
-    quantity--;
-  } else if (e.target.classList.contains('increase')) {
-    quantity++;
-  }
+//   if (e.target.classList.contains('decrease') && quantity > 1) {
+//     quantity--;
+//   } else if (e.target.classList.contains('increase')) {
+//     quantity++;
+//   }
 
-  try {
-    const response = await fetch('/cart/update', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ index, quantity })
-    });
-    const result = await response.json();
-    if (result.success) {
-      // After updating the quantity, reload the cart items
-      loadCart();
-    } else {
-      alert(result.message);
-    }
-  } catch (error) {
-    console.error('Error updating quantity:', error);
-  }
-}
-
-
+//   try {
+//     const response = await fetch('/cart/update', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({ index, quantity })
+//     });
+//     const result = await response.json();
+//     if (result.success) {
+//       // After updating the quantity, reload the cart items
+//       loadCart();
+//     } else {
+//       alert(result.message);
+//     }
+//   } catch (error) {
+//     console.error('Error updating quantity:', error);
+//   }
+// }
 
 
-document.addEventListener("DOMContentLoaded", () => {
-  // Attach listeners to quantity inputs
-  document.querySelectorAll(".quantity-input").forEach(input => {
-    input.addEventListener("change", updateItemQuantity);
-  });
 
-  // Attach listeners to increase/decrease buttons
-  document.querySelectorAll(".decrease").forEach(button => {
-    button.addEventListener("click", modifyQuantity);
-  });
-  document.querySelectorAll(".increase").forEach(button => {
-    button.addEventListener("click", modifyQuantity);
-  });
-});
 
-async function modifyQuantity(event) {
-  const button = event.target;
-  const index = button.getAttribute("data-index");
-  const input = document.querySelector(`.quantity-input[data-index="${index}"]`);
-  let quantity = parseInt(input.value);
+// document.addEventListener("DOMContentLoaded", () => {
+//   // Attach listeners to quantity inputs
+//   document.querySelectorAll(".quantity-input").forEach(input => {
+//     input.addEventListener("change", updateItemQuantity);
+//   });
 
-  // Adjust quantity based on button type
-  if (button.classList.contains("increase")) {
-    quantity += 1;
-  } else if (button.classList.contains("decrease") && quantity > 1) {
-    quantity -= 1;
-  }
+//   // Attach listeners to increase/decrease buttons
+//   document.querySelectorAll(".decrease").forEach(button => {
+//     button.addEventListener("click", modifyQuantity);
+//   });
+//   document.querySelectorAll(".increase").forEach(button => {
+//     button.addEventListener("click", modifyQuantity);
+//   });
+// });
 
-  // Update input value and call update function
-  input.value = quantity;
-  updateItemQuantity({ target: input });
-}
+// async function modifyQuantity(event) {
+//   const button = event.target;
+//   const index = button.getAttribute("data-index");
+//   const input = document.querySelector(`.quantity-input[data-index="${index}"]`);
+//   let quantity = parseInt(input.value);
+
+//   // Adjust quantity based on button type
+//   if (button.classList.contains("increase")) {
+//     quantity += 1;
+//   } else if (button.classList.contains("decrease") && quantity > 1) {
+//     quantity -= 1;
+//   }
+
+//   // Update input value and call update function
+//   input.value = quantity;
+//   updateItemQuantity({ target: input });
+// }
 
 async function updateItemQuantity(event) {
-  const input = event.target;
-  const index = input.getAttribute("data-index");
-  const quantity = parseInt(input.value);
+  const index = event.target.getAttribute('data-index');
+  const quantityInput = document.querySelector(`.quantity-input[data-index="${index}"]`);
+  const quantity = parseInt(quantityInput.value);
 
-  if (quantity < 1) {
-    return; // Do nothing for invalid input
-  }
+  const cart = globalCart;  // Use the global cart variable here
 
-  try {
-    const response = await fetch("/cart/update-quantity", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ index, quantity }),
+  if (cart?.items && cart.items[index]) {
+    const item = cart.items[index];
+
+    const priceToUse = item.offerPrice || item.price;
+    const itemTotal = priceToUse * quantity;
+    item.quantity = quantity;
+
+    document.getElementById(`item-total-${index}`).textContent = `₹${itemTotal.toFixed(2)}`;
+
+    let newSubtotal = 0;
+    cart.items.forEach((item) => {
+      const priceToUse = item.offerPrice || item.price;
+      newSubtotal += priceToUse * item.quantity;
     });
 
-    if (response.ok) {
-      const data = await response.json();
-
-      // Update item total and cart totals dynamically
-      document.querySelector(`#item-total-${index}`).textContent = `₹${(
-        data.itemTotal
-      ).toFixed(2)}`;
-      document.getElementById("subtotal").textContent = `₹${(
-        data.cartTotal
-      ).toFixed(2)}`;
-      document.getElementById("total").textContent = `₹${(
-        data.cartTotal
-      ).toFixed(2)}`;
-    } else {
-      console.error("Failed to update quantity");
-    }
-  } catch (error) {
-    console.error("Error updating quantity:", error);
+    document.getElementById('subtotal').textContent = `₹${newSubtotal.toFixed(2)}`;
+    document.getElementById('total').textContent = `₹${newSubtotal.toFixed(2)}`;
   }
 }
 
@@ -337,8 +327,13 @@ async function reloadCart() {
       document.getElementById('total').textContent = `₹${subtotal.toFixed(2)}`;
 
       // Add event listeners for quantity updates and removals
-      document.querySelectorAll('.decrease').forEach(button => button.addEventListener('click', updateQuantity));
-      document.querySelectorAll('.increase').forEach(button => button.addEventListener('click', updateQuantity));
+      document.querySelectorAll('.decrease').forEach(button => 
+        button.addEventListener('click', (event) => updateQuantity(event))
+      );
+      document.querySelectorAll('.increase').forEach(button => 
+        button.addEventListener('click', (event) => updateQuantity(event))
+      );
+      
       document.querySelectorAll('.remove').forEach(button => button.addEventListener('click', confirmRemoveCartItem));
     }
   } catch (error) {
@@ -348,6 +343,62 @@ async function reloadCart() {
 
 
 
+async function updateQuantity(event) {
+  const index = event.target.getAttribute('data-index');
+  const action = event.target.classList.contains('increase') ? 'increase' : 'decrease';
+  const quantityInput = document.querySelector(`.quantity-input[data-index="${index}"]`);
+  
+  let currentQuantity = parseInt(quantityInput.value);
+  if (action === 'increase') {
+    currentQuantity++;
+  } else if (action === 'decrease' && currentQuantity > 1) {
+    currentQuantity--;
+  }
+
+  quantityInput.value = currentQuantity;
+
+  try {
+    // Send the updated quantity to the backend
+    const response = await fetch('/update-cart', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        index: index,        // Index of the item in the cart
+        quantity: currentQuantity  // Updated quantity
+      })
+    });
+
+    const data = await response.json();
+    
+    // If the response is successful, update the cart
+    if (data.success) {
+      // Update the item total
+      const itemTotalElement = document.getElementById(`item-total-${index}`);
+      itemTotalElement.textContent = `₹${data.itemTotal.toFixed(2)}`;
+
+      // Update the cart totals (Subtotal and Total)
+      const subtotalElement = document.getElementById('subtotal');
+      const totalElement = document.getElementById('total');
+      subtotalElement.textContent = `₹${data.cartTotal.toFixed(2)}`;
+      totalElement.textContent = `₹${data.cartTotal.toFixed(2)}`;
+    } else {
+      console.error('Failed to update the cart:', data.msg);
+    }
+  } catch (error) {
+    console.error('Error updating quantity:', error);
+  }
+}
+
+// Add event listeners to quantity buttons
+document.querySelectorAll('.decrease').forEach(button =>
+  button.addEventListener('click', updateQuantity)
+);
+
+document.querySelectorAll('.increase').forEach(button =>
+  button.addEventListener('click', updateQuantity)
+);
 
 
 

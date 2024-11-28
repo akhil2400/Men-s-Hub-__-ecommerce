@@ -713,7 +713,7 @@ module.exports = {
       res.status(500).json({ success: false, msg: "Server error" });
     }
   },
-  
+
   
 
   async loadcheckout(req, res) {
