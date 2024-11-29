@@ -7,35 +7,30 @@
 */ -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <meta name="author" content="Untree.co" />
-    <link rel="shortcut icon" href="favicon.png" />
 
-    <meta name="description" content="" />
-    <meta name="keywords" content="bootstrap, bootstrap4" />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="author" content="Untree.co" />
+  <link rel="shortcut icon" href="favicon.png" />
 
-    <!-- Bootstrap CSS -->
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-      rel="stylesheet"
-    />
-    <link href="/css/tiny-slider.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/css/style.css" />
-    <link href="/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/css/checkout.css" />
-    <title>
-      Furni Free Bootstrap 5 Template for Furniture and Interior Design Websites
-      by Untree.co
-    </title>
-  </head>
+  <meta name="description" content="" />
+  <meta name="keywords" content="bootstrap, bootstrap4" />
 
-  <body>
-    <%- include("./layouts/header.ejs") %>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+  <link href="/css/tiny-slider.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link href="/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/checkout.css" />
+  <title>
+    Furni Free Bootstrap 5 Template for Furniture and Interior Design Websites
+    by Untree.co
+  </title>
+</head>
+
+<body>
+  <%- include("./layouts/header.ejs") %>
     <nav aria-label="breadcrumb" class="mb-4">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -75,46 +70,52 @@
           <div class="col-md-6 mb-5 mb-md-0">
             <h2 class="h3 mb-3 text-black">Billing Details</h2>
             <div class="p-3 p-lg-5 border bg-white">
-              <div
-                style="
-                  border: 1px solid black;
-                  padding: 5px;
-                  border-radius: 2px;
-                "
-              >
-                <input type="radio" />
-                <p>House Number: 8382</p>
-                <p>Street: 1234</p>
-                <p>City: New York</p>
-                <p>State: New York</p>
-                <p>Zip Code: 10001</p>
-                <p>Country: United States</p>
-              </div>
+                <% addresses.forEach((data, index)=> { %>
+                  <div data-id="<%= data._id %>" class="address-box">
+                    <div class="address-boxes">
+                      <!-- Radio button for selecting the address -->
+                      <input type="radio" name="selectedAddress" id="address-<%= index %>" value="<%= data._id %>"
+                        class="form-check-input" <%=index===0 ? 'checked' : '' %> />
+                      <label for="address-<%= index %>" class="form-check-label">
+                        <p>House Number: <%= data.houseNumber %>
+                        </p>
+                        <p>Street: <%= data.street %>
+                        </p>
+                        <p>Landmark: <%= data.landmark %>
+                        </p>
+                        <p>City: <%= data.city %>
+                        </p>
+                        <p>District: <%= data.district %>
+                        </p>
+                        <p>State: <%= data.state %>
+                        </p>
+                        <p>Country: <%= data.country %>
+                        </p>
+                        <p>Pin Code: <%= data.pinCode %>
+                        </p>
+                      </label>
+                    </div>
+                    <!-- <div>
+                      <button class="edit-address" data-id="">EDIT</button>
+                      <button class="remove-address">REMOVE</button>
+                    </div> -->
+                  </div>
+                  <% }); %>
+              
             </div>
+
           </div>
           <div class="col-md-6">
             <div class="row mb-5">
               <div class="col-md-12">
                 <h2 class="h3 mb-3 text-black">Coupon Code</h2>
                 <div class="p-3 p-lg-5 border bg-white">
-                  <label for="c_code" class="text-black mb-3"
-                    >Enter your coupon code if you have one</label
-                  >
+                  <label for="c_code" class="text-black mb-3">Enter your coupon code if you have one</label>
                   <div class="input-group w-75 couponcode-wrap">
-                    <input
-                      type="text"
-                      class="form-control me-2"
-                      id="c_code"
-                      placeholder="Coupon Code"
-                      aria-label="Coupon Code"
-                      aria-describedby="button-addon2"
-                    />
+                    <input type="text" class="form-control me-2" id="c_code" placeholder="Coupon Code"
+                      aria-label="Coupon Code" aria-describedby="button-addon2" />
                     <div class="input-group-append">
-                      <button
-                        class="btn btn-black btn-sm"
-                        type="button"
-                        id="button-addon2"
-                      >
+                      <button class="btn btn-black btn-sm" type="button" id="button-addon2">
                         Apply
                       </button>
                     </div>
@@ -136,175 +137,144 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>
-                          <img
-                            src="images/top-up-tshirt.jpg"
-                            alt="Top Up T-Shirt"
-                            style="width: 50px; height: auto"
-                          />
-                        </td>
-                        <td>
-                          Top Up T-Shirt <strong class="mx-2">x</strong> 1
-                        </td>
-                        <td>$250.00</td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <img
-                            src="images/polo-shirt.jpg"
-                            alt="Polo Shirt"
-                            style="width: 50px; height: auto"
-                          />
-                        </td>
-                        <td>Polo Shirt <strong class="mx-2">x</strong> 1</td>
-                        <td>$100.00</td>
-                      </tr>
-                      <tr>
-                        <td class="text-black font-weight-bold">
-                          <strong>Cart Subtotal</strong>
-                        </td>
-                        <td></td>
-                        <td class="text-black">$350.00</td>
-                      </tr>
-                      <tr>
-                        <td class="text-black font-weight-bold">
-                          <strong>Order Total</strong>
-                        </td>
-                        <td></td>
-                        <td class="text-black font-weight-bold">
-                          <strong>$350.00</strong>
-                        </td>
-                      </tr>
+                      <% cart.items.forEach((item)=> { %>
+                        <tr>
+                          <td>
+                            <img src="/<%= item.productId.images[0] %>" alt="<%= item.productId.name %>"
+                              style="width: 50px; height: auto" />
+                          </td>
+                          <td>
+                            <%= item.productId.name %>
+                              <strong class="mx-2">x</strong>
+                              <%= item.quantity %>
+                          </td>
+                          <td>₹<%= (item.offerPrice * item.quantity).toFixed(2) %>
+                          </td>
+                        </tr>
+                        <% }); %>
                     </tbody>
+                    <tfoot>
+                      <tr>
+                        <th colspan="2">Subtotal</th>
+                        <td>₹<%= (cart.subtotal || 0).toFixed(2) %>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th colspan="2">Shipping</th>
+                        <td>₹<%= (cart.shippingCost || 0).toFixed(2) %>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th colspan="2">Grand Total</th>
+                        <td><strong>₹<%= (cart.cartTotal || 0).toFixed(2) %></strong></td>
+                      </tr>
+                    </tfoot>
                   </table>
+                </div>
+              </div>
+              <br>
+              <br>
+              <div class="border p-3 mb-3">
+                <div>
+                  <!-- Radio Button with ID -->
+                  <input type="radio" name="payment" id="razerpay" />
 
-                  <div class="border p-3 mb-3">
-                    <div>
-                      <!-- Radio Button with ID -->
-                      <input type="radio" name="payment" id="razerpay" />
+                  <!-- Label for the Radio Button -->
+                  <label for="razerpay">
+                    <h3 class="h6 mb-0">
+                      <a class="d-block" data-bs-toggle="collapse" href="#collapsebank" role="button"
+                        aria-expanded="false" aria-controls="collapsepaypal" style="text-decoration: none">
+                        Bank Transfer
+                      </a>
+                    </h3>
+                  </label>
+                </div>
 
-                      <!-- Label for the Radio Button -->
-                      <label for="razerpay">
-                        <h3 class="h6 mb-0">
-                          <a
-                            class="d-block"
-                            data-bs-toggle="collapse"
-                            href="#collapsepaypal"
-                            role="button"
-                            aria-expanded="false"
-                            aria-controls="collapsepaypal"
-                            style="text-decoration: none"
-                          >
-                            Bank Transfer
-                          </a>
-                        </h3>
-                      </label>
-                    </div>
-
-                    <div class="collapse" id="collapsebank">
-                      <div class="py-2">
-                        <p class="mb-0">
-                          Make your payment directly into our bank account.
-                          Please use your Order ID as the payment reference.
-                          Your order won’t be shipped until the funds have
-                          cleared in our account.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="border p-3 mb-3">
-                    <div>
-                      <!-- Radio Button with ID -->
-                      <input type="radio" name="payment" id="razerpay" />
-
-                      <!-- Label for the Radio Button -->
-                      <label for="razerpay">
-                        <h3 class="h6 mb-0">
-                          <a
-                            class="d-block"
-                            data-bs-toggle="collapse"
-                            href="#collapsepaypal"
-                            role="button"
-                            aria-expanded="false"
-                            aria-controls="collapsepaypal"
-                            style="text-decoration: none"
-                          >
-                            Cash on Delivery
-                          </a>
-                        </h3>
-                      </label>
-                    </div>
-
-                    <div class="collapse" id="collapsecheque">
-                      <div class="py-2">
-                        <p class="mb-0">
-                          Make your payment directly into our bank account.
-                          Please use your Order ID as the payment reference.
-                          Your order won’t be shipped until the funds have
-                          cleared in our account.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="border p-3 mb-5">
-                    <div>
-                      <!-- Radio Button with ID -->
-                      <input type="radio" name="payment" id="razerpay" />
-
-                      <!-- Label for the Radio Button -->
-                      <label for="razerpay">
-                        <h3 class="h6 mb-0">
-                          <a
-                            class="d-block"
-                            data-bs-toggle="collapse"
-                            href="#collapsepaypal"
-                            role="button"
-                            aria-expanded="false"
-                            aria-controls="collapsepaypal"
-                            style="text-decoration: none"
-                          >
-                            Razer Pay
-                          </a>
-                        </h3>
-                      </label>
-                    </div>
-
-                    <div class="collapse" id="collapsepaypal">
-                      <div class="py-2">
-                        <p class="mb-0">
-                          Make your payment directly into our bank account.
-                          Please use your Order ID as the payment reference.
-                          Your order won’t be shipped until the funds have
-                          cleared in our account.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <button
-                      class="place-order-button"
-                      onclick="window.location='thankyou.html'"
-                    >
-                      Place Order
-                    </button>
+                <div class="collapse" id="collapsebank">
+                  <div class="py-2">
+                    <p class="mb-0">
+                      Make your payment directly into our bank account.
+                      Please use your Order ID as the payment reference.
+                      Your order won’t be shipped until the funds have
+                      cleared in our account.
+                    </p>
                   </div>
                 </div>
+              </div>
+
+              <div class="border p-3 mb-3">
+                <div>
+                  <!-- Radio Button with ID -->
+                  <input type="radio" name="payment" id="razerpay" />
+
+                  <!-- Label for the Radio Button -->
+                  <label for="razerpay">
+                    <h3 class="h6 mb-0">
+                      <a class="d-block" data-bs-toggle="collapse" href="#collapsecod" role="button"
+                        aria-expanded="false" aria-controls="collapsecod" style="text-decoration: none">
+                        Cash on Delivery
+                      </a>
+                    </h3>
+                  </label>
+                </div>
+                <div class="collapse" id="collapsecod">
+                  <div class="py-2">
+                    <p class="mb-0">
+                      Make your payment even after the product reached to you.
+                      after the item is delivered to you, you can pay the
+                      amount.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="border p-3 mb-5">
+                <div>
+                  <!-- Radio Button with ID -->
+                  <input type="radio" name="payment" id="razerpay" />
+
+                  <!-- Label for the Radio Button -->
+                  <label for="razerpay">
+                    <h3 class="h6 mb-0">
+                      <a class="d-block" data-bs-toggle="collapse" href="#collapsepaypal" role="button"
+                        aria-expanded="false" aria-controls="collapsepaypal" style="text-decoration: none">
+                        Razer Pay
+                      </a>
+                    </h3>
+                  </label>
+                </div>
+
+                <div class="collapse" id="collapsepaypal">
+                  <div class="py-2">
+                    <p class="mb-0">
+                      Make your payment directly into our bank account.
+                      Please use your Order ID as the payment reference.
+                      Your order won’t be shipped until the funds have
+                      cleared in our account.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <button class="place-order-button" onclick="window.location='thankyou.html'">
+                  Place Order
+                </button>
               </div>
             </div>
           </div>
         </div>
-        <!-- </form> -->
       </div>
+    </div>
+    <!-- </form> -->
+    </div>
     </div>
 
     <%- include("./layouts/footer.ejs") %>
 
-    <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/tiny-slider.js"></script>
-    <script src="js/custom.js"></script>
-  </body>
+      <script src="js/bootstrap.bundle.min.js"></script>
+      <script src="js/tiny-slider.js"></script>
+      <script src="js/custom.js"></script>
+</body>
+
 </html>

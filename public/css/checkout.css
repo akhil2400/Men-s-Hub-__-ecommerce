@@ -8,3 +8,143 @@
   font-size: 16px;
   cursor: pointer;
 }
+.sidebar {
+  width: 250px;
+  background-color: #ffffff;
+  padding-top: 20px;
+  min-height: 100vh;
+  border: 1px solid black;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+  
+}
+
+.sidebar ul li {
+  margin-bottom: 20px;
+}
+
+.sidebar ul li a {
+  text-decoration: none;
+  color: #000000;
+  font-size: 16px;
+  border-radius: 5px;
+  padding: 10px;
+  display: block;
+}
+
+.sidebar ul li a:hover {
+  background-color: #406350;
+  border-radius: 5px;
+  color: #ffffff;
+}
+.sdashbord{
+  background-color: #406350;
+}
+
+.dash-box{
+  border: 1px solid black;
+  background-color: rgba(209, 209, 209, 0.713);
+  padding: 5px;
+  border-radius: 5px;
+}
+.dashP{
+  font-family: "Marmelad", serif; 
+  font-style: normal; 
+}
+.dashpbox{
+  border: 1px solid black;
+  padding: 2%;
+  border-radius: 5px;
+}
+.dasaddedit{
+  background-color: rgb(50, 109, 50);
+  border: 1px solid black;
+  width: 76px;
+  border-radius: 5px;
+  color:white ;
+  padding: 8px;
+}
+.dasaddedit:hover{
+  background-color: rgb(83, 131, 83) ;
+}
+.sidebardash ul li a {
+  display: block;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: #333;
+  transition: background-color 0.3s;
+}
+
+.sidebardash ul li a:hover {
+  background-color: #408751;
+}
+
+.sidebardash ul li a.current {
+  background-color: green;
+  color: white;
+}
+.add-address{
+  background-color: rgb(50, 109, 50);
+  border: 1px solid black;
+  width: 76px;
+  border-radius: 5px;
+  color:white ;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+.address-box{
+  border: 1px solid black;
+  padding:2%;
+  border-radius: 5px;
+  margin-bottom: 5px;
+
+}
+.add-address:hover{
+  background-color: rgb(83, 131, 83);
+  
+}
+.edit-remove-div{
+  display: flex;  
+  width: 15%;
+  justify-content: space-between;
+  border: none;
+}
+
+.edit-address{
+  background-color: rgb(50, 109, 50);
+  border: 1px solid black;
+  width: 76px;
+  border-radius: 5px;
+  color:white ;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+.edit-address:hover{
+  background-color: rgb(83, 131, 83);
+  
+}
+.remove-address{
+  background-color: rgb(184, 51, 51);
+  border: 1px solid black;
+  width: 76px;
+  border-radius: 5px;
+  color:white ;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+.remove-address:hover{
+  background-color: rgb(186, 65, 65);
+  
+}
+.edit-address-btn{
+  background-color: rgb(50, 109, 50);
+  border: 1px solid black;
+  width: 76px;
+  border-radius: 5px;
+  color:white ;
+  padding: 5px;
+  margin-bottom: 5px;
+}

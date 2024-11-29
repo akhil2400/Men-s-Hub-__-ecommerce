@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -7,7 +8,7 @@
   <link rel="shortcut icon" href="favicon.png">
   <meta name="description" content="" />
   <meta name="keywords" content="bootstrap, bootstrap4" />
-  
+
   <!-- Bootstrap CSS -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
@@ -21,130 +22,152 @@
 
   <%- include("./layouts/header.ejs") %>
 
-  <nav aria-label="breadcrumb" class="mb-4">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="/home" class="d-flex align-items-center"><span style="color: rgb(27, 94, 27);">Home</span></a></li>
-      <li class="breadcrumb-item active" aria-current="page">Cart</li>
-    </ol>
-  </nav>
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/home" class="d-flex align-items-center"><span
+              style="color: rgb(27, 94, 27);">Home</span></a></li>
+        <li class="breadcrumb-item active" aria-current="page">Cart</li>
+      </ol>
+    </nav>
 
-  <!-- Start Hero Section -->
-  <div class="hero">
-    <div class="container">
-      <div class="row justify-content-between">
-        <div class="col-lg-5">
-          <div class="intro-excerpt">
-            <h1>Cart</h1>
+    <!-- Start Hero Section -->
+    <div class="hero">
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col-lg-5">
+            <div class="intro-excerpt">
+              <h1>Cart</h1>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- End Hero Section -->
+    <!-- End Hero Section -->
 
-  <div class="untree_co-section before-footer-section">
-    <div class="container">
-      <div class="row mb-5">
-        <div class="col-md-12" >
-          <div class="site-blocks-table">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th class="product-thumbnail">Image</th>
-                  <th class="product-name">Product</th>
-                  <th class="product-price">Price</th>
-                  <th class="product-quantity">Quantity</th>
-                  <th class="product-total">Total</th>
-                  <th class="product-remove">Remove</th>
-                </tr>
-              </thead>
-              
-              <tbody id="cartItems">
-                <% if (cart.length === 0) { %>
+    <div class="untree_co-section before-footer-section">
+      <div class="container">
+        <div class="row mb-5">
+          <div class="col-md-12">
+            <div class="site-blocks-table">
+              <table class="table">
+                <thead>
                   <tr>
-                    <td colspan="6" class="text-center">Your cart is empty.</td>
+                    <th class="product-thumbnail">Image</th>
+                    <th class="product-name">Product</th>
+                    <th class="product-price">Price</th>
+                    <th class="product-quantity">Quantity</th>
+                    <th class="product-total">Total</th>
+                    <th class="product-remove">Remove</th>
                   </tr>
-                <% } else { %>
-                  <% cart.items.forEach((item, index) => { %>
+                </thead>
+
+                <tbody id="cartItems">
+                  <% if (cart.items.length===0) { %>
                     <tr>
-                      <td class="product-thumbnail">
-                        <img src="/<%= item.productId.images[0] %>" alt="<%= item.name %>" class="img-fluid">
-                      </td>
-                      <td class="product-name">
-                        <h2 class="h5 text-black"><%= item.productId.name %></h2>
-                      </td>
-                      <td><%= item.offerPrice %></td>
-                      <td>
-                        <div class="input-group">
-                          <button class="btn btn-outline-secondary decrease" data-index="<%= index %>">-</button>
-                          <input type="number" class="form-control quantity-input" data-index="<%= index %>" 
-                            value="<%= item.quantity %>" min="1" style="width: 60px; text-align: center;">
-                          <button class="btn btn-outline-secondary increase" data-index="<%= index %>">+</button>
-                        </div>
-                      </td>
-                      <td class="item-total" id="item-total-<%= index %>">
-                        ₹<%= (item.offerPrice * item.quantity).toFixed(2) %>
-                      </td>
-                      <td>
-                          <button
-                            class="btn btn-black btn-sm remove"
-                            onclick="confirmRemoveCartItem(event)"
-                          >
-                            <i data-id="<%= item._id %>" class="fa-solid fa-trash"></i>
-                          </button>
-                      </td>
+                      <td colspan="6" class="text-center">Your cart is empty.</td>
                     </tr>
-                  <% }); %>
-                <% } %>
-              </tbody>
-              
-              
-                
-              
-            </table>
+                    <% } else { %>
+                      <% cart.items.forEach((item, index)=> { %>
+                        <tr>
+                          <td class="product-thumbnail">
+                            <img src="/<%= item.productId.images[0] %>" alt="<%= item.productId.name %>"
+                              class="img-fluid">
+                          </td>
+                          <td class="product-name">
+                            <h2 class="h5 text-black">
+                              <%= item.productId.name %>
+                            </h2>
+                          </td>
+                          <td>
+                            <%= item.offerPrice %>
+                          </td>
+                          <td>
+                            <div class="input-group">
+                              <!-- Decrease Button -->
+                              <button class="btn btn-outline-secondary decrease"
+                                onclick="decreaseQuantity('<%= item.productId._id %>', <%= item.stockAvailable %>)">
+                                -
+                              </button>
+
+                              <!-- Quantity Input (Read-Only) -->
+                              <input type="number" class="form-control quantity-input" value="<%= item.quantity %>"
+                                min="1" id="quantity-<%= item.productId._id %>" style="width: 60px; text-align: center;"
+                                readonly />
+
+                              <!-- Increase Button -->
+                              <button class="btn btn-outline-secondary increase"
+                                onclick="increaseQuantity('<%= item.productId._id %>', <%= item.stockAvailable %>)"
+                                id="increase-btn-<%= item.productId._id %>" <% if (item.quantity>= item.stockAvailable)
+                                { %> disabled <% } %>>
+                                  +
+                              </button>
+                            </div>
+                          </td>
+
+
+                          <td class="item-total" id="item-total-<%= index %>">
+                            ₹<%= (item.offerPrice * item.quantity).toFixed(2) %>
+                          </td>
+                          <td>
+                            <button class="btn btn-black btn-sm remove" onclick="confirmRemoveCartItem(event)">
+                              <i data-id="<%= item._id %>" class="fa-solid fa-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <% }); %>
+                          <% } %>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="col-md-6">
-          <div class="row mb-5">
-            <div class="col-md-6 mb-3 mb-md-0">
-              <button class="btn btn-black btn-sm btn-block" onclick="updateCart()">Update Cart</button>
-            </div>
-            <div class="col-md-6">
-              <a href="/shop"><button class="btn btn-outline-black btn-sm btn-block">Continue Shopping</button></a>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="row mb-5">
+              <div class="col-md-6 mb-3 mb-md-0">
+                <button class="btn btn-black btn-sm btn-block" onclick="updateCart()">Update Cart</button>
+              </div>
+              <div class="col-md-6">
+                <a href="/shop"><button class="btn btn-outline-black btn-sm btn-block">Continue Shopping</button></a>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-6 pl-5">
-          <div class="row justify-content-end">
-            <div class="col-md-7">
-              <div class="row">
-                <div class="col-md-12 text-right border-bottom mb-5">
-                  <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
+          <div class="col-md-6 pl-5">
+            <div class="row justify-content-end">
+              <div class="col-md-7">
+                <div class="row">
+                  <div class="col-md-12 text-right border-bottom mb-5">
+                    <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
+                  </div>
                 </div>
-              </div>
-              <div class="row mb-3">
-                <div class="col-md-6">
-                  <span class="text-black">Subtotal</span>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <span class="text-black">Subtotal</span>
+                  </div>
+                  <div class="col-md-6 text-right">
+                    <strong class="text-black" id="subtotal">&#8377;<%= cart.cartTotal %></strong>
+                  </div>
                 </div>
-                <div class="col-md-6 text-right">
-                  <strong class="text-black" id="subtotal">&#8377;<%= cart.cartTotal%></strong>
+                <div class="row mb-5">
+                  <div class="col-md-6">
+                    <span class="text-black">Total</span>
+                  </div>
+                  <div class="col-md-6 text-right">
+                    <strong class="text-black" id="total">&#8377;<%= cart.cartTotal %></strong>
+                  </div>
                 </div>
-              </div>
-              <div class="row mb-5">
-                <div class="col-md-6">
-                  <span class="text-black">Total</span>
-                </div>
-                <div class="col-md-6 text-right">
-                  <strong class="text-black" id="total">&#8377;<%= cart.cartTotal%></strong>
-                </div>
-              </div>
 
-              <div class="row">
-                <div class="col-md-12">
-                  <button class="btn btn-black btn-lg py-3 btn-block" onclick="window.location='checkout.html'">Proceed To Checkout</button>
+                <div class="row">
+                  <div class="col-md-12">
+                    <form action="/checkout" method="POST" id="checkoutForm">
+                      <!-- Cart data embedded as a data attribute -->
+                      <div id="cartContainer" data-cart-items='<%- JSON.stringify(cart.items) %>'
+                        data-cart-total="<%= cart.cartTotal %>"></div>
+                      <input type="hidden" name="cartData" id="cartData" />
+                      <button type="submit" class="btn btn-black btn-lg py-3 btn-block">Proceed To Checkout</button>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
@@ -152,16 +175,91 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <%- include("./layouts/footer.ejs") %>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="js/bootstrap.bundle.min.js"></script>
-  <script src="js/tiny-slider.js"></script>
-  <script src="js/custom.js"></script>
-  <script src="js/users/cart.js"></script>
-  
-  
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      // Function to handle decreasing the quantity
+      function decreaseQuantity(productId, stockAvailable) {
+        const quantityInput = document.getElementById(`quantity-${productId}`);
+        const increaseButton = document.getElementById(`increase-btn-${productId}`);
+        let currentQuantity = parseInt(quantityInput.value);
+
+        // Decrease quantity if greater than 1
+        if (currentQuantity > 1) {
+          quantityInput.value = currentQuantity - 1;
+        }
+
+        // Re-enable increase button if stock allows
+        if (currentQuantity - 1 < stockAvailable) {
+          increaseButton.disabled = false;
+        }
+      }
+
+      // Function to handle increasing the quantity
+      function increaseQuantity(productId, stockAvailable) {
+        const quantityInput = document.getElementById(`quantity-${productId}`);
+        const increaseButton = document.getElementById(`increase-btn-${productId}`);
+        let currentQuantity = parseInt(quantityInput.value);
+
+        // Check if the cart quantity matches the stock
+        if (currentQuantity < stockAvailable) {
+          quantityInput.value = currentQuantity + 1;
+
+          // Disable the button if reaching the stock limit
+          if (currentQuantity + 1 === stockAvailable) {
+            increaseButton.disabled = true;
+
+            // Show a SweetAlert message
+            Swal.fire({
+              icon: 'warning',
+              title: 'Maximum Stock Reached!',
+              text: 'You have reached the maximum stock available for this product.',
+              showConfirmButton: false,
+              timer: 1500
+            });
+          }
+        } else {
+          // Prevent further increment and show SweetAlert message
+          increaseButton.disabled = true;
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Out of Stock!',
+            text: 'You cannot add more of this product as the stock is limited.',
+            showConfirmButton: false,
+            timer: 1500
+          });
+        }
+      }
+    </script>
+
+
+
+
+    <%- include("./layouts/footer.ejs") %>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <script src="js/bootstrap.bundle.min.js"></script>
+      <script src="js/tiny-slider.js"></script>
+      <script src="js/custom.js"></script>
+      <script src="js/users/cart.js"></script>
+
+      <script>
+        document.querySelector('#checkoutForm').addEventListener('submit', function (e) {
+          // Extract cart data from data attributes
+          const cartContainer = document.querySelector('#cartContainer');
+          const cart = {
+            items: JSON.parse(cartContainer.getAttribute('data-cart-items')),
+            cartTotal: parseFloat(cartContainer.getAttribute('data-cart-total')),
+          };
+
+          // Serialize cart data into the hidden input field
+          document.querySelector('#cartData').value = JSON.stringify(cart);
+        });
+      </script>
+
+
+
 
 </body>
+
 </html>

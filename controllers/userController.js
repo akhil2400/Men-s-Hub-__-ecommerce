@@ -8,6 +8,7 @@ const productModel = require('../models/productModel');
 const categoryModel = require('../models/categoryModel');
 const cartModel = require('../models/cartModel');
 const addressModel = require('../models/addressModel')
+const orderModel = require('../models/orderModel');
 const mongoose = require('mongoose');
 
 
@@ -66,7 +67,7 @@ module.exports = {
       console.log('User data cleared ')
       return res.status(400).json({
         st: false,
-        msg: 'sessiron expired',
+        msg: 'session expired',
       })
     }
     const { userName, email, password, mobileNumber, gender } = req.session.userData;
@@ -210,7 +211,7 @@ module.exports = {
   async updateProfile(req, res) {
     const { userName, email, mobileNumber } = req.body;
     const currentUserEmail = req.session.userData.email;
-     console.log(userName, email, mobileNumber, currentUserEmail)
+    console.log(userName, email, mobileNumber, currentUserEmail)
     const errors = {};
 
     try {
@@ -263,7 +264,7 @@ module.exports = {
       return res.status(500).json({ st: false, msg: 'Internal server error' });
     }
   },
-  
+
 
   async loadmyaddress(req, res) {
     const { email } = req.session.userData;
@@ -314,7 +315,7 @@ module.exports = {
     const { id } = req.params;
     console.log(id)
     try {
-      const address = await addressModel.findOne({_id:id})
+      const address = await addressModel.findOne({ _id: id })
       console.log(address)
       res.json(address);
     }
@@ -327,7 +328,7 @@ module.exports = {
     const { address_id } = req.params;
     const { houseNumber, street, city, landmark, district, state, country, pinCode } = req.body;
 
-    console.log("Request Params ID:", address_id,req.body);
+    console.log("Request Params ID:", address_id, req.body);
 
     try {
       const updatedAddress = await addressModel.findByIdAndUpdate(
@@ -344,7 +345,7 @@ module.exports = {
         },
         { new: true } // Ensures the updated document is returned
       );
-     console.log(updatedAddress)
+      console.log(updatedAddress)
       if (!updatedAddress) {
         consol.log("Address not found");
         return res.status(404).json({
@@ -461,7 +462,7 @@ module.exports = {
 
 
 
-  
+
   loadabout(req, res) {
     res.render('about');
   },
@@ -477,29 +478,29 @@ module.exports = {
       }
     })
   },
-  
+
   async removeCartItem(req, res) {
     try {
-      const { itemId } = req.body;  
+      const { itemId } = req.body;
       if (!itemId) {
         return res.status(400).json({ st: false, msg: 'Invalid itemId' });
       }
-  
+
       const cart = await cartModel.findOne({ 'items._id': new mongoose.Types.ObjectId(itemId) });
       if (!cart) {
         return res.status(404).json({ st: false, msg: 'Cart not found' });
       }
-  
+
       // Remove the item by itemId
       await cartModel.updateOne(
         { 'items._id': new mongoose.Types.ObjectId(itemId) },
         { $pull: { items: { _id: new mongoose.Types.ObjectId(itemId) } } }
       );
-  
+
       // Recalculate the cart total
       cart.cartTotal = cart.items.reduce((total, item) => total + item.total, 0);
       await cart.save();
-  
+
       res.status(200).json({ st: true });
     } catch (error) {
       console.error('Error removing item from cart:', error);
@@ -509,47 +510,55 @@ module.exports = {
       });
     }
   },
-  
+
 
 
   async loadcart(req, res) {
     console.log('Load cart endpoint hit');
     try {
-      const { email } = req.session.userData;
-      console.log(email);
-      const user = await userModel.findOne({ email }).lean();
-  
-      if (!user) {
-        return res.status(404).send('User not found');
-      }
-  
-      const cart = await cartModel.findOne({ userId: user._id }).populate('items.productId');
-      console.log(cart);
-  
-      // If the cart doesn't exist, create an empty cart object
-      if (!cart) {
-        return res.render('cart', { cart: { items: [], cartTotal: 0 } });
-      }
-  
-      // Ensure cart.items is always an array
-      if (!Array.isArray(cart.items)) {
-        cart.items = [];
-      }
-  
-      // Ensure cartTotal exists, calculate it if missing
-      if (cart.cartTotal === undefined || cart.cartTotal === null) {
-        cart.cartTotal = cart.items.reduce((total, item) => total + item.price * item.quantity, 0);
-      }
-  
-      console.log(cart);
-      console.log('cart loaded') // For debugging
-      return res.render('cart', { cart });
-      
+        const { email } = req.session.userData;
+        console.log(email);
+        const user = await userModel.findOne({ email }).lean();
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        const cart = await cartModel.findOne({ userId: user._id }).populate('items.productId');
+        console.log(cart);
+
+        // If the cart doesn't exist, create an empty cart object
+        if (!cart) {
+            return res.render('cart', { cart: { items: [], cartTotal: 0 } });
+        }
+
+        // Ensure cart.items is always an array
+        if (!Array.isArray(cart.items)) {
+            cart.items = [];
+        }
+
+        // Ensure cartTotal exists, calculate it if missing
+        if (cart.cartTotal === undefined || cart.cartTotal === null) {
+            cart.cartTotal = cart.items.reduce((total, item) => total + (item.price * item.quantity), 0);
+        }
+
+        // Add stock info to each cart item
+        cart.items = cart.items.map(item => {
+            const stockAvailable = item.productId.stock;
+            item.stockAvailable = stockAvailable;
+            return item;
+        });
+
+        console.log('Cart loaded:', cart);
+        return res.render('cart', { cart });
     } catch (error) {
-      console.error(error);
-      res.status(500).send('An error occurred while loading the cart');
+        console.error('Error in loadcart:', error);
+        res.status(500).send('An error occurred while loading the cart');
     }
-  },
+},
+
+  
+  
   async fetchCart(req, res) {
     try {
       const { email } = req.session.userData;
@@ -557,24 +566,24 @@ module.exports = {
       if (!user) {
         return res.status(404).json({ msg: 'User not found' });
       }
-  
+
       const cart = await cartModel.findOne({ userId: user._id }).populate('items.productId');
       if (!cart) {
         return res.status(404).json({ msg: 'Cart not found' });
       }
-  
+
       // Ensure cart.items is always an array
       if (!Array.isArray(cart.items)) {
         cart.items = [];
       }
-  
+
       // Calculate cartTotal if missing
       if (cart.cartTotal === undefined || cart.cartTotal === null) {
         cart.cartTotal = cart.items.reduce((total, item) => total + item.price * item.quantity, 0);
       }
 
       console.log(cart)
-    
+
       // Return cart items and the total
       return res.status(200).json({ cart });
     } catch (error) {
@@ -582,7 +591,7 @@ module.exports = {
       return res.status(500).json({ msg: 'An error occurred while fetching the cart' });
     }
   },
-  
+
 
 
   async addToCart(req, res) {
@@ -591,6 +600,7 @@ module.exports = {
       if (!req.session.logedIn) {
         return res.status(401).json({ val: false, msg: 'Please login first' });
       }
+  
       const { email } = req.session.userData;
       const user = await userModel.findOne({ email });
       const { productId, productSize, color, quantity } = req.body;
@@ -606,13 +616,19 @@ module.exports = {
         return res.status(404).json({ val: false, msg: 'Product not found' });
       }
   
+      // Check if requested quantity exceeds stock
       if (parsedQuantity > product.stock) {
         return res.status(400).json({ val: false, msg: 'Quantity exceeds stock' });
       }
   
+      // Check if quantity exceeds the maximum allowed (10 items)
+      if (parsedQuantity > 10) {
+        return res.status(400).json({ val: false, msg: 'Cannot add more than 10 units of this product' });
+      }
+  
       let cart = await cartModel.findOne({ userId: user._id });
-      const productTotal = product.offerPrice 
-        ? product.offerPrice * parsedQuantity 
+      const productTotal = product.offerPrice
+        ? product.offerPrice * parsedQuantity
         : product.price * parsedQuantity;
   
       if (cart) {
@@ -625,8 +641,15 @@ module.exports = {
         );
   
         if (existingItem) {
+          // Check if the updated quantity exceeds the available stock
+          const newQuantity = existingItem.quantity + parsedQuantity;
+  
+          if (newQuantity > product.stock) {
+            return res.status(400).json({ val: false, msg: 'Quantity exceeds available stock' });
+          }
+  
           // Update existing item's quantity and total
-          existingItem.quantity += parsedQuantity;
+          existingItem.quantity = newQuantity;
           const priceToUse = existingItem.offerPrice || existingItem.price;
           existingItem.total = priceToUse * existingItem.quantity;
         } else {
@@ -644,7 +667,6 @@ module.exports = {
   
         // Recalculate cart total
         cart.cartTotal = cart.items.reduce((total, item) => total + item.total, 0);
-        console.log(cart.cartTotal)
         await cart.save();
       } else {
         // Create a new cart for the user
@@ -672,53 +694,135 @@ module.exports = {
     }
   },
   
+
   async updateCartItemQuantity(req, res) {
     try {
-      const { index, quantity } = req.body;
-  
-      if (!quantity || quantity < 1) {
-        return res.status(400).json({ success: false, msg: "Invalid quantity" });
-      }
-  
-      const { email } = req.session.userData;
-      const user = await userModel.findOne({ email }).lean();
-  
-      if (!user) {
-        return res.status(404).json({ msg: "User not found" });
-      }
-  
-      const cart = await cartModel.findOne({ userId: user._id });
-      if (!cart || !cart.items[index]) {
-        return res.status(404).json({ success: false, msg: "Cart item not found" });
-      }
-  
-      // Update quantity and item total
-      const item = cart.items[index];
-      const priceToUse = item.offerPrice || item.price;
-      item.quantity = quantity;
-      item.total = priceToUse * quantity;
-  
-      // Recalculate cart total
-      cart.cartTotal = cart.items.reduce((total, item) => total + item.total, 0);
-  
-      await cart.save();
-  
-      res.status(200).json({
-        success: true,
-        cartTotal: cart.cartTotal,
-        itemTotal: item.total,
-      });
+        const { productId, quantity } = req.body;
+
+        if (!quantity || quantity < 1) {
+            return res.status(400).json({ success: false, msg: "Invalid quantity" });
+        }
+
+        const { email } = req.session.userData;
+        const user = await userModel.findOne({ email }).lean();
+
+        if (!user) {
+            return res.status(404).json({ msg: "User not found" });
+        }
+
+        const cart = await cartModel.findOne({ userId: user._id });
+
+        if (!cart) {
+            return res.status(404).json({ success: false, msg: "Cart not found" });
+        }
+
+        // Find the cart item and update the quantity
+        const cartItem = cart.items.find(item => item.productId.toString() === productId);
+
+        if (!cartItem) {
+            return res.status(404).json({ success: false, msg: "Product not found in cart" });
+        }
+
+        // Update quantity and item total
+        const priceToUse = cartItem.offerPrice || cartItem.price;
+        cartItem.quantity = quantity;
+        cartItem.total = priceToUse * quantity;
+
+        // Recalculate cart total
+        cart.cartTotal = cart.items.reduce((total, item) => total + item.total, 0);
+
+        await cart.save();
+
+        res.status(200).json({
+            success: true,
+            cartTotal: cart.cartTotal,
+            itemTotal: cartItem.total,
+        });
     } catch (error) {
-      console.error("Error updating cart item quantity:", error);
-      res.status(500).json({ success: false, msg: "Server error" });
+        console.error("Error updating cart quantity:", error);
+        res.status(500).json({ success: false, msg: "Server error" });
     }
-  },
+},
 
   
 
-  async loadcheckout(req, res) {
-    res.render('checkout');
-    },
+
+
+  // async loadcheckout(req, res) {
+  //   console.log("Load checkout endpoint hit");
+  //   try {
+  //     const cart = req.session.cart;
+  //     if (!cart || cart.items.length === 0) {
+  //       return res.status(400).send("Your cart is empty.");
+  //     }
+
+  //     const subtotal = cart.items.reduce((sum, item) => {
+  //       return sum + item.offerPrice * item.quantity;
+  //     }, 0);
+  //     console.log("subtotal:",subtotal);
+
+  //     const shippingCost = 50;
+  //     const cartTotal = subtotal + shippingCost;
+
+  //     // Log the cart object to verify subtotal, shippingCost, and cartTotal
+  //     console.log("Cart before rendering:", JSON.stringify(cart, null, 2));
+
+  //     // Update cart object with calculated values
+  //     cart.subtotal = subtotal;
+  //     cart.shippingCost = shippingCost;
+  //     cart.cartTotal = cartTotal;
+
+  //     // Fetch addresses for the user
+  //     const addresses = await addressModel.find({ userId: req.user._id });
+  //     console.log(addresses);
+
+  //     // Render the checkout page with cart and addresses
+  //     res.render("checkout", { cart, addresses });
+  //   } catch (error) {
+  //     console.error("Error loading checkout:", error);
+  //     res.status(500).send("Internal Server Error");
+  //   }
+  // },
+
+
+  async processCheckout(req, res) {
+    try {
+      const user = await userModel.findOne({ email: req.session.userData.email });
+      const userId = user.id;
+     
+
+
+      if (!userId) {
+        return res.status(400).send('User ID is required');
+      }
+
+      const addresses = await addressModel.find({ userId });
+      if (!addresses || addresses.length === 0) {
+        return res.status(400).send('No addresses found for this user');
+      }
+      const cartData = req.body.cartData ? JSON.parse(req.body.cartData) : {};
+      if (!cartData.items || cartData.items.length === 0) {
+        return res.status(400).send('Invalid or empty cart data');
+      }
+      const subtotal = cartData.items.reduce((sum, item) => {
+        return sum + item.offerPrice * item.quantity;
+      }, 0);
+      const shippingCost = 50;
+      const cartTotal = subtotal + shippingCost;
+      console.log("Subtotal:", subtotal);
+      console.log("Shipping Cost:", shippingCost);
+      console.log("Cart Total:", cartTotal);
+      cartData.subtotal = subtotal;
+      cartData.shippingCost = shippingCost;
+      cartData.cartTotal = cartTotal;
+      res.render('checkout', { cart: cartData, addresses });
+    } catch (error) {
+      console.error('Error processing checkout:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  }
+
+
 
 }
 

@@ -35,8 +35,8 @@ router.post('/add-to-cart',userController.addToCart)
 router.delete('/cart/remove', userController.removeCartItem);
 router.post ('/update-cart', userController.updateCartItemQuantity);
 
-router.get('/checkout',userController.loadcheckout)
+// router.get('/checkout',userController.loadcheckout)
 
-
+router.post('/checkout', userController.processCheckout);
 
 module.exports = router;

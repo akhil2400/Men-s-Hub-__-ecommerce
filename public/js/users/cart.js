@@ -171,23 +171,33 @@ async function updateItemQuantity(event) {
   const quantityInput = document.querySelector(`.quantity-input[data-index="${index}"]`);
   const quantity = parseInt(quantityInput.value);
 
-  const cart = globalCart;  // Use the global cart variable here
+  if (quantity < 1) {
+    alert("Quantity must be at least 1.");
+    quantityInput.value = 1;
+    return;
+  }
+
+  const cart = globalCart; // Use the global cart variable here
 
   if (cart?.items && cart.items[index]) {
     const item = cart.items[index];
 
+    // Calculate the item total and update in the cart object
     const priceToUse = item.offerPrice || item.price;
     const itemTotal = priceToUse * quantity;
     item.quantity = quantity;
 
+    // Update the item total on the frontend
     document.getElementById(`item-total-${index}`).textContent = `₹${itemTotal.toFixed(2)}`;
 
+    // Recalculate subtotal and total
     let newSubtotal = 0;
-    cart.items.forEach((item) => {
-      const priceToUse = item.offerPrice || item.price;
-      newSubtotal += priceToUse * item.quantity;
+    cart.items.forEach((cartItem) => {
+      const priceToUse = cartItem.offerPrice || cartItem.price;
+      newSubtotal += priceToUse * cartItem.quantity;
     });
 
+    // Update the subtotal and total on the frontend
     document.getElementById('subtotal').textContent = `₹${newSubtotal.toFixed(2)}`;
     document.getElementById('total').textContent = `₹${newSubtotal.toFixed(2)}`;
   }

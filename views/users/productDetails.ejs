@@ -4,10 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <% if (product) { %>
-      <title><%= product.name %> - Product Details</title>
-      <% } else { %>
-      <title>Product Not Found</title>
-      <% } %>
+    <title><%= product.name %> - Product Details</title>
+    <% } else { %>
+    <title>Product Not Found</title>
+    <% } %>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
@@ -106,8 +106,13 @@
               <label>Size:</label>
               <% product.sizes.forEach(size => { %>
               <label class="size-option"
-                ><input class="size-selection" type="radio" name="size" value="<%= size %>" /> <%= size
-                %></label
+                ><input
+                  class="size-selection"
+                  type="radio"
+                  name="size"
+                  value="<%= size %>"
+                />
+                <%= size %></label
               >
               <% }) %>
             </div>
@@ -138,7 +143,7 @@
                 data-stock="<%= product.stock %>"
                 id="quantityInput"
                 min="1"
-                max="<%= product.stock %>"
+                max="<%= Math.min(product.stock, 10) %>"
               />
 
               <div
@@ -153,7 +158,6 @@
           </div>
           <!-- Add to Cart and Buy Now -->
           <div class="actions mt-3">
-
             <button
               class="btn btn-primary add-to-cart-btn"
               data-id="<%= product._id %>"
