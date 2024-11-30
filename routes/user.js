@@ -34,6 +34,8 @@ router.get('/fetch-cart',userController.fetchCart);
 router.post('/add-to-cart',userController.addToCart)
 router.delete('/cart/remove', userController.removeCartItem);
 router.post ('/update-cart', userController.updateCartItemQuantity);
+router.get('/thankyou',userController.loadthankyou)
+router.post('/place-order', userController.placeOrder);
 
 // router.get('/checkout',userController.loadcheckout)
 

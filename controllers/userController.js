@@ -559,38 +559,40 @@ module.exports = {
 
   
   
-  async fetchCart(req, res) {
-    try {
-      const { email } = req.session.userData;
-      const user = await userModel.findOne({ email }).lean();
-      if (!user) {
-        return res.status(404).json({ msg: 'User not found' });
-      }
-
-      const cart = await cartModel.findOne({ userId: user._id }).populate('items.productId');
-      if (!cart) {
-        return res.status(404).json({ msg: 'Cart not found' });
-      }
-
-      // Ensure cart.items is always an array
-      if (!Array.isArray(cart.items)) {
-        cart.items = [];
-      }
-
-      // Calculate cartTotal if missing
-      if (cart.cartTotal === undefined || cart.cartTotal === null) {
-        cart.cartTotal = cart.items.reduce((total, item) => total + item.price * item.quantity, 0);
-      }
-
-      console.log(cart)
-
-      // Return cart items and the total
-      return res.status(200).json({ cart });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ msg: 'An error occurred while fetching the cart' });
+async fetchCart(req, res) {
+  try {
+    const { email } = req.session.userData;
+    const user = await userModel.findOne({ email }).lean();
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
     }
-  },
+
+    const cart = await cartModel.findOne({ userId: user._id }).populate('items.productId');
+    if (!cart) {
+      return res.status(404).json({ msg: 'Cart not found' });
+    }
+
+    // Ensure cart.items is always an array
+    cart.items = Array.isArray(cart.items) ? cart.items : [];
+
+    // Calculate cartTotal if missing
+    if (!cart.cartTotal) {
+      cart.cartTotal = cart.items.reduce(
+        (total, item) => total + (item.productId.price || 0) * item.quantity,
+        0
+      );
+    }
+
+    console.log(cart);
+
+    // Return cart items and the total
+    return res.status(200).json({ cart });
+  } catch (error) {
+    console.error('Error fetching cart:', error);
+    return res.status(500).json({ msg: 'An error occurred while fetching the cart' });
+  }
+},
+
 
 
 
@@ -842,9 +844,93 @@ module.exports = {
       console.error('Error processing checkout:', error);
       res.status(500).send('Internal Server Error');
     }
-  }
+  },
+  async loadthankyou(req, res) {
+    res.render('thankyou');
+  },
 
+  async placeOrder(req, res) {
+    try {
 
+      const user = await userModel.findOne({ email: req.session.userData.email });
+      const userId = user.id;
+      req.session.userId = userId;
+      const { selectedAddress, paymentMethod, items } = req.body;
+  
+      // Debug incoming request data
+      console.log('Place Order Request Data:', req.body);
+  
+      if (!selectedAddress || !paymentMethod) {
+        return res.status(400).json({ val: false, msg: 'Address and payment method are required' });
+      }
+  
+      if (!items || items.length === 0) {
+        return res.status(400).json({ val: false, msg: 'Cart is empty' });
+      }
+  
+      // Ensure user is logged in and session has userData
+      if (!req.session.userId ) {
+        return res.status(401).json({ val: false, msg: 'User is not logged in' });
+      }
+  
+      // Validate and process each product in the cart
+      for (const item of items) {
+        const product = await productModel.findById(item.productId);
+  
+        if (!product) {
+          return res.status(404).json({ val: false, msg: `Product not found: ${item.productId}` });
+        }
+  
+        // Check if stock is sufficient
+        if (product.stock < item.quantity) {
+          return res.status(400).json({
+            val: false,
+            msg: `Insufficient stock for product: ${product.name}`,
+          });
+        }
+  
+        // Decrease product stock
+        product.stock -= item.quantity;
+        await product.save();
+      }
+  
+      // Calculate total order price
+      const totalOrderPrice = items.reduce(
+        (sum, item) => sum + item.productId.price * item.quantity,
+        0
+      );
+  
+      // Debug total calculation
+      console.log('Total Order Price:', totalOrderPrice);
+  
+      // Save the order to the database
+      const order = new orderModel({
+        userId: req.session.userId,  // Ensure userId is set from session
+        billingAddress: selectedAddress,
+        cart: { items, paymentMethod },
+        totalAmount: totalOrderPrice,
+      });
+  
+      // Debug order before saving
+      console.log('Order Data:', order);
+  
+      await order.save();
+  
+      // Empty the user's cart
+      await cartModel.findOneAndUpdate(
+        { userId: req.session.userId },
+        { $set: { items: [], cartTotal: 0 } }
+      );
+  
+      res.status(200).json({ val: true, msg: 'Order placed successfully!' });
+    } catch (error) {
+      console.error('Error placing order:', error);
+      res.status(500).json({ val: false, msg: 'An error occurred while placing the order' });
+    }
+  },
+  
+  
+  
 
 }
 

@@ -70,39 +70,39 @@
           <div class="col-md-6 mb-5 mb-md-0">
             <h2 class="h3 mb-3 text-black">Billing Details</h2>
             <div class="p-3 p-lg-5 border bg-white">
-                <% addresses.forEach((data, index)=> { %>
-                  <div data-id="<%= data._id %>" class="address-box">
-                    <div class="address-boxes">
-                      <!-- Radio button for selecting the address -->
-                      <input type="radio" name="selectedAddress" id="address-<%= index %>" value="<%= data._id %>"
-                        class="form-check-input" <%=index===0 ? 'checked' : '' %> />
-                      <label for="address-<%= index %>" class="form-check-label">
-                        <p>House Number: <%= data.houseNumber %>
-                        </p>
-                        <p>Street: <%= data.street %>
-                        </p>
-                        <p>Landmark: <%= data.landmark %>
-                        </p>
-                        <p>City: <%= data.city %>
-                        </p>
-                        <p>District: <%= data.district %>
-                        </p>
-                        <p>State: <%= data.state %>
-                        </p>
-                        <p>Country: <%= data.country %>
-                        </p>
-                        <p>Pin Code: <%= data.pinCode %>
-                        </p>
-                      </label>
-                    </div>
-                    <!-- <div>
-                      <button class="edit-address" data-id="">EDIT</button>
-                      <button class="remove-address">REMOVE</button>
-                    </div> -->
+              <% addresses.forEach((data, index) => { %>
+                <div data-id="<%= data._id %>" class="address-box">
+                  <div class="address-boxes">
+                    <!-- Radio button for selecting the address -->
+                    <input type="radio" name="selectedAddress" id="address-<%= index %>" value="<%= data._id %>"
+                      class="form-check-input" />
+                    <label for="address-<%= index %>" class="form-check-label">
+                      <p>House Number: <%= data.houseNumber %>
+                      </p>
+                      <p>Street: <%= data.street %>
+                      </p>
+                      <p>Landmark: <%= data.landmark %>
+                      </p>
+                      <p>City: <%= data.city %>
+                      </p>
+                      <p>District: <%= data.district %>
+                      </p>
+                      <p>State: <%= data.state %>
+                      </p>
+                      <p>Country: <%= data.country %>
+                      </p>
+                      <p>Pin Code: <%= data.pinCode %>
+                      </p>
+                    </label>
                   </div>
-                  <% }); %>
-              
+                  <!-- <div>
+                    <button class="edit-address" data-id="">EDIT</button>
+                    <button class="remove-address">REMOVE</button>
+                  </div> -->
+                </div>
+              <% }); %>
             </div>
+            
 
           </div>
           <div class="col-md-6">
@@ -257,10 +257,11 @@
               </div>
 
               <div class="form-group">
-                <button class="place-order-button" onclick="window.location='thankyou.html'">
+                <button class="place-order-button" onclick="validateOrder()">
                   Place Order
                 </button>
               </div>
+              
             </div>
           </div>
         </div>
@@ -271,6 +272,101 @@
     </div>
 
     <%- include("./layouts/footer.ejs") %>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+async function validateOrder() {
+  const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked');
+  const selectedPayment = document.querySelector('input[name="payment"]:checked');
+
+  if (!selectedAddress) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Address not selected',
+      text: 'Please select an address before placing your order.',
+      confirmButtonText: 'OK',
+    });
+    return false;
+  }
+
+  if (!selectedPayment) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Payment method not selected',
+      text: 'Please select a payment method before placing your order.',
+      confirmButtonText: 'OK',
+    });
+    return false;
+  }
+
+  try {
+    // Fetch cart items from the database
+    const response = await fetch('/fetch-cart', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch cart items.');
+    }
+
+    const cartData = await response.json();
+    const cartItems = cartData.cart.items; // Access the items array
+    console.log(cartItems);
+
+    if (!cartItems || cartItems.length === 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Cart is empty',
+        text: 'Add items to the cart before placing an order.',
+        confirmButtonText: 'OK',
+      });
+      return false;
+    }
+
+    // Send the order details to the backend
+    const orderResponse = await fetch('/place-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        selectedAddress: selectedAddress.value,
+        paymentMethod: selectedPayment.id,
+        items: cartItems,
+      }),
+    });
+
+    const orderData = await orderResponse.json();
+
+    if (orderData.val) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Order Placed Successfully',
+        text: orderData.msg,
+        confirmButtonText: 'OK',
+      }).then(() => {
+        window.location = '/thankyou'; // Redirect to thank you page
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: orderData.msg,
+        confirmButtonText: 'OK',
+      });
+    }
+  } catch (error) {
+    console.error('Error during order validation:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'An error occurred while placing your order.',
+      confirmButtonText: 'OK',
+    });
+  }
+}
+
+
+</script>
 
       <script src="js/bootstrap.bundle.min.js"></script>
       <script src="js/tiny-slider.js"></script>
