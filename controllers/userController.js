@@ -621,9 +621,12 @@ module.exports = {
         return res.status(400).json({ val: false, msg: 'Quantity exceeds stock' });
       }
   
-      // Check if quantity exceeds the maximum allowed (10 items)
-      if (parsedQuantity > 10) {
-        return res.status(400).json({ val: false, msg: 'Cannot add more than 10 units of this product' });
+      // Check if quantity exceeds the maximum allowed (3 units per product or 3 distinct items in the cart)
+      if (parsedQuantity > 3) {
+        return res.status(400).json({
+          val: false,
+          msg: 'Cannot add more than 3 units of this product.',
+        });
       }
   
       let cart = await cartModel.findOne({ userId: user._id });
@@ -631,6 +634,7 @@ module.exports = {
         ? product.offerPrice * parsedQuantity
         : product.price * parsedQuantity;
   
+      // If the cart exists, check for product-specific and cart-wide limits
       if (cart) {
         // Find existing item in cart
         const existingItem = cart.items.find(
@@ -640,9 +644,16 @@ module.exports = {
             item.color === color
         );
   
+        // Check if adding this product exceeds its quantity limit
         if (existingItem) {
-          // Check if the updated quantity exceeds the available stock
           const newQuantity = existingItem.quantity + parsedQuantity;
+  
+          if (newQuantity > 3) {
+            return res.status(400).json({
+              val: false,
+              msg: 'Cannot add more than 3 units of this product to the cart.',
+            });
+          }
   
           if (newQuantity > product.stock) {
             return res.status(400).json({ val: false, msg: 'Quantity exceeds available stock' });
@@ -653,6 +664,14 @@ module.exports = {
           const priceToUse = existingItem.offerPrice || existingItem.price;
           existingItem.total = priceToUse * existingItem.quantity;
         } else {
+          // Check if the total number of distinct items in the cart exceeds 3
+          if (cart.items.length >= 3) {
+            return res.status(400).json({
+              val: false,
+              msg: 'Cannot add more than 3 distinct items to the cart.',
+            });
+          }
+  
           // Add a new item to the cart
           cart.items.push({
             productId,
@@ -694,15 +713,18 @@ module.exports = {
     }
   },
   
+  
 
   async updateCartItemQuantity(req, res) {
     try {
-        const { productId, quantity } = req.body;
-
+        const { index, quantity } = req.body;
+        console.log(index, quantity);
         if (!quantity || quantity < 1) {
             return res.status(400).json({ success: false, msg: "Invalid quantity" });
         }
-
+        if(quantity > 3){
+          return res.status(400).json({ success: false, msg: "Quantity cannot be more"})
+        }
         const { email } = req.session.userData;
         const user = await userModel.findOne({ email }).lean();
 
@@ -717,36 +739,36 @@ module.exports = {
         }
 
         // Find the cart item and update the quantity
-        const cartItem = cart.items.find(item => item.productId.toString() === productId);
-
-        if (!cartItem) {
-            return res.status(404).json({ success: false, msg: "Product not found in cart" });
-        }
-
-        // Update quantity and item total
-        const priceToUse = cartItem.offerPrice || cartItem.price;
-        cartItem.quantity = quantity;
-        cartItem.total = priceToUse * quantity;
-
-        // Recalculate cart total
-        cart.cartTotal = cart.items.reduce((total, item) => total + item.total, 0);
+        //const cartItem = cart.items.find(item => item.productId.toString() === productId);
+        cart.items[index].quantity = quantity;
+        cart.items[index].total = cart.items[index].offerPrice * quantity;
+        cart.cartTotal = cart.items.reduce((acc, item) => acc + item.total, 0);
 
         await cart.save();
+        // if (!cartItem) {
+        //     return res.status(404).json({ success: false, msg: "Product not found in cart" });
+        // }
+
+        // Update quantity and item total
+        // const priceToUse = cartItem.offerPrice || cartItem.price;
+        // cartItem.quantity = quantity;
+        // cartItem.total = priceToUse * quantity;
+
+        // // Recalculate cart total
+        // cart.cartTotal = cart.items.reduce((total, item) => total + item.total, 0);
+
+        // await cart.save();
 
         res.status(200).json({
             success: true,
             cartTotal: cart.cartTotal,
-            itemTotal: cartItem.total,
+            itemTotal: cart.items[index].total,
         });
     } catch (error) {
         console.error("Error updating cart quantity:", error);
         res.status(500).json({ success: false, msg: "Server error" });
     }
 },
-
-  
-
-
 
   // async loadcheckout(req, res) {
   //   console.log("Load checkout endpoint hit");

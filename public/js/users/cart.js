@@ -1,5 +1,5 @@
- // Function to handle adding items to the cart (from productDetails.ejs)
- document.querySelector('.add-to-cart-btn')?.addEventListener('click', async (event) => {
+// Function to handle adding items to the cart (from productDetails.ejs)
+document.querySelector('.add-to-cart-btn')?.addEventListener('click', async (event) => {
   event.preventDefault();
 
   const productId = event.target.getAttribute('data-id');
@@ -167,6 +167,7 @@ document.querySelectorAll('.color-option').forEach((button) => {
 // }
 
 async function updateItemQuantity(event) {
+  console.log('Updating item quantity...');
   const index = event.target.getAttribute('data-index');
   const quantityInput = document.querySelector(`.quantity-input[data-index="${index}"]`);
   const quantity = parseInt(quantityInput.value);
@@ -337,13 +338,13 @@ async function reloadCart() {
       document.getElementById('total').textContent = `₹${subtotal.toFixed(2)}`;
 
       // Add event listeners for quantity updates and removals
-      document.querySelectorAll('.decrease').forEach(button => 
+      document.querySelectorAll('.decrease').forEach(button =>
         button.addEventListener('click', (event) => updateQuantity(event))
       );
-      document.querySelectorAll('.increase').forEach(button => 
+      document.querySelectorAll('.increase').forEach(button =>
         button.addEventListener('click', (event) => updateQuantity(event))
       );
-      
+
       document.querySelectorAll('.remove').forEach(button => button.addEventListener('click', confirmRemoveCartItem));
     }
   } catch (error) {
@@ -356,16 +357,16 @@ async function reloadCart() {
 async function updateQuantity(event) {
   const index = event.target.getAttribute('data-index');
   const action = event.target.classList.contains('increase') ? 'increase' : 'decrease';
-  const quantityInput = document.querySelector(`.quantity-input[data-index="${index}"]`);
-  
+  const quantityInput = document.querySelector(`.quantity-input-${index}`);
+  console.log(quantityInput.value);
   let currentQuantity = parseInt(quantityInput.value);
   if (action === 'increase') {
     currentQuantity++;
   } else if (action === 'decrease' && currentQuantity > 1) {
     currentQuantity--;
   }
+  console.log(currentQuantity)
 
-  quantityInput.value = currentQuantity;
 
   try {
     // Send the updated quantity to the backend
@@ -381,20 +382,30 @@ async function updateQuantity(event) {
     });
 
     const data = await response.json();
-    
+
     // If the response is successful, update the cart
     if (data.success) {
       // Update the item total
       const itemTotalElement = document.getElementById(`item-total-${index}`);
       itemTotalElement.textContent = `₹${data.itemTotal.toFixed(2)}`;
-
+      quantityInput.value = currentQuantity;
       // Update the cart totals (Subtotal and Total)
       const subtotalElement = document.getElementById('subtotal');
       const totalElement = document.getElementById('total');
       subtotalElement.textContent = `₹${data.cartTotal.toFixed(2)}`;
       totalElement.textContent = `₹${data.cartTotal.toFixed(2)}`;
     } else {
+    
+      swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: data.msg+" than 3",
+        showConfirmButton: false,
+        timer: 2000
+      });
+    
       console.error('Failed to update the cart:', data.msg);
+     
     }
   } catch (error) {
     console.error('Error updating quantity:', error);

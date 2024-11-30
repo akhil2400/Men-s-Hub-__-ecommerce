@@ -84,21 +84,21 @@
                           <td>
                             <div class="input-group">
                               <!-- Decrease Button -->
-                              <button class="btn btn-outline-secondary decrease"
-                                onclick="decreaseQuantity('<%= item.productId._id %>', <%= item.stockAvailable %>)">
-                                -
-                              </button>
+                              <button class="btn btn-outline-secondary decrease" data-index="<%= index %>">-</button>
+                          
 
                               <!-- Quantity Input (Read-Only) -->
-                              <input type="number" class="form-control quantity-input" value="<%= item.quantity %>"
-                                min="1" id="quantity-<%= item.productId._id %>" style="width: 60px; text-align: center;"
-                                readonly />
+                              <input type="number" class="form-control quantity-input-<%= index %>" 
+                              value="<%= item.quantity %>" 
+                              min="1" 
+                              id="quantity-<%= item.productId._id %>" 
+                              style="width: 60px; text-align: center;" 
+                              readonly />
 
                               <!-- Increase Button -->
-                              <button class="btn btn-outline-secondary increase"
-                                onclick="increaseQuantity('<%= item.productId._id %>', <%= item.stockAvailable %>)"
+                              <button class="btn btn-outline-secondary increase" data-index="<%= index %>"
                                 id="increase-btn-<%= item.productId._id %>" <% if (item.quantity>= item.stockAvailable)
-                                { %> disabled <% } %>>
+                                { %> disabled <% } %> >
                                   +
                               </button>
                             </div>
@@ -178,59 +178,59 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-      // Function to handle decreasing the quantity
-      function decreaseQuantity(productId, stockAvailable) {
-        const quantityInput = document.getElementById(`quantity-${productId}`);
-        const increaseButton = document.getElementById(`increase-btn-${productId}`);
-        let currentQuantity = parseInt(quantityInput.value);
+      // // Function to handle decreasing the quantity
+      // function decreaseQuantity(productId, stockAvailable) {
+      //   const quantityInput = document.getElementById(`quantity-${productId}`);
+      //   const increaseButton = document.getElementById(`increase-btn-${productId}`);
+      //   let currentQuantity = parseInt(quantityInput.value);
 
-        // Decrease quantity if greater than 1
-        if (currentQuantity > 1) {
-          quantityInput.value = currentQuantity - 1;
-        }
+      //   // Decrease quantity if greater than 1
+      //   if (currentQuantity > 1) {
+      //     quantityInput.value = currentQuantity - 1;
+      //   }
 
-        // Re-enable increase button if stock allows
-        if (currentQuantity - 1 < stockAvailable) {
-          increaseButton.disabled = false;
-        }
-      }
+      //   // Re-enable increase button if stock allows
+      //   if (currentQuantity - 1 < stockAvailable) {
+      //     increaseButton.disabled = false;
+      //   }
+      // }
 
       // Function to handle increasing the quantity
-      function increaseQuantity(productId, stockAvailable) {
-        const quantityInput = document.getElementById(`quantity-${productId}`);
-        const increaseButton = document.getElementById(`increase-btn-${productId}`);
-        let currentQuantity = parseInt(quantityInput.value);
+      // function increaseQuantity(productId, stockAvailable) {
+      //   const quantityInput = document.getElementById(`quantity-${productId}`);
+      //   const increaseButton = document.getElementById(`increase-btn-${productId}`);
+      //   let currentQuantity = parseInt(quantityInput.value);
 
-        // Check if the cart quantity matches the stock
-        if (currentQuantity < stockAvailable) {
-          quantityInput.value = currentQuantity + 1;
+      //   // Check if the cart quantity matches the stock
+      //   if (currentQuantity < stockAvailable) {
+      //     quantityInput.value = currentQuantity + 1;
 
-          // Disable the button if reaching the stock limit
-          if (currentQuantity + 1 === stockAvailable) {
-            increaseButton.disabled = true;
+      //     // Disable the button if reaching the stock limit
+      //     if (currentQuantity + 1 === stockAvailable) {
+      //       increaseButton.disabled = true;
 
-            // Show a SweetAlert message
-            Swal.fire({
-              icon: 'warning',
-              title: 'Maximum Stock Reached!',
-              text: 'You have reached the maximum stock available for this product.',
-              showConfirmButton: false,
-              timer: 1500
-            });
-          }
-        } else {
-          // Prevent further increment and show SweetAlert message
-          increaseButton.disabled = true;
+      //       // Show a SweetAlert message
+      //       Swal.fire({
+      //         icon: 'warning',
+      //         title: 'Maximum Stock Reached!',
+      //         text: 'You have reached the maximum stock available for this product.',
+      //         showConfirmButton: false,
+      //         timer: 1500
+      //       });
+      //     }
+      //   } else {
+      //     // Prevent further increment and show SweetAlert message
+      //     increaseButton.disabled = true;
 
-          Swal.fire({
-            icon: 'error',
-            title: 'Out of Stock!',
-            text: 'You cannot add more of this product as the stock is limited.',
-            showConfirmButton: false,
-            timer: 1500
-          });
-        }
-      }
+      //     Swal.fire({
+      //       icon: 'error',
+      //       title: 'Out of Stock!',
+      //       text: 'You cannot add more of this product as the stock is limited.',
+      //       showConfirmButton: false,
+      //       timer: 1500
+      //     });
+      //   }
+      // }
     </script>
 
 
