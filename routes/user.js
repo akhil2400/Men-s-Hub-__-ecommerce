@@ -3,6 +3,7 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 const noCache = require('../middlewares/noCache');
 const productController = require('../controllers/productController');
+const orderController = require('../controllers/orderController');
 
 
 router.get('/',noCache,userController.loadstartingpage);
@@ -36,6 +37,8 @@ router.delete('/cart/remove', userController.removeCartItem);
 router.post ('/update-cart', userController.updateCartItemQuantity);
 router.get('/thankyou',userController.loadthankyou)
 router.post('/place-order', userController.placeOrder);
+router.get('/orders',orderController.loadorders)
+
 
 // router.get('/checkout',userController.loadcheckout)
 

@@ -1,197 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <title>My Orders</title>
+   <link rel="stylesheet" href="/css/viewOrder.css">
 </head>
 <body>
-  <nav class="custom-navbar navbar navbar navbar-expand-md" arial-label="Furni navigation bar" >
-    <div class="container">
-      <div id="navlogo" >
-        <a href=""><img src="/images/img/logo/A_logo_with_the_letters_M_and_H_together_with_a_cap_on_M-removebg-preview.png" alt=""></a>
-      </div>
-      <a class="navbar-brand" href="index.html"><span class="brandname">Men's Hub </span></a>
-  
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarsFurni"
-        aria-controls="navbarsFurni"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-  
-      <div class="collapse navbar-collapse" id="navbarsFurni">
-        <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
-          <li class="nav-item active">
-            <a class="nav-link" href="/home">Home</a>
-          <li><a class="nav-link" href="/shop">Shop</a></li>
-          <li><a class="nav-link" href="/about">About us</a></li>
-          <li><a class="nav-link" href="/contact">Contact us</a></li>
-          <li><a class="nav-link" href="/dashboard">MY Account</a></li>       
-        </ul>
-        <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-          <li>
-            <a href="wishlist.html">
-              <a href="wishlist.html"><i class="fa fa-heart wishicon2" style="color: white;"> </i></a>        
-            </a>
-          </li>
-          <li>
-            <a class="nav-link" href="#"><img src="/images/user.svg" /></a>
-          </li>
-          <li>
-            <a class="nav-link" href="/cart"
-              ><img src="/images/cart.svg"
-            /></a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+    <div class="orders-container">
+        <div class="orders-header">
+            <h1>My Orders</h1>
+        </div>
 
-
-
-
-  
-
-   <!-- Start Footer Section -->
- <footer class="footer-section">
-  <div class="container relative">
-    <div class="logoimg">
-      <img src="/images/img/logo/A_logo_with_the_letters_M_and_H_together_with_a_cap_on_M-removebg-preview.png" alt="Image" class="img-fluid" />
-    </div>
-
-    <div class="row">
-      <div class="col-lg-8">
-        <div class="subscription-form">
-          <h3 class="d-flex align-items-center">
-            <span class="me-1"
-              ><img
-                src="/images/envelope-outline.svg"
-                alt="Image"
-                class="img-fluid" /></span
-            ><span>Subscribe to Men's Hub</span>
-          </h3>
-
-          <form action="#" class="row g-3">
-            <div class="col-auto">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Enter your name"
-              />
+        <div class="order-item">
+            <img src="/api/placeholder/100/100" alt="Product Image">
+            <div class="order-details">
+                <h3>Wireless Bluetooth Headphones</h3>
+                <p>Order #12345 | Placed on November 15, 2024</p>
+                <p>Quantity: 1 | Total: $129.99</p>
             </div>
-            <div class="col-auto">
-              <input
-                type="email"
-                class="form-control"
-                placeholder="Enter your email"
-              />
+            <div class="order-status">
+                <p class="status-shipped">Shipped</p>
+                <div class="order-actions">
+                    <button class="btn btn-track">Track Package</button>
+                    <button class="btn btn-invoice">Download Invoice</button>
+                </div>
             </div>
-            <div class="col-auto">
-              <button class="  planebutton">
-                <span class="fa fa-paper-plane ">send</span>
-              </button>
+        </div>
+
+        <div class="order-item">
+            <img src="/api/placeholder/100/100" alt="Product Image">
+            <div class="order-details">
+                <h3>Smart Watch Series 5</h3>
+                <p>Order #12346 | Placed on November 20, 2024</p>
+                <p>Quantity: 1 | Total: $299.99</p>
             </div>
-          </form>
+            <div class="order-status">
+                <p class="status-processing">Processing</p>
+                <div class="order-actions">
+                    <button class="btn btn-track">Track Package</button>
+                    <button class="btn btn-invoice">Download Invoice</button>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-
-    <div class="row g-5 mb-5">
-      <div class="col-lg-4">
-        <div class="mb-4 footer-logo-wrap">
-          <a href="#" class="footer-logo">MEN'S HUB<span>.</span></a>
-        </div>
-        <p class="mb-4">
-          Your one-stop destination for premium men's fashion.
-          Shop the latest trends in clothing, accessories, and more. 
-        Quality and style delivered right to your doorstep.
-        </p>
-
-        <ul class="list-unstyled custom-social">
-          <li>
-            <a href="#"><span class="fa fa-brands fa-facebook-f"></span></a>
-          </li>
-          <li>
-            <a href="#"><span class="fa fa-brands fa-twitter"></span></a>
-          </li>
-          <li>
-            <a href="#"><span class="fa fa-brands fa-instagram"></span></a>
-          </li>
-          <li>
-            <a href="#"><span class="fa fa-brands fa-linkedin"></span></a>
-          </li>
-        </ul>
-      </div>
-
-      <div class="col-lg-8">
-        <div class="row links-wrap">
-          <div class="col-6 col-sm-6 col-md-3">
-            <ul class="list-unstyled">
-              <li><a href="#">About us</a></li>
-              <li><a href="#">Services</a></li>
-              <li><a href="#">Blog</a></li>
-              <li><a href="#">Contact us</a></li>
-            </ul>
-          </div>
-
-          <div class="col-6 col-sm-6 col-md-3">
-            <ul class="list-unstyled">
-              <li><a href="#">Support</a></li>
-              <li><a href="#">Knowledge base</a></li>
-              <li><a href="#">Live chat</a></li>
-            </ul>
-          </div>
-
-          <div class="col-6 col-sm-6 col-md-3">
-            <ul class="list-unstyled">
-              <li><a href="#">Jobs</a></li>
-              <li><a href="#">Our team</a></li>
-              <li><a href="#">Leadership</a></li>
-              <li><a href="#">Privacy Policy</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="paymentfooterimgdiv" style="display: flex;">
-      <p>100% secure payment :</p>
-      <img class="paymentfooterimg" src="/images/img/payment-method.png" alt="img not renederd">
-    </div>
-
-    <div class="border-top copyright">
-      <div class="row pt-4">
-        <div class="col-lg-6">
-          <p class="mb-2 text-center text-lg-start">
-            Copyright &copy;
-            <script>
-              document.write(new Date().getFullYear());
-            </script>
-            . All Rights Reserved;to
-            <a hreff="#">Men's Hub</a>
-            <!-- License information: https://untree.co/license/ -->
-          </p>
-        </div>
-
-        <div class="col-lg-6 text-center text-lg-end">
-          <ul class="list-unstyled d-inline-flex ms-auto">
-            <li class="me-4"><a href="#">Terms &amp; Conditions</a></li>
-            <li><a href="#">Privacy Policy</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</footer>
-<!-- End Footer Section -->
-  
-  <script src="/js/users/header.js"></script>
-  
 </body>
 </html>

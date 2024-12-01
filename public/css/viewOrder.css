@@ -1,0 +1,89 @@
+/* body {
+  font-family: Arial, sans-serif;
+  background-color: #f3f3f3;
+  margin: 0;
+  padding: 20px;
+  line-height: 1.6;
+} */
+.orders-container {
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-radius: 5px;
+  padding: 20px;
+}
+.orders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 15px;
+}
+.orders-header h1 {
+  margin: 0;
+  color: #333;
+}
+.order-search {
+  display: flex;
+  align-items: center;
+}
+.order-search input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+.order-item {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 15px 0;
+  align-items: center;
+}
+.order-item img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-right: 20px;
+  border: 1px solid #ddd;
+}
+.order-details {
+  flex-grow: 1;
+}
+.order-details h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+.order-details p {
+  margin: 5px 0;
+  color: #666;
+}
+.order-status {
+  text-align: right;
+}
+.order-status .status-shipped {
+  color: #2ecc71;
+  font-weight: bold;
+}
+.order-status .status-processing {
+  color: #f39c12;
+  font-weight: bold;
+}
+.order-actions {
+  display: flex;
+  gap: 10px;
+}
+.btn {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn-track {
+  background-color: #3498db;
+  color: white;
+}
+.btn-invoice {
+  background-color: #2ecc71;
+  color: white;
+}
