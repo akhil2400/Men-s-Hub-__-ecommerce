@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/shop.css">
   <link href="/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/filter.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
   <style>
@@ -20,37 +22,38 @@
       border-radius: 5px;
       transition: box-shadow 0.3s ease;
     }
-  
+
     .product-card:hover {
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
-  
+
     .product-image-container {
       position: relative;
       overflow: hidden;
     }
-  
+
     .product-image {
       width: 100%;
       border-radius: 5px;
     }
-  
+
     .icon-overlay {
       position: absolute;
       top: 10px;
       right: 10px;
       display: flex;
-      flex-direction: column; /* Stack icons vertically */
-      gap: 10px; /* Space between the icons */
+      flex-direction: column;
+      gap: 10px;
       opacity: 0;
       transition: opacity 0.3s ease;
     }
-  
+
     .product-image-container:hover .icon-overlay {
       opacity: 1;
     }
-  
-    .wishlist-icon, .add-cart-icon {
+
+    .wishlist-icon,
+    .add-cart-icon {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -63,96 +66,261 @@
       cursor: pointer;
       transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
     }
-  
+
     .wishlist-icon.clicked {
       background-color: #e74c3c;
       color: #fff;
     }
-  
+
     .add-cart-icon.clicked {
       background-color: #2ecc71;
       color: #fff;
     }
-  
-    .wishlist-icon:hover, .add-cart-icon:hover {
+
+    .wishlist-icon:hover,
+    .add-cart-icon:hover {
       transform: scale(1);
     }
-  
+
     .product-name {
       margin-top: 10px;
       font-weight: bold;
       font-size: 1rem;
       color: #333;
     }
-  
+
     .product-price {
       font-size: 1rem;
       color: #555;
     }
+
+    /* Ensure the filter button and search bar are always visible */
+    .filter-search-container {
+      position: relative;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      width: 100%;
+      z-index: 1000;
+      /* High z-index to keep above dropdown */
+    }
+
+    /* Position the filter dropdown exactly below the filter-search-container */
+    .filter-dropdown {
+      position: absolute;
+      top: 100%;
+      /* Position it below the parent container */
+      left: 0;
+      width: 100%;
+      background: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      z-index: 999;
+      /* Lower z-index so it's below the filter button */
+      padding: 10px;
+      display: none;
+      /* Initially hidden */
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .filter-dropdown.show {
+      display: block;
+    }
   </style>
-  
+
 </head>
 
 <body>
   <%- include("./layouts/header.ejs") %>
 
-  <nav aria-label="breadcrumb" class="mb-4">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a href="/home" class="d-flex align-items-center">
-          Home
-        </a>
-      </li>
-      <li class="breadcrumb-item active" aria-current="page">Shop</li>
-    </ol>
-  </nav>
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="/home" class="d-flex align-items-center">
+            Home
+          </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Shop</li>
+      </ol>
+    </nav>
 
-  <!-- Product Grid -->
-<section class="container-fluid shopcontainer">
-  <div class="product-grid">
-    <div class="row">
-      <% if (products && products.length > 0) { %>
-        <% products.forEach(function(product) { %>
-          <div class="col-md-3 col-sm-6 mb-4"> <!-- 4 products per row on medium screens, 2 per row on smaller screens -->
-            <div class="product-card">
-              <div class="product-image-container">
-                <!-- Main Product Image -->
-                <a href="/productDetails/<%= product._id %>">
-                  <img src="/<%= product.images[0] %>" alt="<%= product.name %>" class="img-fluid product-image">
-                </a>
-                <!-- Icons -->
-                <div class="icon-overlay">
-                  <i class="fa fa-heart wishlist-icon" title="Add to Wishlist" onclick="toggleIconColor(this, 'wishlist')"></i>
-                  <i class="fa fa-shopping-cart add-cart-icon" title="Add to Cart" onclick="toggleIconColor(this, 'cart')"></i>
-                </div>
-              </div>
-              <p class="product-name"><%= product.name %></p>
-              <span class="product-price">₹<%= product.offerPrice ? product.offerPrice : product.price %></span>
+    <!-- Filter and Search -->
+
+    <div class="container-fluid shopcontainer">
+      <div class="filter-search-container">
+        <!-- Search Bar -->
+        <div class="search-bar" style="margin-right: 5px;">
+          <input type="text" class="form-control" id="searchInput" placeholder="Search products..."
+            onkeyup="filterProducts()">
+        </div>
+
+        <!-- Filter Icon -->
+        <div class="filter-icon">
+          <button class="btn btn-secondary" id="filterButton">
+            <i class="fas fa-filter"></i> Filters
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Dropdown -->
+      <div>
+        <div id="filterDropdown" class="filter-dropdown" style="top: 100px;height: 181px;">
+          <div class="row">
+            <!-- Price Filters -->
+            <div class="col-md-3">
+              <h6>Price</h6>
+              <ul class="list-unstyled">
+                <li><a href="#" onclick="filterByPrice('lowToHigh')">Low to High</a></li>
+                <li><a href="#" onclick="filterByPrice('500-1000')">₹500 to ₹1000</a></li>
+                <li><a href="#" onclick="filterByPrice('1000-2000')">₹1000 to ₹2000</a></li>
+                <li><a href="#" onclick="filterByPrice('2000-5000')">₹2000 to ₹5000</a></li>
+                <li><a href="#" onclick="filterByPrice('5000+')">Above ₹5000</a></li>
+              </ul>
+            </div>
+
+            <!-- Category Filters -->
+            <div class="col-md-3">
+              <h6>Categories</h6>
+              <ul class="list-unstyled">
+                <% categories.forEach(function(category) { %>
+                  <li><a href="#" onclick="filterByCategory('<%= category.name %>')">
+                      <%= category.name %>
+                    </a></li>
+                  <% }); %>
+              </ul>
+            </div>
+
+            <!-- Alphabetical Filters -->
+            <div class="col-md-3">
+              <h6>Alphabetical</h6>
+              <ul class="list-unstyled">
+                <li><a href="#" onclick="filterAlphabetically('A-Z')">A to Z</a></li>
+                <li><a href="#" onclick="filterAlphabetically('Z-A')">Z to A</a></li>
+              </ul>
             </div>
           </div>
-        <% }); %>
-      <% } else { %>
-        <p>No products found.</p>
-      <% } %>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
-
-  <%- include("./layouts/footer.ejs") %>
 
 
-  <script>
-    function toggleIconColor(iconElement, type) {
-      // Check if the icon is already clicked
-      if (type === "wishlist") {
-        iconElement.classList.toggle("clicked");
-      } else if (type === "cart") {
-        iconElement.classList.toggle("clicked");
-      }
-    }
-  </script>
-  
+    <!-- Product Grid -->
 
-  <script src="/js/users/shop.js"></script>
+    <section class="container-fluid shopcontainer">
+      <div class="product-grid">
+        <div class="row">
+          <% if (products && products.length> 0) { %>
+            <% products.forEach(function(product) { %>
+              <div class="col-md-3 col-sm-6 mb-4">
+                <div class="product-card">
+                  <div class="product-image-container">
+                    <a href="/productDetails/<%= product._id %>">
+                      <img src="/<%= product.images[0] %>" alt="<%= product.name %>" class="img-fluid product-image">
+                    </a>
+                    <div class="icon-overlay">
+                      <i class="fa fa-heart wishlist-icon" title="Add to Wishlist"
+                        onclick="toggleIconColor(this, 'wishlist')"></i>
+                      <i class="fa fa-shopping-cart add-cart-icon" title="Add to Cart"
+                        onclick="toggleIconColor(this, 'cart')"></i>
+                    </div>
+                  </div>
+                  <p class="product-name">
+                    <%= product.name %>
+                  </p>
+                  <span class="product-price">₹<%= product.offerPrice ? product.offerPrice : product.price %></span>
+                </div>
+              </div>
+              <% }); %>
+                <% } else { %>
+                  <p>No products found.</p>
+                  <% } %>
+        </div>
+      </div>
+    </section>
+
+    <%- include("./layouts/footer.ejs") %>
+
+      <!-- Filter Dropdown Toggle and Scripts -->
+      <script>
+        // Toggle filter dropdown visibility
+        document.getElementById('filterButton').addEventListener('click', function () {
+          const filterDropdown = document.getElementById('filterDropdown');
+          filterDropdown.classList.toggle('show');
+        });
+      
+        // Function to fetch filtered products using async/await
+        async function fetchFilteredProducts(filters) {
+          const searchInput = document.getElementById('searchInput').value.toLowerCase();
+          const params = new URLSearchParams(filters);
+      
+          // Add search term to params
+          if (searchInput) {
+            params.append('searchTerm', searchInput);
+          }
+      
+          try {
+            // Await the response from the server
+            const response = await fetch(`/shop?${params.toString()}`);
+            
+            // Check if the response is OK
+            if (!response.ok) {
+              throw new Error('Failed to fetch filtered products');
+            }
+      
+            // Await the HTML content from the response
+            const html = await response.text();
+      
+            // Parse the new HTML and extract the product grid section
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            const newProductGrid = tempDiv.querySelector('.product-grid');
+      
+            // Replace the old product grid with the new one
+            document.querySelector('.product-grid').innerHTML = newProductGrid.innerHTML;
+      
+          } catch (error) {
+            console.error('Error fetching filtered products:', error);
+          }
+        }
+      
+        // Filter by price range
+        function filterByPrice(range) {
+          const priceRanges = {
+            'lowToHigh': '0-500',
+            '500-1000': '500-1000',
+            '1000-2000': '1000-2000',
+            '2000-5000': '2000-5000',
+            '5000+': '5000-10000'
+          };
+          fetchFilteredProducts({ priceRange: priceRanges[range] });
+        }
+      
+        // Filter by category
+        function filterByCategory(category) {
+          fetchFilteredProducts({ category: category });
+        }
+      
+        // Alphabetical sorting (A-Z or Z-A)
+        function filterAlphabetically(order) {
+          fetchFilteredProducts({ orderBy: order });
+        }
+      
+        // Handle product search
+        function filterProducts() {
+          const searchInput = document.getElementById('searchInput').value.toLowerCase();
+          const products = document.querySelectorAll('.product-card');
+          products.forEach(function (product) {
+            const name = product.querySelector('.product-name').textContent.toLowerCase();
+            if (name.includes(searchInput)) {
+              product.style.display = 'block';
+            } else {
+              product.style.display = 'none';
+            }
+          });
+        }
+      </script>
+      
+      
+      
 </body>
+
 </html>

@@ -3,6 +3,7 @@ const router = express.Router();
 const adminController = require('../controllers/adminController');
 const productController = require('../controllers/productController');
 const categoryController = require('../controllers/categoryController');
+const orderController = require('../controllers/orderController');
 const upload = require('../utils/multer');
 const isAuthenticated = require('../middlewares/adminauth');  // Import middleware
 const productModel = require('../models/productModel');
@@ -36,6 +37,9 @@ router.put('/admin/products/update/:productId', upload.fields([
   // { name: 'image5', maxCount: 1 }
 ]), productController.updateProduct);
 router.post('/update-product-image/:productId',upload.single('productImage'),productController.productImageUpdate);
+router.get('/admin/ordermanagement', orderController.loadordermanagement);
+router.post('/admin/order/:id/updatestatus',orderController.updateOrderStatus)
+router.get('/admin/vieworder/:orderid',orderController.loadorderdetails);
 
 
 module.exports = router;

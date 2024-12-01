@@ -38,6 +38,8 @@ router.post ('/update-cart', userController.updateCartItemQuantity);
 router.get('/thankyou',userController.loadthankyou)
 router.post('/place-order', userController.placeOrder);
 router.get('/orders',orderController.loadorders)
+router.get('/order/details/:id', orderController.viewOrderDetails);
+router.post('/cancel-order/:id',orderController.cancelOrder)
 
 
 // router.get('/checkout',userController.loadcheckout)

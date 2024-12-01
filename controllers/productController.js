@@ -250,23 +250,44 @@ async loadupdateProducts(req, res) {
 
   async shopPageLoad(req, res) {
     try {
+      let filters = {};
+  
+      // Get filter parameters from query
+      if (req.query.category) {
+        filters.category = req.query.category;
+      }
+      if (req.query.priceRange) {
+        // You can add your price range logic here
+        filters.priceRange = req.query.priceRange;
+      }
+      if (req.query.searchTerm) {
+        filters.searchTerm = req.query.searchTerm;
+      }
+  
+      // If there's a category filter, fetch the products by that category
       if (req.query.category) {
         const cat = await categoryModel.findOne({ name: req.query.category });
-        const products = await productModel.find({ category: cat._id, isDeleted: false  });
-        return res.status(200).render("shop", { products });
-      } else {
-        console.log("hellsdfs")
-      const listedCategories = await categoryModel.find({ isDeleted: false  });
-      console.log(listedCategories)
-      const listed = listedCategories.map((category) => category._id);
-      console.log(listed)
-        const product = await productModel.find({  isDeleted: false ,category : { $in: listed } });
-        return res.status(200).render("shop", { products: product });
+        filters.category = cat._id;
       }
+  
+      // Retrieve filtered products based on the filters
+      const products = await productModel.find(filters).populate('category').exec();
+      const categories = await categoryModel.find({ isDeleted: false });
+  
+      if (req.xhr) {  // Check if it's an AJAX request (for fetch)
+        // Render only the product grid for AJAX requests
+        return res.status(200).render('partials/product-grid', { products, categories });
+      }
+  
+      // Otherwise, render the full page (shop page)
+      return res.status(200).render('shop', { products, categories });
+  
     } catch (err) {
       console.log(err);
     }
   },
+  
+  
 
   // Route for product details page
   async productDetails(req, res) {

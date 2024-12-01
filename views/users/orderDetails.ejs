@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Order Details</title>
+  <link rel="stylesheet" href="/css/orderDetails.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dash.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+    integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    /* Add your specific order details styles here */
+    /* body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f3f3;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        } */
+
+    .order-details-container {
+      max-width: 900px;
+      margin: 0 auto;
+      background-color: white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      padding: 20px;
+    }
+
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+    }
+
+    .order-header h1 {
+      margin: 0;
+      color: #333;
+    }
+
+    .order-info {
+      display: flex;
+      justify-content: space-between;
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+
+    .order-info-item {
+      flex: 1;
+    }
+
+    .product-details {
+      display: flex;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 15px 0;
+    }
+
+    .product-image {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      margin-right: 20px;
+      border: 1px solid #ddd;
+    }
+
+    .shipping-details {
+      margin-top: 20px;
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 5px;
+    }
+
+    .status-cancelled {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Include Header -->
+  <%- include("./layouts/header.ejs") %>
+
+    <div class="containerdac ">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <ul>
+          <li><a href="/dashboard"><i class="fa-solid fa-user" style="color: #000000;"></i><span
+                style="margin-left: 3px;">Dashboard</span> </a></li>
+          <li><a class="sdashbord" href="/orders"><i class="fa-solid fa-briefcase" style="color: #ffffff;"></i><span
+                style="margin-left: 3px;color: #ffffff;">Orders</span></a></li>
+          <li><a href="/my-address"><i class="fa-solid fa-location-dot" style="color: #000000;"></i><span
+                style="margin-left: 3px; color: #000000;">My Address</span></a></li>
+          <% if (user && user.isGoogleLogin===false) { %>
+            <li><a href="/change-password"><i class="fa-solid fa-key" style="color: #000000;"></i><span
+                  style="margin-left: 3px;">Change Password</span></a></li>
+            <% } %>
+              <li><a href="/wallet"><i class="fa-solid fa-wallet" style="color: #000000;"></i><span
+                    style="margin-left: 3px;">Wallet</span></a></li>
+              <li><a href="/logout"><i class="fa-solid fa-arrow-right-from-bracket" style="color: #000000;"></i><span
+                    style="margin-left: 3px;">Logout</span></a></li>
+        </ul>
+      </div>
+
+      <!-- Main Content -->
+      <div class="content">
+        <div class="order-details-container">
+          <!-- Order Header -->
+          <div class="order-header">
+            <h1>Order Details</h1>
+            <div>
+
+              <% if (order.status !=='Cancelled' ) { %>
+                <a href="#" class="btn btn-secondary cancel-order-btn">Cancel Order</a>
+                <% } %>
+            </div>
+          </div>
+
+          <!-- Order Information -->
+          <div class="order-info">
+            <div class="order-info-item">
+              <% order.products.forEach(product=> { %>
+                <% if (product.productId && product.productId.images && product.productId.images.length> 0) { %>
+                  <img src="<%= product.productId.images[0] %>" alt="Product Image">
+                  <% } else { %>
+                    <p>No image available</p>
+                    <% } %>
+                      <% }) %>
+                        <!-- <p>#<%= order.id %></p> -->
+            </div>
+            <div class="order-info-item">
+              <h4>Order Date</h4>
+              <p>
+                <%= order.createdAt %>
+              </p>
+            </div>
+            <div class="order-info-item">
+              <h4>Order Total</h4>
+              <p>$<%= order.totalAmount.toFixed(2) %>
+              </p>
+            </div>
+            <div class="order-info-item">
+              <h4>Status</h4>
+              <p class="status-<%= order.statusClass %>">
+                <%= order.status %>
+              </p>
+            </div>
+          </div>
+
+
+
+
+          <div class="payment-method">
+            <h4>Payment Method</h4>
+            <% if (order.paymentMethod) { %>
+              <p>
+                <%= order.paymentMethod.type %> Cash on Delivery <%= order.paymentMethod.last4 %>
+              </p>
+              <% if (order.paymentMethod.billingSameAsShipping) { %>
+                <p>Billing Address: Same as Shipping</p>
+                <% } %>
+                  <% } else { %>
+                    <p>Payment method information is unavailable.</p>
+                    <% } %>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <!-- Include Footer -->
+    <%- include("./layouts/footer.ejs") %>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const cancelOrderBtn = document.querySelector(".btn-secondary");
+
+          if (cancelOrderBtn) {
+            cancelOrderBtn.addEventListener("click", async function (e) {
+              e.preventDefault(); // Prevent default link behavior
+
+              const orderId = "<%= order.id %>"; // Pass the order ID dynamically
+
+              // Use SweetAlert for the confirmation dialog
+              const result = await Swal.fire({
+                title: "Are you sure?",
+                text: "Do you want to cancel this order?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Yes, cancel it!",
+                cancelButtonText: "No, keep it",
+              });
+
+              if (result.isConfirmed) {
+                try {
+                  const response = await fetch(`/cancel-order/${orderId}`, {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                  });
+
+                  const responseData = await response.json();
+
+                  if (response.ok && responseData.success) {
+                    await Swal.fire("Cancelled!", responseData.message, "success");
+                    
+
+                    // Hide the cancel button
+                    cancelOrderBtn.style.display = "none";
+
+                    // Update order status dynamically
+                    const statusElement = document.querySelector(".status-<%= order.statusClass %>");
+                    if (statusElement) {
+                      statusElement.textContent = "Cancelled";
+                      statusElement.className = "status-cancelled"; // Apply a different class for styling
+                    }
+                  } else {
+                    Swal.fire("Error", responseData.message, "error");
+                  }
+                } catch (error) {
+                  console.error("Error cancelling order:", error);
+                  Swal.fire("Error", "Something went wrong while cancelling the order.", "error");
+                }
+              }
+            });
+          }
+        });
+      </script>
+
+</body>
+
+</html>

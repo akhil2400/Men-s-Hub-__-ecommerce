@@ -1,0 +1,42 @@
+.filter-dropdown {
+  background: #fff;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  position: absolute;
+  top: 100%; /* This ensures the dropdown appears directly below the filter button */
+  left: 0; /* Aligns the dropdown to the left of the container */
+  width: auto; /* Adjust to content width or make it full-width if needed */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* Makes sure the dropdown is above other content */
+  display: none; /* Initially hidden */
+  transition: opacity 0.3s ease-in-out; /* Smooth transition for visibility */
+}
+
+.filter-dropdown.show {
+  display: block; /* Displays the dropdown when toggled */
+}
+
+.filter-dropdown h6 {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.filter-dropdown ul {
+  padding: 0;
+  list-style: none;
+}
+
+.filter-dropdown ul li {
+  margin-bottom: 5px;
+}
+
+.filter-dropdown ul li a {
+  text-decoration: none;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.filter-dropdown ul li a:hover {
+  color: #007bff;
+}

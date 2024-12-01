@@ -89,7 +89,7 @@
             </a>
           </li>
           <li class="nav-item menu-items">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="/admin/ordermanagement">
               <span class="menu-title">Order Management</span>
             </a>
           </li>
@@ -151,11 +151,11 @@
                   id="productUpdateImage<%= i %>"
                   style="display: none;"
                   accept="image/*"
-                  onchange="previewAndCrop(event, <%= i %>)"
+                  onchange="previewAndCrop(event, '<%= i %>')"
                 />
                 <div id="cropPreviewUpdateSection<%= i %>" style="display: none; width: 500px; height: 430px;">
                   <img id="cropPreviewUpdate<%= i %>" style="width: 500px; height: 430px;" />
-                  <button style="    margin-left: 401px;" type="button" onclick="startCroppingUpdate(<%= i %>)">Crop Image</button>
+                  <button style="    margin-left: 401px;" type="button" onclick="startCroppingUpdate('<%= i %>')">Crop Image</button>
                 </div>
               <% } %>
               
