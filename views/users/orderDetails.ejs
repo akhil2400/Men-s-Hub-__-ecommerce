@@ -125,36 +125,71 @@
           </div>
 
           <!-- Order Information -->
+          <!-- Order Information -->
           <div class="order-info">
             <div class="order-info-item">
               <% order.products.forEach(product=> { %>
                 <% if (product.productId && product.productId.images && product.productId.images.length> 0) { %>
-                  <img src="<%= product.productId.images[0] %>" alt="Product Image">
+                  <div class="product-details">
+                    <!-- Product Image -->
+                    <a href="/productDetails/<%= product.productId._id %>">
+                    <div style="border: 1px solid #000000; padding: 8px; margin-right:4px ; border-radius: 5px; height: 300px;">
+                          <img src="/<%= product.productId.images[0] %>" alt="Product Image" class="product-image">
+                        
+                      </a>
+                      <h6><strong>Product Details</strong></h6>
+                      <p>
+                        <%= product.productId.name %>
+                      </p> <!-- Display product name -->
+                      <p><strong>Price:</strong> &#8377;<%= product.productId.price.toFixed(2) %>
+                      </p> <!-- Display price -->
+                      <p><strong>Quantity:</strong> <%= product.quantity %>
+                      </p> <!-- Display quantity -->
+                    </div>
+                  </div>
                   <% } else { %>
-                    <p>No image available</p>
+                    <p>No image available for <%= product.productId.name %>
+                    </p>
                     <% } %>
                       <% }) %>
-                        <!-- <p>#<%= order.id %></p> -->
             </div>
-            <div class="order-info-item">
-              <h4>Order Date</h4>
+            <div class="order-info-item" style="border: 1px solid #000000; padding-left: 8px;padding-right: 8px;padding-top: 12px;padding-bottom: 12px; margin-right:4px ; border-radius: 5px;">
+              <h6><strong>Order Date</strong></h6>
               <p>
                 <%= order.createdAt %>
               </p>
             </div>
-            <div class="order-info-item">
-              <h4>Order Total</h4>
-              <p>$<%= order.totalAmount.toFixed(2) %>
+            <div class="order-info-item" style="border: 1px solid #000000; padding: 8px; margin-right:4px ; border-radius: 5px;">
+              <h6><strong>Order Total</strong></h6>
+              <p>&#8377;<%= order.totalAmount.toFixed(2) %>
               </p>
             </div>
-            <div class="order-info-item">
-              <h4>Status</h4>
+            <div class="order-info-item" style="border: 1px solid #000000; padding: 8px; margin-right:4px ; border-radius: 5px;">
+              <h6><strong>Status</strong></h6>
               <p class="status-<%= order.statusClass %>">
                 <%= order.status %>
               </p>
             </div>
           </div>
 
+
+          <div class="shipping-details">
+            <h4>Shipping Address</h4>
+            <% if (order.deliveryAddress) { %>
+              <p><strong>House Number:</strong> <%= order.deliveryAddress.houseNumber %></p>
+              <p><strong>Street:</strong> <%= order.deliveryAddress.street %></p>
+              <p><strong>City:</strong> <%= order.deliveryAddress.city %></p>
+              <p><strong>Landmark:</strong> <%= order.deliveryAddress.landmark %></p>
+              <p><strong>District:</strong> <%= order.deliveryAddress.district %></p>
+              <p><strong>State:</strong> <%= order.deliveryAddress.state %></p>
+              <p><strong>Country:</strong> <%= order.deliveryAddress.country %></p>
+              <p><strong>Postal Code:</strong> <%= order.deliveryAddress.pinCode %></p>
+            <% } else { %>
+              <p>Shipping address is unavailable.</p>
+            <% } %>
+          </div>
+          
+          
 
 
 
@@ -216,7 +251,7 @@
 
                   if (response.ok && responseData.success) {
                     await Swal.fire("Cancelled!", responseData.message, "success");
-                    
+
 
                     // Hide the cancel button
                     cancelOrderBtn.style.display = "none";

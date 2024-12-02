@@ -243,81 +243,82 @@
       <script>
         // Toggle filter dropdown visibility
         document.getElementById('filterButton').addEventListener('click', function () {
-          const filterDropdown = document.getElementById('filterDropdown');
-          filterDropdown.classList.toggle('show');
+            const filterDropdown = document.getElementById('filterDropdown');
+            filterDropdown.classList.toggle('show');
         });
-      
+    
         // Function to fetch filtered products using async/await
         async function fetchFilteredProducts(filters) {
-          const searchInput = document.getElementById('searchInput').value.toLowerCase();
-          const params = new URLSearchParams(filters);
-      
-          // Add search term to params
-          if (searchInput) {
-            params.append('searchTerm', searchInput);
-          }
-      
-          try {
-            // Await the response from the server
-            const response = await fetch(`/shop?${params.toString()}`);
-            
-            // Check if the response is OK
-            if (!response.ok) {
-              throw new Error('Failed to fetch filtered products');
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const params = new URLSearchParams(filters);
+    
+            // Add search term to params
+            if (searchInput) {
+                params.append('searchTerm', searchInput);
             }
-      
-            // Await the HTML content from the response
-            const html = await response.text();
-      
-            // Parse the new HTML and extract the product grid section
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = html;
-            const newProductGrid = tempDiv.querySelector('.product-grid');
-      
-            // Replace the old product grid with the new one
-            document.querySelector('.product-grid').innerHTML = newProductGrid.innerHTML;
-      
-          } catch (error) {
-            console.error('Error fetching filtered products:', error);
-          }
+    
+            try {
+                // Await the response from the server
+                const response = await fetch(`/shop?${params.toString()}`);
+    
+                // Check if the response is OK
+                if (!response.ok) {
+                    throw new Error('Failed to fetch filtered products');
+                }
+    
+                // Await the HTML content from the response
+                const html = await response.text();
+    
+                // Parse the new HTML and extract the product grid section
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = html;
+                const newProductGrid = tempDiv.querySelector('.product-grid');
+    
+                // Replace the old product grid with the new one
+                document.querySelector('.product-grid').innerHTML = newProductGrid.innerHTML;
+    
+            } catch (error) {
+                console.error('Error fetching filtered products:', error);
+            }
         }
-      
+    
         // Filter by price range
         function filterByPrice(range) {
-          const priceRanges = {
-            'lowToHigh': '0-500',
-            '500-1000': '500-1000',
-            '1000-2000': '1000-2000',
-            '2000-5000': '2000-5000',
-            '5000+': '5000-10000'
-          };
-          fetchFilteredProducts({ priceRange: priceRanges[range] });
+            const priceRanges = {
+                'lowToHigh': '0-500',
+                '500-1000': '500-1000',
+                '1000-2000': '1000-2000',
+                '2000-5000': '2000-5000',
+                '5000+': '5000-10000'
+            };
+            fetchFilteredProducts({ priceRange: priceRanges[range] });
         }
-      
+    
         // Filter by category
         function filterByCategory(category) {
-          fetchFilteredProducts({ category: category });
+            fetchFilteredProducts({ category: category });
         }
-      
+    
         // Alphabetical sorting (A-Z or Z-A)
         function filterAlphabetically(order) {
-          fetchFilteredProducts({ orderBy: order });
+            fetchFilteredProducts({ orderBy: order });
         }
-      
+    
         // Handle product search
         function filterProducts() {
-          const searchInput = document.getElementById('searchInput').value.toLowerCase();
-          const products = document.querySelectorAll('.product-card');
-          products.forEach(function (product) {
-            const name = product.querySelector('.product-name').textContent.toLowerCase();
-            if (name.includes(searchInput)) {
-              product.style.display = 'block';
-            } else {
-              product.style.display = 'none';
-            }
-          });
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const products = document.querySelectorAll('.product-card');
+            products.forEach(function (product) {
+                const name = product.querySelector('.product-name').textContent.toLowerCase();
+                if (name.includes(searchInput)) {
+                    product.style.display = 'block';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
         }
-      </script>
+    </script>
+    
       
       
       

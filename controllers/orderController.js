@@ -32,63 +32,87 @@ module.exports = {
 
   async loadorderdetails(req, res) {
     const orderId = req.params.orderid;
+  
     try {
-      // Fetch the order
-      const order = await orderModel.findById(orderId);
+      // Fetch the order details along with the related data
+      const order = await orderModel.findById(orderId).lean(); // .lean() for plain objects
+  
       if (!order) {
-        return res.status(404).send('Order not found');
+        return res.status(404).send("Order not found");
       }
-
+  
       // Fetch all products in the order
       const productsDetails = await Promise.all(
         order.products.map(async (product) => {
-          const productData = await productModel.findById(product.productId);
+          const productData = await productModel.findById(product.productId).lean(); // Fetch product details
+          if (!productData) {
+            console.error(`Product not found: ${product.productId}`);
+            return null;
+          }
           return {
-            ...product,
-            productData,
+            ...product, // Keep quantity and price
+            productData, // Add product data
           };
         })
       );
-
+  
+      // Filter out null products (in case a product is missing)
+      const filteredProductsDetails = productsDetails.filter((item) => item !== null);
+  
       // Fetch the delivery address
-      const deliveryAddress = await addressModel.findById(order.deliveryAddress);
+      const deliveryAddress = await addressModel.findById(order.deliveryAddress).lean(); // Fetch address details
+  
       if (!deliveryAddress) {
         console.error(`Delivery address not found for order: ${orderId}`);
       }
-      console.log('Order:', order);
-      console.log('Delivery Address:', deliveryAddress);
-
+  
+      // Debug logs
+      console.log("Order Details:", order);
+      console.log("Products Details:", filteredProductsDetails);
+      console.log("Delivery Address:", deliveryAddress);
+  
       // Render the page with fetched data
-      res.render('Editordermanagement', {
+      res.render("Editordermanagement", {
         order,
-        productsDetails,
-        deliveryAddress,
+        productsDetails: filteredProductsDetails,
+        deliveryAddress: deliveryAddress || {}, // Ensure fallback for undefined address
       });
     } catch (error) {
-      console.error('Error loading order details:', error);
-      res.status(500).send('Internal Server Error');
+      console.error("Error loading order details:", error);
+      res.status(500).send("Internal Server Error");
     }
   },
+  
+  
 
   async updateOrderStatus(req, res) {
-    const { orderId } = req.params;
-  const { status } = req.body;
-
-  try {
-    const order = await orderModel.findById(orderId);
-    if (!order) {
-      return res.status(404).json({ success: false, message: 'Order not found' });
+    const orderId  = req.params.orderid;
+    const  status  = req.body.status;
+  
+    console.log('Received orderId:', orderId);
+    console.log('New status:', status);
+  
+    if (!orderId) {
+      return res.status(400).json({ success: false, message: 'Order ID is required' });
     }
-
-    order.status = status;
-    await order.save();
-
-    res.json({ success: true, message: 'Order status updated successfully!' });
-  } catch (error) {
-    console.error('Error updating order status:', error);
-    res.status(500).json({ success: false, message: 'An error occurred while updating the status.' });
-  }
-},
+  
+    try {
+      const order = await orderModel.findById(orderId);
+      if (!order) {
+        return res.status(404).json({ success: false, message: 'Order not found' });
+      }
+  
+      order.status = status;
+      await order.save();
+  
+      res.json({ success: true, message: 'Order status updated successfully!' });
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      res.status(500).json({ success: false, message: 'An error occurred.' });
+    }
+  },
+  
+  
 
 
 
@@ -158,27 +182,27 @@ module.exports = {
   async viewOrderDetails(req, res) {
     try {
       const orderId = req.params.id;
-
-      // Fetch the order details from your database
-      const order = await orderModel.findById(orderId).populate('products.productId') // Use `.lean()` for Mongoose performance
-
+  
+      // Fetch the order details and populate the product details (including images) and delivery address
+      const order = await orderModel
+        .findById(orderId)
+        .populate('products.productId')  // Populating products with details
+        .populate('deliveryAddress');    // Populating the delivery address
+  
       if (!order) {
         return res.status(404).send("Order not found");
       }
-
+  
       // Ensure order.total, shippingAddress, and paymentMethod are set
       if (!order.total) {
         order.total = 0; // Default value if not already calculated
       }
-
-      if (!order.shippingAddress) {
-        order.shippingAddress = {}; // Default to an empty object if missing
-      }
-
+  
       if (!order.paymentMethod) {
         order.paymentMethod = {}; // Default to an empty object if missing
       }
-
+  
+      // Render the order details page with the populated order data
       res.render("orderDetails", {
         user: req.user,
         order,
@@ -188,7 +212,8 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
-
+  
+  
   async cancelOrder(req, res) {
     try {
       const orderId = req.params.id;

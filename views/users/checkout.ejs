@@ -329,8 +329,8 @@ async function validateOrder() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        selectedAddress: selectedAddress.value,
-        paymentMethod: selectedPayment.id,
+        selectedAddressId: selectedAddress.value,  // Send selectedAddressId as expected by backend
+        paymentMethod: selectedPayment.value,  // Send the correct payment method
         items: cartItems,
       }),
     });
@@ -342,10 +342,12 @@ async function validateOrder() {
         icon: 'success',
         title: 'Order Placed Successfully',
         text: orderData.msg,
-        confirmButtonText: 'OK',
-      }).then(() => {
-        window.location = '/thankyou'; // Redirect to thank you page
-      });
+        showconfirmbutton: false,
+      })
+      setTimeout(() => {
+        window.location.href = '/thankyou'; // Redirect to thank you page
+      },1500)
+      
     } else {
       Swal.fire({
         icon: 'error',
@@ -364,6 +366,7 @@ async function validateOrder() {
     });
   }
 }
+
 
 
 </script>

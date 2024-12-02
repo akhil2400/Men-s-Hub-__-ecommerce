@@ -259,14 +259,12 @@
                     <%= order.totalAmount %>
                   </td>
                   <td>
-                   <%= console.log(order.status)%>
-                   
-                    <%if( order.status === "pending"){%>
-                      <span class="badge badge-danger">Pending</span>
-                      <%}else if(order.status === "Cancelled"){%>
+                    <%if( order.status === "Pending" || order.status === "pending"){%>
+                      <span class="text-warning">Pending</span>
+                      <%}else if(order.status === "Cancelled"||order.status === "cancelled"){%>
                         <span class="text-danger">Unpaid</span>
-                        <% }else if(order.status === "completed"){ %>
-                          <span class="badge badge-success">Paid</span>
+                        <% }else if(order.status === "completed" || order.status === "Completed"){ %>
+                          <span class="text-success">Paid</span>
                           <%} %>
                   </td>
                   <td>
