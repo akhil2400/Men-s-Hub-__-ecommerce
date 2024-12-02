@@ -251,6 +251,8 @@ async loadupdateProducts(req, res) {
   async shopPageLoad(req, res) {
     try {
       let filters = {};
+      let sortOption = {};
+      console.log(req.query);
   
       // Get filter parameters from query
       if (req.query.category) {
@@ -262,6 +264,10 @@ async loadupdateProducts(req, res) {
       }
       if (req.query.searchTerm) {
         filters.searchTerm = req.query.searchTerm;
+      }
+
+      if(req.query.priceRange==='lowToHigh') {
+        sortOption.price = -1;
       }
   
       // If there's a category filter, fetch the products by that category
@@ -278,6 +284,8 @@ async loadupdateProducts(req, res) {
         // Render only the product grid for AJAX requests
         return res.status(200).render('partials/product-grid', { products, categories });
       }
+
+      console.log(products);
   
       // Otherwise, render the full page (shop page)
       return res.status(200).render('shop', { products, categories });
