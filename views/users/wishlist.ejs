@@ -1,133 +1,155 @@
-<!-- /*
-* Bootstrap 5
-* Template Name: Furni
-* Template Author: Untree.co
-* Template URI: https://untree.co/
-* License: https://creativecommons.org/licenses/by/3.0/
-*/ -->
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="Untree.co">
   <link rel="shortcut icon" href="favicon.png">
-
   <meta name="description" content="" />
   <meta name="keywords" content="bootstrap, bootstrap4" />
 
-		<!-- Bootstrap CSS -->
-		<link href="css/bootstrap.min.css" rel="stylesheet">
-		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-		<link href="/css/tiny-slider.css" rel="stylesheet" />
-		<link rel="stylesheet" href="/css/style.css">
-		<link href="/css/bootstrap.min.css" rel="stylesheet" />
-		<title>Furni Free Bootstrap 5 Template for Furniture and Interior Design Websites by Untree.co </title>
-	</head>
+  <!-- Bootstrap CSS -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link href="/css/tiny-slider.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/wishlist.css">
+  <title>Your Wishlist</title>
+</head>
 
-	<body>
+<body>
 
-		<%- include("./layouts/header.ejs") %>
-    <nav aria-label="breadcrumb" class="mb-4">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a href="/home" class="d-flex align-items-center">
-            <span style="color: rgb(27, 94, 27);">Home</span>
-          </a>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">Wishlists</li>
-      </ol>
-    </nav>
+  <%- include("./layouts/header.ejs") %>
 
-		<!-- Start Hero Section -->
-			<div class="hero">
-				<div class="container">
-					<div class="row justify-content-between">
-						<div class="col-lg-5">
-							<div class="intro-excerpt">
-								<h1>Whishlist</h1>
-							</div>
-						</div>
-						<div class="col-lg-7">
-							
-						</div>
-					</div>
-				</div>
-			</div>
-		<!-- End Hero Section -->
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/home" class="d-flex align-items-center"><span
+            style="color: rgb(27, 94, 27);">Home</span></a></li>
+      <li class="breadcrumb-item active" aria-current="page">Wishlist</li>
+    </ol>
+  </nav>
 
-		
+  <!-- Start Hero Section -->
+  <div class="hero">
+    <div class="container">
+      <div class="row justify-content-between">
+        <div class="col-lg-5">
+          <div class="intro-excerpt">
+            <h1>Your Wishlist</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End Hero Section -->
 
-		<div class="untree_co-section before-footer-section">
-            <div class="container">
-              <div class="row mb-5">
-                <form class="col-md-12" method="post">
-                  <div class="site-blocks-table">
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th class="product-thumbnail">Image</th>
-                          <th class="product-name">Product</th>
-                          <th class="product-price">Price</th>
-                          <th class="product-quantity">Stock status</th>
-                          <th class="product-total">active</th>
-                          <th class="product-remove">Remove</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td class="product-thumbnail">
-                            <img src="images/product-1.png" alt="Image" class="img-fluid">
-                          </td>
-                          <td class="product-name">
-                            <h2 class="h5 text-black">Product 1</h2>
-                          </td>
-                          <td>$49.00</td>
-                          <td>
-                            <div class="input-group mb-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
-                              <div class="input-group-prepend">
-                                <p class="instock">InStock</p> 
-                              </div>
-                            </div>
-        
-                          </td>
-                          <td><button class="addcartbtn">Add to cart</button></td>
-                          <td><a href="#" class="btn btn-black btn-sm">X</a></td>
-                        </tr>
-        
-                        <tr>
-                          <td class="product-thumbnail">
-                            <img src="images/product-2.png" alt="Image" class="img-fluid">
-                          </td>
-                          <td class="product-name">
-                            <h2 class="h5 text-black">Product 2</h2>
-                          </td>
-                          <td>$49.00</td>
-                          <td>
-                            <div class="input-group mb-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
-                              <div class="input-group-prepend">
-                                  <p class="instock">InStock</p>                            
-                              </div>
-                            </div>
-                          </td>
-                          <td><button class="addcartbtn">Add to cart</button></td>
-                          <td><a href="#" class="btn btn-black btn-sm">X</a></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </form>
-              </div>
-        
-            
+  <div class="untree_co-section before-footer-section">
+    <div class="container">
+      <div class="row mb-5">
+        <div class="col-md-12">
+          <div class="site-blocks-table">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th class="product-thumbnail">Image</th>
+                  <th class="product-name">Product</th>
+                  <th class="product-price">Price</th>
+                  <th class="product-action">Action</th>
+                  <th class="product-remove">Remove</th>
+                </tr>
+              </thead>
+              <tbody id="wishlistItems">
+                <% if (wishlistItems.length === 0) { %>
+                  <tr>
+                    <td colspan="4" class="text-center">Your wishlist is empty. Start adding products!</td>
+                  </tr>
+                <% } else { %>
+                  <% wishlistItems.forEach(item => { %>
+                    <tr>
+                      <td class="product-thumbnail">
+                        <img src="<%= item.image %>" alt="<%= item.name %>" class="img-fluid" />
+                      </td>
+                      <td class="product-name">
+                        <h2 class="h5 text-black"><%= item.name %></h2>
+                      </td>
+                      <td class="product-price">
+                        ₹<%= item.price %>
+                      </td>
+                      <td class="product-action">
+                        <a href="/productDetails/<%= item.productId %>" class="addcartbtn">Add to cart</a>
+                      </td>
+                      <td>
+                        <button class="btn btn-danger remove-wishlist-btn" data-id="<%= item._id %>">
+                          <i class="fa-solid fa-trash"></i> Remove
+                        </button>
+                      </td>
+                    </tr>
+                  <% }); %>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+    
+    <%- include("./layouts/footer.ejs") %>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const removeButtons = document.querySelectorAll(".remove-wishlist-btn");
 
-							<%- include("./layouts/footer.ejs") %>
+      removeButtons.forEach(button => {
+        button.addEventListener("click", async (e) => {
+          const productId = e.target.dataset.id;
 
+          // SweetAlert confirmation
+          const result = await Swal.fire({
+            title: "Are you sure?",
+            text: "This will remove the product from your wishlist.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, remove it!"
+          });
 
+          // If the user confirms, remove the item
+          if (result.isConfirmed) {
+            try {
+              // Fetch the endpoint to remove the product from wishlist
+              const response = await fetch(`/removeFromWishlist/${productId}`, {
+                method: "DELETE"
+              });
 
-		<script src="js/bootstrap.bundle.min.js"></script>
-		<script src="js/tiny-slider.js"></script>
-		<script src="js/custom.js"></script>
-	</body>
+              // Parse the response
+              const data = await response.json();
+
+              if (data.success) {
+                // Show success message and reload the page
+                await Swal.fire("Removed!", "The product has been removed from your wishlist.", "success");
+                location.reload();
+              } else {
+                // Show error message if the operation failed
+                await Swal.fire("Error!", "Something went wrong. Please try again.", "error");
+              }
+            } catch (error) {
+              // Handle any errors that occur during the fetch operation
+              await Swal.fire("Error!", "An error occurred while removing the item. Please try again.", "error");
+            }
+          }
+        });
+      });
+    });
+  </script>
+
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/tiny-slider.js"></script>
+  <script src="js/custom.js"></script>
+
+</body>
 
 </html>

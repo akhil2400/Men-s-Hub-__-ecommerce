@@ -166,3 +166,65 @@ addToCartButtons.addEventListener("click", (e) => {
 
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  const wishlistIcon = document.querySelector(".wishlist-icon");
+
+  if (wishlistIcon) {
+    wishlistIcon.addEventListener("click", async (e) => {
+      const productId = e.target.dataset.id;
+      const productName = e.target.dataset.name;
+      const productPrice = e.target.dataset.price;
+      const productImage = e.target.dataset.image;
+
+      // Toggle the color change of the wishlist icon
+      wishlistIcon.classList.toggle("fa-regular");
+      wishlistIcon.classList.toggle("fa-solid");
+
+      // SweetAlert confirmation
+      const result = await Swal.fire({
+        title: "Add to Wishlist?",
+        text: "Do you want to add this product to your wishlist?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, add it!",
+      });
+
+      // If confirmed, add to wishlist
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch('/addToWishlist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              productId,
+              name: productName,
+              price: productPrice,
+              image: productImage
+            })
+          });
+
+          const data = await response.json();
+          
+          if (data.success) {
+            // Show success Swal
+            await swal.fire('Added!', 'The product has been added to your wishlist.', 'success');
+          } else {
+            await swal.fire('Error!', 'Something went wrong. Please try again.', 'error');
+          }
+        } catch (error) {
+          await swal.fire('Error!', 'An error occurred while adding to wishlist. Please try again.', 'error');
+        }
+      } else {
+        // Revert the icon if the action was canceled
+        wishlistIcon.classList.toggle("fa-regular");
+        wishlistIcon.classList.toggle("fa-solid");
+      }
+    });
+  }
+});
+
+
+
+

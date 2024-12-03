@@ -252,34 +252,29 @@ async loadupdateProducts(req, res) {
     try {
       let filters = {};
   
-      // Get filter parameters from query
       if (req.query.category) {
         filters.category = req.query.category;
       }
       if (req.query.priceRange) {
-        // You can add your price range logic here
         filters.priceRange = req.query.priceRange;
       }
       if (req.query.searchTerm) {
         filters.searchTerm = req.query.searchTerm;
       }
   
-      // If there's a category filter, fetch the products by that category
       if (req.query.category) {
         const cat = await categoryModel.findOne({ name: req.query.category });
         filters.category = cat._id;
       }
   
-      // Retrieve filtered products based on the filters
       const products = await productModel.find(filters).populate('category').exec();
       const categories = await categoryModel.find({ isDeleted: false });
   
-      if (req.xhr) {  // Check if it's an AJAX request (for fetch)
-        // Render only the product grid for AJAX requests
+      if (req.xhr) { 
         return res.status(200).render('partials/product-grid', { products, categories });
       }
   
-      // Otherwise, render the full page (shop page)
+      
       return res.status(200).render('shop', { products, categories });
   
     } catch (err) {

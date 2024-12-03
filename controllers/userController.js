@@ -6,10 +6,12 @@ const { generateOTP, otpExpire } = require('../utils/otpGenerator');
 const { sendOTP } = require('../utils/mailSender');
 const productModel = require('../models/productModel');
 const categoryModel = require('../models/categoryModel');
+const wishlistModel = require('../models/wishlistModel');
 const cartModel = require('../models/cartModel');
 const addressModel = require('../models/addressModel')
 const orderModel = require('../models/orderModel');
 const mongoose = require('mongoose');
+
 
 
 
@@ -927,6 +929,70 @@ async fetchCart(req, res) {
         console.error('Error placing order:', error.message);
         res.status(500).json({ val: false, msg: 'An error occurred while placing the order' });
     }
+},
+async loadwishlist (req, res) {
+    try {
+      const user = await userModel.findOne({ email: req.session.userData.email })
+      const userId = user.id
+      const wishlistItems = await wishlistModel.find({ userId }).populate('productId');
+  
+      res.render('wishlist', { wishlistItems });
+    } catch (error) {
+      console.error('Error loading wishlist:', error);
+      res.status(500).render('error', { message: 'Could not load wishlist.' });
+    }
+  },
+async addToWishlist(req, res) {
+  try {
+    const { productId, name, price, image } = req.body;
+    const user = await userModel.findOne({ email: req.session.userData.email });
+    
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const existingWishlistItem = await wishlistModel.findOne({
+      userId: user.id,
+      productId
+    });
+
+    if (existingWishlistItem) {
+      return res.status(400).json({ success: false, message: 'Product is already in your wishlist' });
+    }
+
+    const newWishlistItem = new wishlistModel({
+      userId: user.id,
+      productId,
+      name,
+      price,
+      image
+    });
+
+    await newWishlistItem.save();
+    
+    res.json({ success: true, message: 'Product added to wishlist' });
+  } catch (error) {
+    console.error('Error adding to wishlist:', error);
+    res.status(500).json({ success: false, message: 'Could not add product to wishlist' });
+  }
+},
+
+async removeFromWishlist(req, res) {
+  try {
+    const { id } = req.params;
+    // Assuming you have a Wishlist model
+    const result = await wishlistModel.deleteOne({ _id: id });
+
+    if (result.deletedCount > 0) {
+      res.json({ success: true });
+    } else {
+      res.json({ success: false, message: 'Item not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+},
+
 }
 
 
@@ -934,5 +1000,5 @@ async fetchCart(req, res) {
   
   
 
-}
+
 
