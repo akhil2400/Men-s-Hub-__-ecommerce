@@ -231,14 +231,14 @@
               <div class="border p-3 mb-5">
                 <div>
                   <!-- Radio Button with ID -->
-                  <input type="radio" name="payment" id="razerpay" />
+                  <input type="radio" name="payment" id="razorpay" />
 
                   <!-- Label for the Radio Button -->
-                  <label for="razerpay">
+                  <label for="razorpay">
                     <h3 class="h6 mb-0">
                       <a class="d-block" data-bs-toggle="collapse" href="#collapsepaypal" role="button"
                         aria-expanded="false" aria-controls="collapsepaypal" style="text-decoration: none">
-                        Razer Pay
+                        Razor Pay
                       </a>
                     </h3>
                   </label>
@@ -273,9 +273,9 @@
 
     <%- include("./layouts/footer.ejs") %>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-async function validateOrder() {
+ async function validateOrder() {
   const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked');
   const selectedPayment = document.querySelector('input[name="payment"]:checked');
 
@@ -299,8 +299,18 @@ async function validateOrder() {
     return false;
   }
 
+  const paymentMethod = selectedPayment.id;
+  if (paymentMethod !== 'cash-on-delivery' && paymentMethod !== 'razorpay') {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Payment Method',
+      text: 'Please select a valid payment method (Cash on Delivery or Razorpay).',
+      confirmButtonText: 'OK',
+    });
+    return false;
+  }
+
   try {
-    // Fetch cart items from the database
     const response = await fetch('/fetch-cart', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
@@ -311,8 +321,7 @@ async function validateOrder() {
     }
 
     const cartData = await response.json();
-    const cartItems = cartData.cart.items; // Access the items array
-    console.log(cartItems);
+    const cartItems = cartData.cart.items;
 
     if (!cartItems || cartItems.length === 0) {
       Swal.fire({
@@ -324,7 +333,7 @@ async function validateOrder() {
       return false;
     }
 
-    // Send the order details to the backend
+    // Place the order based on payment method
     const orderResponse = await fetch('/place-order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -338,14 +347,70 @@ async function validateOrder() {
     const orderData = await orderResponse.json();
 
     if (orderData.val) {
-      Swal.fire({
-        icon: 'success',
-        title: 'Order Placed Successfully',
-        text: orderData.msg,
-        confirmButtonText: 'OK',
-      }).then(() => {
-        window.location = '/thankyou'; // Redirect to thank you page
-      });
+      if (paymentMethod === 'razorpay') {
+        // Initialize Razorpay payment when Razorpay is selected
+        const razorpayOptions = {
+          key: 'rzp_test_mUKkruYO0ysf3W', // Your Razorpay key
+          amount: orderData.amount, // Total amount to be paid (in paise)
+          currency: "INR", // Currency code
+          name: "Your Company Name",
+          description: "Order Payment",
+          image: "your-logo-url",
+          order_id: orderData.razorpayOrderId, // Razorpay order ID
+          handler: function (response) {
+            fetch('/place-order-razorpay', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                paymentId: response.razorpay_payment_id,
+                orderId: orderData.razorpayOrderId,
+              }),
+            })
+              .then(response => response.json())
+              .then(data => {
+                if (data.success) {
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Payment Successful',
+                    text: 'Your payment was successful. Thank you!',
+                    confirmButtonText: 'OK',
+                  }).then(() => {
+                    window.location = '/thankyou'; // Redirect to thank you page
+                  });
+                } else {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Payment Failed',
+                    text: 'There was an issue with the payment. Please try again.',
+                    confirmButtonText: 'OK',
+                  });
+                }
+              });
+          },
+          prefill: {
+            name: "Customer Name",
+            email: "customer@example.com",
+          },
+          notes: {
+            address: selectedAddress.value,
+          },
+          theme: {
+            color: "#F37254",
+          },
+        };
+
+        const razorpay = new Razorpay(razorpayOptions);
+        razorpay.open();
+      } else {
+        Swal.fire({
+          icon: 'success',
+          title: 'Order Placed Successfully',
+          text: orderData.msg,
+          confirmButtonText: 'OK',
+        }).then(() => {
+          window.location = '/thankyou'; // Redirect to thank you page
+        });
+      }
     } else {
       Swal.fire({
         icon: 'error',
@@ -364,6 +429,100 @@ async function validateOrder() {
     });
   }
 }
+
+</script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+// async function validateOrder() {
+//   const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked');
+//   const selectedPayment = document.querySelector('input[name="payment"]:checked');
+
+//   if (!selectedAddress) {
+//     Swal.fire({
+//       icon: 'error',
+//       title: 'Address not selected',
+//       text: 'Please select an address before placing your order.',
+//       confirmButtonText: 'OK',
+//     });
+//     return false;
+//   }
+
+//   if (!selectedPayment) {
+//     Swal.fire({
+//       icon: 'error',
+//       title: 'Payment method not selected',
+//       text: 'Please select a payment method before placing your order.',
+//       confirmButtonText: 'OK',
+//     });
+//     return false;
+//   }
+
+//   try {
+//     // Fetch cart items from the database
+//     const response = await fetch('/fetch-cart', {
+//       method: 'GET',
+//       headers: { 'Content-Type': 'application/json' },
+//     });
+
+//     if (!response.ok) {
+//       throw new Error('Failed to fetch cart items.');
+//     }
+
+//     const cartData = await response.json();
+//     const cartItems = cartData.cart.items; // Access the items array
+//     console.log(cartItems);
+
+//     if (!cartItems || cartItems.length === 0) {
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Cart is empty',
+//         text: 'Add items to the cart before placing an order.',
+//         confirmButtonText: 'OK',
+//       });
+//       return false;
+//     }
+
+//     // Send the order details to the backend
+//     const orderResponse = await fetch('/place-order', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({
+//         selectedAddress: selectedAddress.value,
+//         paymentMethod: selectedPayment.id,
+//         items: cartItems,
+//       }),
+//     });
+
+//     const orderData = await orderResponse.json();
+
+//     if (orderData.val) {
+//       Swal.fire({
+//         icon: 'success',
+//         title: 'Order Placed Successfully',
+//         text: orderData.msg,
+//         confirmButtonText: 'OK',
+//       }).then(() => {
+//         window.location = '/thankyou'; // Redirect to thank you page
+//       });
+//     } else {
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Error',
+//         text: orderData.msg,
+//         confirmButtonText: 'OK',
+//       });
+//     }
+//   } catch (error) {
+//     console.error('Error during order validation:', error);
+//     Swal.fire({
+//       icon: 'error',
+//       title: 'Error',
+//       text: 'An error occurred while placing your order.',
+//       confirmButtonText: 'OK',
+//     });
+//   }
+// }
 
 
 </script>

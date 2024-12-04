@@ -1,105 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="author" content="Untree.co" />
-    <link rel="shortcut icon" href="favicon.png" />
-    <meta name="description" content="" />
-    <meta name="keywords" content="bootstrap, bootstrap4" />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="author" content="Untree.co" />
+  <link rel="shortcut icon" href="favicon.png" />
+  <meta name="description" content="" />
+  <meta name="keywords" content="bootstrap, bootstrap4" />
 
-    <!-- Bootstrap CSS and custom styles -->
-    <link href="css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
-    <link href="/css/tiny-slider.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/css/style.css">
-    <link href="/css/bootstrap.min.css" rel="stylesheet" />
-    <title>Men's Hub</title>
-  </head>
-
-  <body>
-    <nav class="custom-navbar navbar navbar-expand-md" arial-label="Furni navigation bar">
-      <div class="container">
-        <div id="navlogo">
-          <a href=""><img src="/images/img/logo/A_logo_with_the_letters_M_and_H_together_with_a_cap_on_M-removebg-preview.png" alt=""></a>
-        </div>        
-        <% if(isAdmin) { %>
-          <a href="/admin/usermanagement">
-              <img src="/images/img/adminlogo/admip.png" alt="ADMIN" style="width: 65px; height: 61px; position: absolute; top: 3px; left: 277px;">
-          </a>
-       <% } %>
-       
-        <a class="navbar-brand" href="/home"><span class="brandname">Men's Hub </span></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni" aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarsFurni">
-          <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
-            <li class="nav-item active"><a class="nav-link" href="/home">Home</a></li>
-            <li><a class="nav-link" href="/shop">Shop</a></li>
-            <li><a class="nav-link" href="/about">About us</a></li>
-            <li><a class="nav-link" href="/contact">Contact us</a></li>
-            <li><a class="nav-link" href="/dashboard">My Account</a></li>
-          </ul>
-          <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-            <li><a href="#"><i class="fa fa-heart wishicon2" style="color: white;"> </i></a></li>
-            <li><a class="nav-link" href="#"><img src="/images/user.svg" /></a></li>
-            <li><a class="nav-link" href="/cart"><img src="/images/cart.svg" /></a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-    <div class="container-fluid homebanner"></div>
-
-    <!-- Start Product Section -->
-    <div class="product-section">
-      <div class="container">
-        <div class="row">
-          
-          <h3 class="populcoll" style="margin-bottom: 50px"><span style="color: #3b5d50">POPULAR</span> CATEGORIES</h3>
-          <% category.forEach((data) => { %>
-            <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
-              <a class="product-item" href="/shop?category=<%= encodeURIComponent(data.name) %>">
-                <img src="<%= data.image %>" class="img-fluid product-thumbnail" />
-                <h3 class="product-title"><%= data.name %></h3>
-                <span class="icon-cross"><img src="/images/cross.svg" class="img-fluid" /></span>
-              </a>
-            </div>
-          <% }) %>
-        </div>
-      </div>
-    </div>
-
-    <!-- Start New Arrivals -->
-    <h2 class="ms-3 newarrivalnew"><span style="color: #3b5d50">NEW </span>ARRIVALS</h2>
-    <div class="container-fluid">
-      <div class="row">
-        <% products.forEach((data, index) => { %>
-          <div class="col-12 col-md-4 col-lg-3 mb-md-0 newarrnew text-center" style="margin-top: 20px;">
-            <div class="newarrimg-box">
-              <a href="/productDetails/<%= data._id %>">
-                <img class="newarrimg" src="/<%= data.images[0] %>" alt="<%= data.name %>" />
-              </a>
-              <i class="fa-regular fa-heart fa-xl mt-4 wishiconnew" style="color: #000000"></i>
-            </div>
-            <div class="newarrcolbox1new">
-              <a class="product-item" href="/productDetails/<%= data._id %>" style="text-decoration: none;">
-                <div class="tittlesnew"><%= data.name %></div>
-              </a>
-            </div>
-          </div>
-        <% }) %>
+  <link href="css/bootstrap.min.css" rel="stylesheet" />
+  <link href="/css/tiny-slider.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/home.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>Men's Hub</title>
+</head>
+<body>
+  <nav class="custom-navbar navbar navbar-expand-md" aria-label="Furni navigation bar">
+    <div class="container">
+      <div id="navlogo">
+        <a href=""><img src="/images/img/logo/A_logo_with_the_letters_M_and_H_together_with_a_cap_on_M-removebg-preview.png" alt=""></a>
+      </div>        
+      <% if(isAdmin) { %>
+        <a href="/admin/usermanagement">
+            <img src="/images/img/adminlogo/admip.png" alt="ADMIN" style="width: 65px; height: 61px; position: absolute; top: 3px; left: 277px;">
+        </a>
+      <% } %>
+      
+      <a class="navbar-brand" href="/home"><span class="brandname">Men's Hub</span></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni" aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarsFurni">
+        <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
+          <li class="nav-item active"><a class="nav-link" href="/home" title="Home">Home</a></li>
+          <li><a class="nav-link" href="/shop" title="Shop">Shop</a></li>
+          <li><a class="nav-link" href="/about" title="About">About us</a></li>
+          <li><a class="nav-link" href="/contact" title="Contact">Contact us</a></li>
+          <li><a class="nav-link" href="/dashboard" title="My Account">My Account</a></li>
+        </ul>
+        <a title="Search"><img class="searchicon" src="/images/img/searchicon/search.png" alt="Search"></a>
+        <a href="/wishlist"><img src="/images/img/The new whish list/wishlist.png" alt="whislist"></a>
+        <a class="nav-link" href="/cart"><img src="/images/cart.svg" /></a>
         
       </div>
     </div>
+  </nav>
 
-    <br>
-    <br>
+  <!-- Search Input and Results -->
+  <div class="container-fluid search-div">
+    <input type="text" id="searchInput" placeholder="Search for products" />
+    <div class="search-results"></div>
+  </div>
 
-    <%- include ("./layouts/footer.ejs") %>    
+  <!-- Main Content and Products -->
+  <div class="container-fluid homebanner"></div>
 
-    <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/tiny-slider.js"></script>
-    <script src="js/custom.js"></script>
-  </body>
+  <!-- Start Product Section -->
+  <div class="product-section">
+    <div class="container">
+      <div class="row">
+        <h3 class="populcoll" style="margin-bottom: 50px"><span style="color: #3b5d50">POPULAR</span> CATEGORIES</h3>
+        <% category.forEach((data) => { %>
+          <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
+            <a class="product-item" href="/shop?category=<%= encodeURIComponent(data.name) %> ">
+              <img src="<%= data.image %>" class="img-fluid product-thumbnail" />
+              <h3 class="product-title"><%= data.name %></h3>
+              <span class="icon-cross"><img src="/images/cross.svg" class="img-fluid" /></span>
+            </a>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Start New Arrivals -->
+  <h2 class="ms-3 newarrivalnew"><span style="color: #3b5d50">NEW </span>ARRIVALS</h2>
+  <div class="container-fluid">
+    <div class="row">
+      <% products.forEach((data, index) => { %>
+        <div class="col-12 col-md-4 col-lg-3 mb-md-0 newarrnew text-center" style="margin-top: 20px;">
+          <div class="newarrimg-box">
+            <a href="/productDetails/<%= data._id %>">
+              <img class="newarrimg" src="/<%= data.images[0] %>" alt="<%= data.name %>" />
+            </a>
+            <i class="fa-regular fa-heart fa-xl mt-4 wishiconnew" style="color: #000000"></i>
+          </div>
+          <div class="newarrcolbox1new">
+            <a class="product-item" href="/productDetails/<%= data._id %>" style="text-decoration: none;">
+              <div class="tittlesnew"><%= data.name %></div>
+            </a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <br>
+  <br>
+
+  <%- include ("./layouts/footer.ejs") %>
+
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/tiny-slider.js"></script>
+  <script>
+    const searchIcon = document.querySelector(".searchicon");
+    const searchDiv = document.querySelector(".search-div");
+    const searchInput = document.getElementById("searchInput");
+    const searchResults = document.querySelector(".search-results");
+    const mainContent = document.querySelector("body");
+
+    // Toggle search input visibility
+    searchIcon.addEventListener("click", function (e) {
+      e.preventDefault();
+      searchDiv.style.display = searchDiv.style.display === "none" || searchDiv.style.display === "" ? "block" : "none";
+    });
+
+    // Dynamic search functionality
+    searchInput.addEventListener("input", async function () {
+      const query = this.value.trim();
+
+      if (query.length > 0) {
+        const response = await fetch(`/search?query=${encodeURIComponent(query)}`);
+        const products = await response.json();
+
+        if (products.length) {
+          searchResults.innerHTML = products
+            .map(product => `<a href="/productDetails/${product._id}">${product.name}</a>`)
+            .join("");
+          searchResults.style.display = "block";
+          mainContent.classList.add("blurred");
+        } else {
+          searchResults.innerHTML = "<p>No results found.</p>";
+        }
+      } else {
+        searchResults.style.display = "none";
+        mainContent.classList.remove("blurred");
+      }
+    });
+
+    // Close search results on outside click
+    document.body.addEventListener("click", function (e) {
+      if (!e.target.closest(".search-div") && !e.target.closest(".search-results")) {
+        searchResults.style.display = "none";
+        mainContent.classList.remove("blurred");
+      }
+    });
+  </script>
+</body>
 </html>
