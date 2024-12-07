@@ -4,21 +4,27 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <meta name="author" content="Untree.co" />
-  <link rel="shortcut icon" href="favicon.png" />
-  <meta name="description" content="" />
-  <meta name="keywords" content="bootstrap, bootstrap4" />
-
-  <!-- Bootstrap CSS and Font Awesome -->
-  <link href="css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Marmelad&display=swap" rel="stylesheet">
-  <link href="/css/tiny-slider.css" rel="stylesheet" />
+  <title>Order Details</title>
+  <link rel="stylesheet" href="/css/orderDetails.css">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/dash.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
     integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    .btn-details{
+  background-color: black;
+  color: white;
+  cursor: pointer;
+
+}
+ .btn-details:hover{
+  background-color: #ffffff;
+  color: #000000;
+ }
+  </style>
 </head>
 
 <body>
@@ -44,57 +50,57 @@
         </ul>
       </div>
 
+
       <div class="content">
         <div class="dash-box">
-          <p style="color: #000000; font-weight: bold;">Order Details</p>
+          <p>Order Details</p>
         </div>
+
         
-        <div">
-        <% if (orders && orders.length> 0) { %>
-          <% orders.forEach(order=> { %>
-            <div class="order-item" style="border: 1px solid #000000; padding: 8px; margin-bottom: 4px; border-radius: 5px;">
-              <div class="order-details">
-                <h3>Order ID: <%= order.id %>
-                </h3>
-                <p>Placed on: <%= order.date %>
-                </p>
+          <% if (orders && orders.length> 0) { %>
+            <% orders.forEach(order=> { %>
+              <div class="order-item"
+                style="border: 1px solid #000; padding: 8px; margin-bottom: 4px; border-radius: 5px;">
+                <div class="order-details">
+                  <h3>Order ID: <%= order.id %>
+                  </h3>
+                  <p>Placed on: <%= order.createdAt ? new Date(order.createdAt).toDateString() : "Date Not Available" %></p>
+
+                  </p>
+                  <p>Status: <span class="status-<%= order.statusClass %>">
+                      <%= order.status %>
+                    </span></p>
+                </div>
+
+                <div class="products">
+                  <% order.products.forEach(product=> { %>
+                    <% const prod=product.productId; %>
+                      <div class="product-item">
+                        <p>Name: <%= prod ? prod.name : 'Unknown Product' %>
+                        </p>
+                        <p>Category: <%= prod && prod.category ? prod.category : 'N/A' %>
+                        </p>
+                        <p>Quantity: <%= product.quantity %>
+                        </p>
+                        <p>Price: $<%= product.price.toFixed(2) %>
+                        </p>
+                      </div>
+                      <% }); %>
+                </div>
                 
-                      <p>Status: <span class="status-<%= order.statusClass %>">
-                          <%= order.status %>
-                        </span></p>
+                <div class="order-actions d-flex justify-content-end">
+                  <a href="/order/details/<%= order.id %>" class="btn btn-details">View Details</a>
+                </div>
               </div>
-
-              <div class="products">
-                <% order.products.forEach(product=> { %>
-                  <div class="product-item">
-                    <img src="<%= product.images[0] || '/images/placeholder.jpg' %>" alt="Product Image">
-                    <p>Name: <%= product.name %>
-                    </p>
-                    <p>Category: <%= product.category %>
-                    </p>
-                    <p>Quantity: <%= product.quantity %>
-                    </p>
-                    <p>Price: $<%= product.price.toFixed(2) %>
-                    </p>
-                  </div>
-                  <% }) %>
+                <% }); %>
+                  <% } else { %>
+                    <p>No orders found!</p>
+                    <% } %>
               </div>
-
-              <div class="order-actions d-flex justify-content-end">
-                <a href="/order/details/<%= order.id %>" class="btn btn-details">View Details</a>
-              </div>
-            </div>
-            <% }); %>
-              <% } else { %>
-                <p>No orders found!</p>
-                <% } %>
+        </div>
       </div>
-    </div>
-  </div>
 
-    <%- include("./layouts/footer.ejs") %>
-
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <%- include("./layouts/footer.ejs") %>
 </body>
 
 </html>

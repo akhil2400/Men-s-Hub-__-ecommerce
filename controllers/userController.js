@@ -962,6 +962,7 @@ async fetchCart(req, res) {
       });
   
       await order.save();
+      
   
       // Call Razorpay payment initiation logic
       const razorpayInstance = new Razorpay({
@@ -979,6 +980,11 @@ async fetchCart(req, res) {
       // Save the Razorpay order ID in the order document
       order.razorpayOrderId = razorpayOrder.id;
       await order.save();
+
+      await cartModel.findOneAndUpdate(
+        { userId: req.session.userId },
+        { $set: { items: [], cartTotal: 0 } }
+      );
   
       res.status(200).json({
         val: true,
@@ -992,29 +998,40 @@ async fetchCart(req, res) {
     }
   },
   
- // Verify Razorpay Payment
+// Verify Razorpay Payment
 async verifyRazorpayPayment(req, res) {
   try {
     const { paymentId, orderId } = req.body;
+
+    if (!paymentId || !orderId) {
+      return res.status(400).json({ success: false, msg: 'Payment ID and Order ID are required' });
+    }
+
     const razorpayInstance = new Razorpay({
-      key_id: 'your-razorpay-key',
-      key_secret: 'your-razorpay-secret',
+      key_id: process.env.RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_KEY_SECRET,
     });
 
     const paymentDetails = await razorpayInstance.payments.fetch(paymentId);
     if (paymentDetails.status === 'captured') {
-      // Update the order payment status to "paid"
-      await orderModel.findByIdAndUpdate(orderId, { paymentStatus: 'paid' });
+      console.log(`Payment details: ${JSON.stringify(paymentDetails)}`);
+
+      // Update the order payment status to "paid" using razorpayOrderId
+      await orderModel.findOneAndUpdate(
+        { razorpayOrderId: orderId },
+        { paymentStatus: 'paid' }
+      );
+
       res.status(200).json({ success: true, msg: 'Payment verified successfully' });
     } else {
       res.status(400).json({ success: false, msg: 'Payment failed' });
     }
   } catch (error) {
-    console.error('Error verifying payment:', error);
+    console.error('Error verifying payment:', error.message, error.stack);
     res.status(500).json({ success: false, msg: 'Error verifying payment' });
   }
 },
-  
+
   
   
 

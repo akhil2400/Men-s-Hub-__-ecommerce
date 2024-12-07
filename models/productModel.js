@@ -10,11 +10,11 @@ const productSchema = new mongoose.Schema({
   tags: [{ type: String }],
   sizes: [{ type: String }],
   colors: [{ type: String }],
-  category:{type:mongoose.Schema.ObjectId,ref:'Category'},
+  category: { type: mongoose.Schema.ObjectId, ref: 'Category' },
   brand: { type: String },
-  cashOnDelivery: { type:Boolean },
-  warranty: { type:String },
-  returnPolicy: { type:String },
+  cashOnDelivery: { type: Boolean },
+  warranty: { type: String },
+  returnPolicy: { type: String },
   rating: { type: Number, default: 0 },
   reviews: [
     {
@@ -28,4 +28,4 @@ const productSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model('Products',productSchema);
+module.exports = mongoose.model('Products', productSchema);
