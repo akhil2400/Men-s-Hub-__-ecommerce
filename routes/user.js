@@ -47,6 +47,9 @@ router.get('/orders',orderController.loadorders)
 router.get('/order/details/:id', orderController.viewOrderDetails);
 router.post('/cancel-order/:id',orderController.cancelOrder)
 router.get('/search',userController.loadsearch)
+router.get('/wishlist',userController.loadwishlist)
+router.post('/addToWishlist', userController.addToWishlist);
+router.delete('/removeFromWishlist', userController.removeFromWishlist);
 
 
 // router.get('/checkout',userController.loadcheckout)
