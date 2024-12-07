@@ -160,27 +160,27 @@ module.exports = {
   async viewOrderDetails(req, res) {
     try {
       const orderId = req.params.id;
-
-      // Fetch the order details from your database
-      const order = await orderModel.findById(orderId).populate('products.productId') // Use `.lean()` for Mongoose performance
-
+  
+      // Fetch the order details and populate the product details (including images) and delivery address
+      const order = await orderModel
+        .findById(orderId)
+        .populate('products.productId')  // Populating products with details
+        .populate('deliveryAddress');    // Populating the delivery address
+  
       if (!order) {
         return res.status(404).send("Order not found");
       }
-
+  
       // Ensure order.total, shippingAddress, and paymentMethod are set
       if (!order.total) {
         order.total = 0; // Default value if not already calculated
       }
-
-      if (!order.shippingAddress) {
-        order.shippingAddress = {}; // Default to an empty object if missing
-      }
-
+  
       if (!order.paymentMethod) {
         order.paymentMethod = {}; // Default to an empty object if missing
       }
-
+  
+      // Render the order details page with the populated order data
       res.render("orderDetails", {
         user: req.user,
         order,
