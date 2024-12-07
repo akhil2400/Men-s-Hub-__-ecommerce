@@ -110,7 +110,8 @@ module.exports = {
         .populate({
           path: "products.productId",
           populate: {
-            path: "category", // Populate the category field inside the products
+            path: "category",
+            select: "name", // Populate the category field inside the products
           },
         })
         .populate("deliveryAddress") // Correctly populate the deliveryAddress field
@@ -123,8 +124,9 @@ module.exports = {
         products: order.products.map((product) => ({
           name: product.productId?.name || "Unknown Product",
           price: product.productId?.price || 0,
+          category: product.productId?.category?.name || "Unknown Category",
           quantity: product.quantity || 0,
-          image: product.productId?.images[0] || "/images/placeholder.jpg",
+          image: product.productId?.images?.[0] || "/images/placeholder.jpg",
         })),
         totalPrice: order.totalAmount || 0,
         status: order.status || "Unknown",

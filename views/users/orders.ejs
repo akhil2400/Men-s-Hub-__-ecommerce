@@ -67,6 +67,8 @@
               <div class="products">
                 <% order.products.forEach(product=> { %>
                   <div class="product-item">
+                    <img height="100px" width="100px" src="http://localhost:3001/<%= product.image %>" alt="Product Image" class="product-image">
+
                     <p>Name: <%= product.name %>
                     </p>
                     <p>Category: <%= product.category %>
