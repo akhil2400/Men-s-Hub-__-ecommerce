@@ -303,7 +303,7 @@
           items: cartItems,
         };
 
-        if (selectedPayment.id === 'cod') {
+        if (selectedPayment.id === 'cash-on-delivery') {
           // Place COD order
           const orderResponse = await fetch('/place-order', {
             method: 'POST',

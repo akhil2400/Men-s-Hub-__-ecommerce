@@ -196,16 +196,19 @@
           <div class="payment-method">
             <h4>Payment Method</h4>
             <% if (order.paymentMethod) { %>
-              <p>
-                <%= order.paymentMethod.type %> Cash on Delivery <%= order.paymentMethod.last4 %>
-              </p>
-              <% if (order.paymentMethod.billingSameAsShipping) { %>
-                <p>Billing Address: Same as Shipping</p>
-                <% } %>
-                  <% } else { %>
-                    <p>Payment method information is unavailable.</p>
-                    <% } %>
+              <% if (order.paymentMethod === "razorpay" ) { %>
+                <p>Payment Method: Razorpay</p>
+              <% } else if (order.paymentMethod === "cod") { %>
+                <p>Payment Method: Cash on Delivery</p>
+              <% } else { %>
+                <p>Payment method details are unavailable</p>
+              <% } %>
+            <% } else { %>
+              <p>Payment method information is unavailable</p>
+            <% } %>
           </div>
+          
+          
 
         </div>
       </div>

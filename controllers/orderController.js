@@ -180,6 +180,13 @@ module.exports = {
         order.paymentMethod = {}; // Default to an empty object if missing
       }
   
+      // Dynamically handle Razorpay last 4 digits if payment method is Razorpay
+      if (order.paymentMethod === "razorpay" && order.razorpayPaymentId) {
+        order.paymentMethodLast4 = order.razorpayPaymentId.slice(-4);
+      } else {
+        order.paymentMethodLast4 = null;
+      }
+  
       // Render the order details page with the populated order data
       res.render("orderDetails", {
         user: req.user,
@@ -190,6 +197,7 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
+  
 
   async cancelOrder(req, res) {
     try {
