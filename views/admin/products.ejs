@@ -1,761 +1,554 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <title>Admin Panel</title>
-    <!-- bootstrap:css -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-    />
-    <!-- Cropper.js CSS -->
-    <link
-      href="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.css"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="/css/admin.css" />
 
-    <!-- End layout styles -->
-    <!-- <link rel="shortcut icon" href="assets/images/favicon.png" /> -->
-  </head>
-  <body>
-    <div class="container-scroller">
-      <!-- partial:partials/_sidebar.html -->
-      <nav class="sidebar sidebar-offcanvas" id="sidebar">
-        <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-          <a class="sidebar-brand brand-logo" href="index.html">MEN'S HUB </a>
-          <a class="sidebar-brand brand-logo-mini" href="index.html"><img src="/images/logo-mini.svg" alt="logo" /></a>
-          <a href="/home"><img style="width: 30px;height: 30px;" src="/images/img/home-logo/home2.png" alt="To home"></a>
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>Admin Panel</title>
+  <!-- bootstrap:css -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+  <!-- Cropper.js CSS -->
+  <link href="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/admin.css" />
+
+  <!-- End layout styles -->
+  <!-- <link rel="shortcut icon" href="assets/images/favicon.png" /> -->
+</head>
+
+<body>
+  <div class="container-scroller">
+    <!-- partial:partials/_sidebar.html -->
+    <nav class="sidebar sidebar-offcanvas" id="sidebar">
+      <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
+        <a class="sidebar-brand brand-logo" href="index.html">MEN'S HUB </a>
+        <a class="sidebar-brand brand-logo-mini" href="index.html"><img src="/images/logo-mini.svg" alt="logo" /></a>
+        <a href="/home"><img style="width: 30px;height: 30px;" src="/images/img/home-logo/home2.png" alt="To home"></a>
+      </div>
+      <ul class="nav">
+        <li class="nav-item menu-items">
+          <a class="nav-link" href="#">
+            <span class="menu-title">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items">
+          <a class="nav-link" href="/admin/usermanagement">
+            <span class="menu-title">User Management</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items forme">
+          <a class="nav-link" href="/admin/products">
+            <span class="menu-title">Products Management</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items">
+          <a class="nav-link" href="/admin/ordermanagement">
+            <span class="menu-title">Order Management</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items ">
+          <a class="nav-link" href="/admin/categorymanagement">
+            <span class="menu-title">Category Management</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items">
+          <a class="nav-link" href="/admin/couponmanagement">
+            <span class="menu-title">Coupen Management</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_navbar.html -->
+      <nav class="navbar p-0 fixed-top d-flex flex-row">
+        <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
+          <a class="navbar-brand brand-logo-mini" href="index.html"><img src="assets/images/logo-mini.svg"
+              alt="logo" /></a>
         </div>
-        <ul class="nav">
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="#">
-              <span class="menu-title">Dashboard</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="/admin/usermanagement">
-              <span class="menu-title">User Management</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items forme">
-            <a class="nav-link" href="/admin/products">
-              <span class="menu-title">Products Management</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="/admin/ordermanagement">
-              <span class="menu-title">Order Management</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items " >
-            <a class="nav-link" href="/admin/categorymanagement">
-              <span class="menu-title" >Category Management</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="#">
-              <span class="menu-title">Coupen Management</span>
-            </a>
-          </li>
-        </ul>
+        <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
+          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="mdi mdi-menu"></span>
+          </button>
+          <ul class="navbar-nav w-100">
+            <li class="nav-item w-100"></li>
+          </ul>
+          <ul class="navbar-nav navbar-nav-right">
+            <li class="nav-item nav-settings d-none d-lg-block">
+              <a class="nav-link" href="#">
+                <i class="mdi mdi-view-grid"></i>
+              </a>
+            </li>
+            <li class="nav-item dropdown border-left">
+              <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#" data-toggle="dropdown"
+                aria-expanded="false">
+                <i class="mdi mdi-email"></i>
+                <span class="count bg-success"></span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                aria-labelledby="messageDropdown">
+                <h6 class="p-3 mb-0">Messages</h6>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <img src="assets/images/faces/face4.jpg" alt="image" class="rounded-circle profile-pic" />
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject ellipsis mb-1">
+                      Mark send you a message
+                    </p>
+                    <p class="text-muted mb-0">1 Minutes ago</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <img src="assets/images/faces/face2.jpg" alt="image" class="rounded-circle profile-pic" />
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject ellipsis mb-1">
+                      Cregh send you a message
+                    </p>
+                    <p class="text-muted mb-0">15 Minutes ago</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <img src="assets/images/faces/face3.jpg" alt="image" class="rounded-circle profile-pic" />
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject ellipsis mb-1">
+                      Profile picture updated
+                    </p>
+                    <p class="text-muted mb-0">18 Minutes ago</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <p class="p-3 mb-0 text-center">4 new messages</p>
+              </div>
+            </li>
+            <li class="nav-item dropdown border-left">
+              <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
+                data-toggle="dropdown">
+                <i class="mdi mdi-bell"></i>
+                <span class="count bg-danger"></span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                aria-labelledby="notificationDropdown">
+                <h6 class="p-3 mb-0">Notifications</h6>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-dark rounded-circle">
+                      <i class="mdi mdi-calendar text-success"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject mb-1">Event today</p>
+                    <p class="text-muted ellipsis mb-0">
+                      Just a reminder that you have an event today
+                    </p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-dark rounded-circle">
+                      <i class="mdi mdi-settings text-danger"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject mb-1">Settings</p>
+                    <p class="text-muted ellipsis mb-0">Update dashboard</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-dark rounded-circle">
+                      <i class="mdi mdi-link-variant text-warning"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject mb-1">Launch Admin</p>
+                    <p class="text-muted ellipsis mb-0">New admin wow!</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <p class="p-3 mb-0 text-center">See all notifications</p>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                aria-labelledby="profileDropdown">
+                <h6 class="p-3 mb-0">Profile</h6>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-dark rounded-circle">
+                      <i class="mdi mdi-settings text-success"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject mb-1">Settings</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-dark rounded-circle">
+                      <i class="mdi mdi-logout text-danger"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject mb-1">Log out</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <p class="p-3 mb-0 text-center">Advanced settings</p>
+              </div>
+            </li>
+          </ul>
+          <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+            data-toggle="offcanvas">
+            <span class="mdi mdi-format-line-spacing"></span>
+          </button>
+        </div>
       </nav>
       <!-- partial -->
-      <div class="container-fluid page-body-wrapper">
-        <!-- partial:partials/_navbar.html -->
-        <nav class="navbar p-0 fixed-top d-flex flex-row">
-          <div
-            class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center"
-          >
-            <a class="navbar-brand brand-logo-mini" href="index.html"
-              ><img src="assets/images/logo-mini.svg" alt="logo"
-            /></a>
-          </div>
-          <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
-            <button
-              class="navbar-toggler navbar-toggler align-self-center"
-              type="button"
-              data-toggle="minimize"
-            >
-              <span class="mdi mdi-menu"></span>
-            </button>
-            <ul class="navbar-nav w-100">
-              <li class="nav-item w-100"></li>
-            </ul>
-            <ul class="navbar-nav navbar-nav-right">
-              <li class="nav-item nav-settings d-none d-lg-block">
-                <a class="nav-link" href="#">
-                  <i class="mdi mdi-view-grid"></i>
-                </a>
-              </li>
-              <li class="nav-item dropdown border-left">
-                <a
-                  class="nav-link count-indicator dropdown-toggle"
-                  id="messageDropdown"
-                  href="#"
-                  data-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <i class="mdi mdi-email"></i>
-                  <span class="count bg-success"></span>
-                </a>
-                <div
-                  class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
-                  aria-labelledby="messageDropdown"
-                >
-                  <h6 class="p-3 mb-0">Messages</h6>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img
-                        src="assets/images/faces/face4.jpg"
-                        alt="image"
-                        class="rounded-circle profile-pic"
-                      />
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject ellipsis mb-1">
-                        Mark send you a message
+      <div class="row p-3 view-Products">
+        <div class="col-12 grid-margin">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Order Status</h4>
+              <div class="table-responsive">
+                <form class="nav-link mt-2 mt-md-0 d-lg-flex search">
+                  <input type="text" class="form-control" placeholder="Search products" />
+                  <div style="display: flex">
+                    <button style="height: 33px; margin: 3px 0px 0px 10px" class="btn btn-primary">
+                      Search
+                    </button>
+                    <button type="button" class="btn btn-primary btn-addProductModal" data-bs-toggle="modal"
+                      data-bs-target="#productUploadModal">
+                      Add New Product
+                    </button>
+                  </div>
+                </form>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Image1</th>
+                      <th>Image2</th>
+                      <th>Image3</th>
+                      <th>Image4</th>
+                      <th>Name</th>
+                      <th>category</th>
+                      <th>Brand</th>
+                      <th>Price</th>
+                      <th>stock</th>
+                      <th>List</th>
+                      <th>Update</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% if(!val){ %>
+                      <p>
+                        <%= msg %>
                       </p>
-                      <p class="text-muted mb-0">1 Minutes ago</p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img
-                        src="assets/images/faces/face2.jpg"
-                        alt="image"
-                        class="rounded-circle profile-pic"
-                      />
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject ellipsis mb-1">
-                        Cregh send you a message
-                      </p>
-                      <p class="text-muted mb-0">15 Minutes ago</p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img
-                        src="assets/images/faces/face3.jpg"
-                        alt="image"
-                        class="rounded-circle profile-pic"
-                      />
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject ellipsis mb-1">
-                        Profile picture updated
-                      </p>
-                      <p class="text-muted mb-0">18 Minutes ago</p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <p class="p-3 mb-0 text-center">4 new messages</p>
-                </div>
-              </li>
-              <li class="nav-item dropdown border-left">
-                <a
-                  class="nav-link count-indicator dropdown-toggle"
-                  id="notificationDropdown"
-                  href="#"
-                  data-toggle="dropdown"
-                >
-                  <i class="mdi mdi-bell"></i>
-                  <span class="count bg-danger"></span>
-                </a>
-                <div
-                  class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
-                  aria-labelledby="notificationDropdown"
-                >
-                  <h6 class="p-3 mb-0">Notifications</h6>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-dark rounded-circle">
-                        <i class="mdi mdi-calendar text-success"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject mb-1">Event today</p>
-                      <p class="text-muted ellipsis mb-0">
-                        Just a reminder that you have an event today
-                      </p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-dark rounded-circle">
-                        <i class="mdi mdi-settings text-danger"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject mb-1">Settings</p>
-                      <p class="text-muted ellipsis mb-0">Update dashboard</p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-dark rounded-circle">
-                        <i class="mdi mdi-link-variant text-warning"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject mb-1">Launch Admin</p>
-                      <p class="text-muted ellipsis mb-0">New admin wow!</p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <p class="p-3 mb-0 text-center">See all notifications</p>
-                </div>
-              </li>
-              <li class="nav-item dropdown">
-                <div
-                  class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
-                  aria-labelledby="profileDropdown"
-                >
-                  <h6 class="p-3 mb-0">Profile</h6>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-dark rounded-circle">
-                        <i class="mdi mdi-settings text-success"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject mb-1">Settings</p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-dark rounded-circle">
-                        <i class="mdi mdi-logout text-danger"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject mb-1">Log out</p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <p class="p-3 mb-0 text-center">Advanced settings</p>
-                </div>
-              </li>
-            </ul>
-            <button
-              class="navbar-toggler navbar-toggler-right d-lg-none align-self-center"
-              type="button"
-              data-toggle="offcanvas"
-            >
-              <span class="mdi mdi-format-line-spacing"></span>
-            </button>
-          </div>
-        </nav>
-        <!-- partial -->
-        <div class="row p-3 view-Products">
-          <div class="col-12 grid-margin">
-            <div class="card">
-              <div class="card-body">
-                <h4 class="card-title">Order Status</h4>
-                <div class="table-responsive">
-                  <form class="nav-link mt-2 mt-md-0 d-lg-flex search">
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Search products"
-                    />
-                    <div style="display: flex">
-                      <button
-                        style="height: 33px; margin: 3px 0px 0px 10px"
-                        class="btn btn-primary"
-                      >
-                        Search
-                      </button>
-                      <button
-                        type="button"
-                        class="btn btn-primary btn-addProductModal"
-                        data-bs-toggle="modal"
-                        data-bs-target="#productUploadModal"
-                      >
-                        Add New Product
-                      </button>
-                    </div>
-                  </form>
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th>No</th>
-                        <th>Image1</th>
-                        <th>Image2</th>
-                        <th>Image3</th>
-                        <th>Image4</th>
-                        <th>Name</th>
-                        <th>category</th>
-                        <th>Brand</th>
-                        <th>Price</th>
-                        <th>stock</th>
-                        <th>List</th>
-                        <th>Update</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <% if(!val){ %>
-                      <p><%= msg %></p>
-                      <% }else{ %> <% products.forEach((data,index)=>{ %>
-                      <tr>
-                        <td><%= index+1 %></td>
-                        <td>
-                          <img src="/<%= data.images[0]  %>" alt="image" />
-                        </td>
-                        <td>
-                          <img src="/<%= data.images[1]  %>" alt="image" />
-                        </td>
-                        <td>
-                          <img src="/<%= data.images[2]  %>" alt="image" />
-                        </td>
-                        <td>
-                          <img src="/<%= data.images[3]  %>" alt="image" />
-                        </td>
-                        <td><%= data.name %></td>
-                        <td>
-                          <% category.forEach((x)=>{ %> <%
-                          if(x._id.toString()===data.category.toString()){ %>
-                          <%= x.name %> <% } %> <% }) %>
-                        </td>
-                        <td><%= data.brand %></td>
-                        <td><%= data.price %></td>
-                        <td><%= data.stock %></td>
-                        <td>
-                          <td>
-                          <button data-id="<%= data._id  %>" class="badge btnListAndUnlist <%= data.isDeleted?'badge-outline-success':'badge-outline-primary' %>"><%= data.isDeleted?'List':'Unlist' %></button>
-                        </td>
-                        <td>
-                          <a href="/admin/Product/update/<%= data._id %>"><button class="badge badge-outline-warning update-category-btn">Update</button></a>
-                        </td>
-                      </tr>
-                      <% }) %> <% } %>
-                    </tbody>
-                  </table>
-                </div>
+                      <% }else{ %>
+                        <% products.forEach((data,index)=>{ %>
+                          <tr>
+                            <td>
+                              <%= index+1 %>
+                            </td>
+                            <td>
+                              <img src="/<%= data.images[0]  %>" alt="image" />
+                            </td>
+                            <td>
+                              <img src="/<%= data.images[1]  %>" alt="image" />
+                            </td>
+                            <td>
+                              <img src="/<%= data.images[2]  %>" alt="image" />
+                            </td>
+                            <td>
+                              <img src="/<%= data.images[3]  %>" alt="image" />
+                            </td>
+                            <td>
+                              <%= data.name %>
+                            </td>
+                            <td>
+                              <% category.forEach((x)=>{ %> <% if(x._id.toString()===data.category.toString()){ %>
+                                  <%= x.name %>
+                                    <% } %>
+                                      <% }) %>
+                            </td>
+                            <td>
+                              <%= data.brand %>
+                            </td>
+                            <td>
+                              <%= data.price %>
+                            </td>
+                            <td>
+                              <%= data.stock %>
+                            </td>
+                            <td>
+                            <td>
+                              <button data-id="<%= data._id  %>"
+                                class="badge btnListAndUnlist <%= data.isDeleted?'badge-outline-success':'badge-outline-primary' %>">
+                                <%= data.isDeleted?'List':'Unlist' %>
+                              </button>
+                            </td>
+                            <td>
+                              <a href="/admin/Product/update/<%= data._id %>"><button
+                                  class="badge badge-outline-warning update-category-btn">Update</button></a>
+                            </td>
+                          </tr>
+                          <% }) %>
+                            <% } %>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
-          <nav aria-label="Page navigation">
-                      <ul class="pagination justify-content-center">
-                        <!-- Previous Page Link -->
-                        <% if (currentPage > 1) { %>
-                          <li class="page-item">
-                            <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
-                              <span aria-hidden="true">&laquo;</span>
-                            </a>
-                          </li>
-                        <% } %>
-                    
-                        <!-- Page Number Links -->
-                        <% for (let i = 1; i <= totalPages; i++) { %>
-                          <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                            <a class="page-link" href="?page=<%= i %>"><%= i %></a>
-                          </li>
-                        <% } %>
-                    
-                        <!-- Next Page Link -->
-                        <% if (currentPage < totalPages) { %>
-                          <li class="page-item">
-                            <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
-                              <span aria-hidden="true">&raquo;</span>
-                            </a>
-                          </li>
-                        <% } %>
-                      </ul>
-                    </nav>
         </div>
-        <div
-          class="modal fade"
-          id="productUploadModal"
-          tabindex="-1"
-          aria-labelledby="productUploadModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog w-100 modal-lg product-modal">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="productUploadModalLabel">
-                  Add New Product
-                </h5>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div class="modal-body">
-                <form
-                  class="forms-sample"
-                  id="productForm"
-                  enctype="multipart/form-data"
-                  novalidate
-                >
-                  <input
-                    style="display: none"
-                    type="file"
-                    class="product-image"
-                    multiple
-                    required
-                  />
-                  <div class="form-group">
-                    <label for="productName">Name</label>
-                    <input
-                      type="text"
-                      class="form-control product-name"
-                      id="productName"
-                      name="name"
-                      placeholder="Product Name"
-                      required
-                    />
-                    <p class="error-message" id="productNameError"></p>
-                  </div>
-                  <div class="form-group">
-                    <label for="productImages">Images</label>
-                    <input
-                      type="file"
-                      class="form-control product-image"
-                      id="productImage1"
-                      accept="image/*"
-                      onchange="previewAndCrop(event, 0)"
-                    />
-                    <div
-                      class="cropPreviewSection"
-                      id="cropPreviewSection0"
-                      style="display: none"
-                    >
-                      <img id="cropPreview0" style="max-width: 100%" />
-                      <button type="button" onclick="startCropping(0)">
-                        Crop Image 1
-                      </button>
-                    </div>
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+            <!-- Previous Page Link -->
+            <% if (currentPage> 1) { %>
+              <li class="page-item">
+                <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <% } %>
 
-                    <input
-                      type="file"
-                      class="form-control product-image"
-                      id="productImage2"
-                      accept="image/*"
-                      onchange="previewAndCrop(event, 1)"
-                    />
-                    <div
-                      class="cropPreviewSection"
-                      id="cropPreviewSection1"
-                      style="display: none"
-                    >
-                      <img id="cropPreview1" style="max-width: 100%" />
-                      <button type="button" onclick="startCropping(1)">
-                        Crop Image 2
-                      </button>
-                    </div>
+                <!-- Page Number Links -->
+                <% for (let i=1; i <=totalPages; i++) { %>
+                  <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                    <a class="page-link" href="?page=<%= i %>">
+                      <%= i %>
+                    </a>
+                  </li>
+                  <% } %>
 
-                    <input
-                      type="file"
-                      class="form-control product-image"
-                      id="productImage3"
-                      accept="image/*"
-                      onchange="previewAndCrop(event, 2)"
-                    />
-                    <div
-                      class="cropPreviewSection"
-                      id="cropPreviewSection2"
-                      style="display: none"
-                    >
-                      <img id="cropPreview2" style="max-width: 100%" />
-                      <button type="button" onclick="startCropping(2)">
-                        Crop Image 3
-                      </button>
-                    </div>
-
-                    <input
-                      type="file"
-                      class="form-control product-image"
-                      id="productImage4"
-                      accept="image/*"
-                      onchange="previewAndCrop(event, 3)"
-                    />
-                    <div
-                      class="cropPreviewSection"
-                      id="cropPreviewSection3"
-                      style="display: none"
-                    >
-                      <img id="cropPreview3" style="max-width: 100%" />
-                      <button type="button" onclick="startCropping(3)">
-                        Crop Image 4
-                      </button>
-                    </div>
+                    <!-- Next Page Link -->
+                    <% if (currentPage < totalPages) { %>
+                      <li class="page-item">
+                        <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                        </a>
+                      </li>
+                      <% } %>
+          </ul>
+        </nav>
+      </div>
+      <div class="modal fade" id="productUploadModal" tabindex="-1" aria-labelledby="productUploadModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog w-100 modal-lg product-modal">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="productUploadModalLabel">
+                Add New Product
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form class="forms-sample" id="productForm" enctype="multipart/form-data" novalidate>
+                <input style="display: none" type="file" class="product-image" multiple required />
+                <div class="form-group">
+                  <label for="productName">Name</label>
+                  <input type="text" class="form-control product-name" id="productName" name="name"
+                    placeholder="Product Name" required />
+                  <p class="error-message" id="productNameError"></p>
+                </div>
+                <div class="form-group">
+                  <label for="productImages">Images</label>
+                  <input type="file" class="form-control product-image" id="productImage1" accept="image/*"
+                    onchange="previewAndCrop(event, 0)" />
+                  <div class="cropPreviewSection" id="cropPreviewSection0" style="display: none">
+                    <img id="cropPreview0" style="max-width: 100%" />
+                    <button type="button" onclick="startCropping(0)">
+                      Crop Image 1
+                    </button>
                   </div>
 
-                  <div class="form-group">
-                    <label for="productDesc">Description</label>
-                    <input
-                      type="text"
-                      class="form-control product-desc"
-                      id="productDescription"
-                      name="description"
-                      placeholder="Product Description"
-                      required
-                    />
-                    <p class="error-message" id="descError"></p>
+                  <input type="file" class="form-control product-image" id="productImage2" accept="image/*"
+                    onchange="previewAndCrop(event, 1)" />
+                  <div class="cropPreviewSection" id="cropPreviewSection1" style="display: none">
+                    <img id="cropPreview1" style="max-width: 100%" />
+                    <button type="button" onclick="startCropping(1)">
+                      Crop Image 2
+                    </button>
                   </div>
 
-                  <div class="form-group">
-                    <label for="productCategory">Category</label>
-                    <select
-                      class="form-control"
-                      id="productCategory"
-                      name="cta"
-                    >
-                      <option value="">Select Category</option>
-                      <% category.forEach((data)=>{ %>
+                  <input type="file" class="form-control product-image" id="productImage3" accept="image/*"
+                    onchange="previewAndCrop(event, 2)" />
+                  <div class="cropPreviewSection" id="cropPreviewSection2" style="display: none">
+                    <img id="cropPreview2" style="max-width: 100%" />
+                    <button type="button" onclick="startCropping(2)">
+                      Crop Image 3
+                    </button>
+                  </div>
+
+                  <input type="file" class="form-control product-image" id="productImage4" accept="image/*"
+                    onchange="previewAndCrop(event, 3)" />
+                  <div class="cropPreviewSection" id="cropPreviewSection3" style="display: none">
+                    <img id="cropPreview3" style="max-width: 100%" />
+                    <button type="button" onclick="startCropping(3)">
+                      Crop Image 4
+                    </button>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="productDesc">Description</label>
+                  <input type="text" class="form-control product-desc" id="productDescription" name="description"
+                    placeholder="Product Description" required />
+                  <p class="error-message" id="descError"></p>
+                </div>
+
+                <div class="form-group">
+                  <label for="productCategory">Category</label>
+                  <select class="form-control" id="productCategory" name="cta">
+                    <option value="">Select Category</option>
+                    <% category.forEach((data)=>{ %>
                       <option value="<%= data.name  %>">
                         <%= data.name %>
                       </option>
                       <% }) %>
-                    </select>
-                    <p class="error-message" id="categoryError"></p>
-                  </div>
+                  </select>
+                  <p class="error-message" id="categoryError"></p>
+                </div>
 
-                  <div class="form-group">
-                    <label for="productTags">Tags</label>
-                    <input
-                      type="text"
-                      class="form-control product-tags"
-                      id="productTags"
-                      placeholder="Product tags"
-                      required
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label for="productBrand">Brand</label>
-                    <input
-                      type="text"
-                      class="form-control product-brand"
-                      id="productBrand"
-                      placeholder="Product brand"
-                      required
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label>Size Options</label>
-                    <div style="padding: 10px">
-                      <div class="form-check">
-                        <input
-                          type="checkbox"
-                          class="form-check-input"
-                          id="sizeSmall"
-                          value="S"
-                          onchange="updateSelectedSizes()"
-                        />
-                        <label class="form-check-label" for="sizeSmall">S</label>
-                      </div>
-                      <div class="form-check">
-                        <input
-                          type="checkbox"
-                          class="form-check-input"
-                          id="sizeMedium"
-                          value="M"
-                          onchange="updateSelectedSizes()"
-                        />
-                        <label class="form-check-label" for="sizeMedium">M</label>
-                      </div>
-                      <div class="form-check">
-                        <input
-                          type="checkbox"
-                          class="form-check-input"
-                          id="sizeLarge"
-                          value="L"
-                          onchange="updateSelectedSizes()"
-                        />
-                        <label class="form-check-label" for="sizeLarge">L</label>
-                      </div>
-                      <div class="form-check">
-                        <input
-                          type="checkbox"
-                          class="form-check-input"
-                          id="sizeXL"
-                          value="XL"
-                          onchange="updateSelectedSizes()"
-                        />
-                        <label class="form-check-label" for="sizeXL">XL</label>
-                      </div>
-                      <div class="form-check">
-                        <input
-                          type="checkbox"
-                          class="form-check-input"
-                          id="sizeXXL"
-                          value="XXL"
-                          onchange="updateSelectedSizes()"
-                        />
-                        <label class="form-check-label" for="sizeXXL">XXL</label>
-                      </div>
-                      <div class="form-check">
-                        <input
-                          type="checkbox"
-                          class="form-check-input"
-                          id="sizeXXXL"
-                          value="XXXL"
-                          onchange="updateSelectedSizes()"
-                        />
-                        <label class="form-check-label" for="sizeXXXL">XXXL</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label>Color Options</label>
+                <div class="form-group">
+                  <label for="productTags">Tags</label>
+                  <input type="text" class="form-control product-tags" id="productTags" placeholder="Product tags"
+                    required />
+                </div>
+                <div class="form-group">
+                  <label for="productBrand">Brand</label>
+                  <input type="text" class="form-control product-brand" id="productBrand" placeholder="Product brand"
+                    required />
+                </div>
+                <div class="form-group">
+                  <label>Size Options</label>
+                  <div style="padding: 10px">
                     <div class="form-check">
-                      <input type="color" value="#008000" id="colorPicker" />
-                      <button
-                        class="btn btn-success mb-3"
-                        type="button"
-                        onclick="addColor()"
-                      >
-                        Add Color
-                      </button>
+                      <input type="checkbox" class="form-check-input" id="sizeSmall" value="S"
+                        onchange="updateSelectedSizes()" />
+                      <label class="form-check-label" for="sizeSmall">S</label>
                     </div>
-                    <div class="showColors" id="showColors"></div>
-                  </div>
-                  <div class="form-group">
-                    <label for="productOgPrice">Price</label>
-                    <input
-                      type="number"
-                      class="form-control product-og-price"
-                      id="productOgPrice"
-                      placeholder="Original Price"
-                      required
-                    />
-                    <p class="error-message" id="ogPriceError"></p>
-                  </div>
-                  <div class="form-group">
                     <div class="form-check">
-                      <input
-                        type="checkbox"
-                        class="form-check-input"
-                        id="cashOnDelivery"
-                      />
-                      <label class="form-check-label" for="cashOnDelivery">Cash on Delivery</label>
+                      <input type="checkbox" class="form-check-input" id="sizeMedium" value="M"
+                        onchange="updateSelectedSizes()" />
+                      <label class="form-check-label" for="sizeMedium">M</label>
+                    </div>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" id="sizeLarge" value="L"
+                        onchange="updateSelectedSizes()" />
+                      <label class="form-check-label" for="sizeLarge">L</label>
+                    </div>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" id="sizeXL" value="XL"
+                        onchange="updateSelectedSizes()" />
+                      <label class="form-check-label" for="sizeXL">XL</label>
+                    </div>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" id="sizeXXL" value="XXL"
+                        onchange="updateSelectedSizes()" />
+                      <label class="form-check-label" for="sizeXXL">XXL</label>
+                    </div>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" id="sizeXXXL" value="XXXL"
+                        onchange="updateSelectedSizes()" />
+                      <label class="form-check-label" for="sizeXXXL">XXXL</label>
                     </div>
                   </div>
-                  <div class="form-group">
-                    <div class="form-check mb-3">
-                      <input
-                        type="checkbox"
-                        class="form-check-input"
-                        id="toggleOfferPrice"
-                        onclick="toggleOfferPriceInput()"
-                      />
-                      <label class="form-check-label" for="toggleOfferPrice">Add Offer Price</label>
-                    </div>
-                    <div
-                      class="offer-price-input mt-2"
-                      id="offerPriceDiv"
-                      style="display: none"
-                    >
-                      <label for="productOfferPrice">Offer Price</label>
-                      <input
-                        type="number"
-                        class="form-control product-offer-price"
-                        id="productOfferPrice"
-                        placeholder="Offer Price"
-                      />
-                      <p class="error-message" id="offerPriceError"></p>
-                    </div>
+                </div>
+                <div class="form-group">
+                  <label>Color Options</label>
+                  <div class="form-check">
+                    <input type="color" value="#008000" id="colorPicker" />
+                    <button class="btn btn-success mb-3" type="button" onclick="addColor()">
+                      Add Color
+                    </button>
                   </div>
-                  <div class="form-group">
-                    <label for="productStock">Stock</label>
-                    <input
-                      type="number"
-                      class="form-control product-stock"
-                      id="productStock"
-                      placeholder="Stock"
-                      required
-                    />
-                    <p class="error-message" id="stockError"></p>
+                  <div class="showColors" id="showColors"></div>
+                </div>
+                <div class="form-group">
+                  <label for="productOgPrice">Price</label>
+                  <input type="number" class="form-control product-og-price" id="productOgPrice"
+                    placeholder="Original Price" required />
+                  <p class="error-message" id="ogPriceError"></p>
+                </div>
+                <div class="form-group">
+                  <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="cashOnDelivery" />
+                    <label class="form-check-label" for="cashOnDelivery">Cash on Delivery</label>
                   </div>
-                  <div class="form-group">
-                    <div class="form-check mb-3">
-                      <input
-                        type="checkbox"
-                        class="form-check-input"
-     
-                        id="toggleWarranty"
-                        onclick="toggleWarrantyInput()"
-                      />
-                      <label class="form-check-label" for="toggleWarranty">Add Warranty</label>
-                    </div>
-                    <div
-                      class="warranty-input mt-2"
-                      id="warrantyDiv"
-                      style="display: none"
-                    >
-                      <label for="productWarranty">Warranty</label>
-                      <input
-                        type="text"
-                        class="form-control product-warranty"
-                        id="productWarranty"
-                        placeholder="Warranty"
-                      />
-                      <p class="error-message" id="warrantyError"></p>
-                    </div>
+                </div>
+                <div class="form-group">
+                  <div class="form-check mb-3">
+                    <input type="checkbox" class="form-check-input" id="toggleOfferPrice"
+                      onclick="toggleOfferPriceInput()" />
+                    <label class="form-check-label" for="toggleOfferPrice">Add Offer Price</label>
                   </div>
-                  <div class="form-group">
-                    <div class="form-check mb-3">
-                      <input
-                        type="checkbox"
-                        class="form-check-input"
-                        id="toggleReturnPolicy"
-                        onclick="toggleReturnPolicyInput()"
-                      />
-                      <label class="form-check-label" for="toggleReturnPolicy">Add Return Policy</label>
-                    </div>
-                    <div
-                      class="return-policy-input mt-2"
-                      id="returnPolicyDiv"
-                      style="display: none"
-                    >
-                      <label for="productReturnPolicy">Return Policy</label>
-                      <input
-                        type="text"
-                        class="form-control product-return-policy"
-                        id="productReturnPolicy"
-                        placeholder="Return Policy"
-                      />
-                      <p class="error-message" id="returnPolicyError"></p>
-                    </div>
+                  <div class="offer-price-input mt-2" id="offerPriceDiv" style="display: none">
+                    <label for="productOfferPrice">Offer Price</label>
+                    <input type="number" class="form-control product-offer-price" id="productOfferPrice"
+                      placeholder="Offer Price" />
+                    <p class="error-message" id="offerPriceError"></p>
                   </div>
-                  <button
-                    type="submit"
-                    class="btn btn-primary mt-3 btn-CreateProduct"
-                  >
-                    Create
-                  </button>
-                </form>
-              </div>
+                </div>
+                <div class="form-group">
+                  <label for="productStock">Stock</label>
+                  <input type="number" class="form-control product-stock" id="productStock" placeholder="Stock"
+                    required />
+                  <p class="error-message" id="stockError"></p>
+                </div>
+                <div class="form-group">
+                  <div class="form-check mb-3">
+                    <input type="checkbox" class="form-check-input" id="toggleWarranty"
+                      onclick="toggleWarrantyInput()" />
+                    <label class="form-check-label" for="toggleWarranty">Add Warranty</label>
+                  </div>
+                  <div class="warranty-input mt-2" id="warrantyDiv" style="display: none">
+                    <label for="productWarranty">Warranty</label>
+                    <input type="text" class="form-control product-warranty" id="productWarranty"
+                      placeholder="Warranty" />
+                    <p class="error-message" id="warrantyError"></p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="form-check mb-3">
+                    <input type="checkbox" class="form-check-input" id="toggleReturnPolicy"
+                      onclick="toggleReturnPolicyInput()" />
+                    <label class="form-check-label" for="toggleReturnPolicy">Add Return Policy</label>
+                  </div>
+                  <div class="return-policy-input mt-2" id="returnPolicyDiv" style="display: none">
+                    <label for="productReturnPolicy">Return Policy</label>
+                    <input type="text" class="form-control product-return-policy" id="productReturnPolicy"
+                      placeholder="Return Policy" />
+                    <p class="error-message" id="returnPolicyError"></p>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3 btn-CreateProduct">
+                  Create
+                </button>
+              </form>
             </div>
-            </div>
-            </div>
-            </div>
-            
+          </div>
+        </div>
+      </div>
     </div>
-    <script src="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/admin/products.js"></script>
- </body>
+
+  </div>
+  <script src="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/admin/products.js"></script>
+</body>
+
 </html>

@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>Admin Panel</title>
+  <!-- bootstrap:css -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+  <!-- Cropper.js CSS -->
+  <link href="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/admin.css" />
+
+  <!-- End layout styles -->
+  <!-- <link rel="shortcut icon" href="assets/images/favicon.png" /> -->
+</head>
+
+<body>
+  <div class="container-scroller">
+    <!-- partial:partials/_sidebar.html -->
+    <nav class="sidebar sidebar-offcanvas" id="sidebar">
+      <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
+        <a class="sidebar-brand brand-logo" href="index.html">MEN'S HUB </a>
+        <a class="sidebar-brand brand-logo-mini" href="index.html"><img src="/images/logo-mini.svg" alt="logo" /></a>
+        <a href="/home"><img style="width: 30px;height: 30px;" src="/images/img/home-logo/home2.png" alt="To home"></a>
+      </div>
+      <ul class="nav">
+        <li class="nav-item menu-items">
+          <a class="nav-link" href="#">
+            <span class="menu-title">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items">
+          <a class="nav-link" href="/admin/usermanagement">
+            <span class="menu-title">User Management</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items ">
+          <a class="nav-link" href="/admin/products">
+            <span class="menu-title">Products Management</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items">
+          <a class="nav-link" href="/admin/ordermanagement">
+            <span class="menu-title">Order Management</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items ">
+          <a class="nav-link" href="/admin/categorymanagement">
+            <span class="menu-title">Category Management</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items forme">
+          <a class="nav-link" href="/admin/couponmanagement">
+            <span class="menu-title">Coupen Management</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_navbar.html -->
+      <nav class="navbar p-0 fixed-top d-flex flex-row">
+        <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
+          <a class="navbar-brand brand-logo-mini" href="index.html"><img src="assets/images/logo-mini.svg"
+              alt="logo" /></a>
+        </div>
+        <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
+          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="mdi mdi-menu"></span>
+          </button>
+          <ul class="navbar-nav w-100">
+            <li class="nav-item w-100"></li>
+          </ul>
+          <ul class="navbar-nav navbar-nav-right">
+            <li class="nav-item nav-settings d-none d-lg-block">
+              <a class="nav-link" href="#">
+                <i class="mdi mdi-view-grid"></i>
+              </a>
+            </li>
+            <li class="nav-item dropdown border-left">
+              <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#" data-toggle="dropdown"
+                aria-expanded="false">
+                <i class="mdi mdi-email"></i>
+                <span class="count bg-success"></span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                aria-labelledby="messageDropdown">
+                <h6 class="p-3 mb-0">Messages</h6>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <img src="assets/images/faces/face4.jpg" alt="image" class="rounded-circle profile-pic" />
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject ellipsis mb-1">
+                      Mark send you a message
+                    </p>
+                    <p class="text-muted mb-0">1 Minutes ago</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <img src="assets/images/faces/face2.jpg" alt="image" class="rounded-circle profile-pic" />
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject ellipsis mb-1">
+                      Cregh send you a message
+                    </p>
+                    <p class="text-muted mb-0">15 Minutes ago</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <img src="assets/images/faces/face3.jpg" alt="image" class="rounded-circle profile-pic" />
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject ellipsis mb-1">
+                      Profile picture updated
+                    </p>
+                    <p class="text-muted mb-0">18 Minutes ago</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <p class="p-3 mb-0 text-center">4 new messages</p>
+              </div>
+            </li>
+            <li class="nav-item dropdown border-left">
+              <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
+                data-toggle="dropdown">
+                <i class="mdi mdi-bell"></i>
+                <span class="count bg-danger"></span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                aria-labelledby="notificationDropdown">
+                <h6 class="p-3 mb-0">Notifications</h6>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-dark rounded-circle">
+                      <i class="mdi mdi-calendar text-success"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject mb-1">Event today</p>
+                    <p class="text-muted ellipsis mb-0">
+                      Just a reminder that you have an event today
+                    </p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-dark rounded-circle">
+                      <i class="mdi mdi-settings text-danger"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject mb-1">Settings</p>
+                    <p class="text-muted ellipsis mb-0">Update dashboard</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-dark rounded-circle">
+                      <i class="mdi mdi-link-variant text-warning"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject mb-1">Launch Admin</p>
+                    <p class="text-muted ellipsis mb-0">New admin wow!</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <p class="p-3 mb-0 text-center">See all notifications</p>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                aria-labelledby="profileDropdown">
+                <h6 class="p-3 mb-0">Profile</h6>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-dark rounded-circle">
+                      <i class="mdi mdi-settings text-success"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject mb-1">Settings</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-dark rounded-circle">
+                      <i class="mdi mdi-logout text-danger"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject mb-1">Log out</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <p class="p-3 mb-0 text-center">Advanced settings</p>
+              </div>
+            </li>
+          </ul>
+          <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+            data-toggle="offcanvas">
+            <span class="mdi mdi-format-line-spacing"></span>
+          </button>
+        </div>
+      </nav>
+      <!-- partial -->
+      <div class="row p-3 view-Products">
+        <div class="col-12 grid-margin">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Coupon Management</h4>
+              <div class="table-responsive">
+                <form class="nav-link mt-2 mt-md-0 d-lg-flex search">
+                  <input type="text" class="form-control" placeholder="Search coupons" />
+                  <div style="display: flex">
+                    <button style="height: 33px; margin: 3px 0px 0px 10px" class="btn btn-primary">
+                      Search
+                    </button>
+                    <button type="button" class="btn btn-primary btn-addCouponModal" data-bs-toggle="modal"
+                      data-bs-target="#couponUploadModal" style="width: 100px;margin-left: 10px; height: 38px">
+                      Add New Coupon
+                    </button>
+                  </div>
+                </form>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Coupon Code</th>
+                      <th>Discount Type</th>
+                      <th>Discount Value</th>
+                      <th>Minimum Purchase</th>
+                      <th>Start Date</th>
+                      <th>Expiry Date</th>
+                      <th>Usage Limit</th>
+                      <th>Status</th>
+                      <th>Update</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% if(!val){ %>
+                      <p>
+                        <%= msg %>
+                      </p>
+                      <% }else{ %>
+                        <% coupons.forEach((data,index)=>{ %>
+                          <tr>
+                            <td>
+                              <%= index+1 %>
+                            </td>
+                            <td>
+                              <%= data.couponCode %>
+                            </td>
+                            <td>
+                              <%= data.discountType %>
+                            </td>
+                            <td>
+                              <%= data.discountValue %>
+                            </td>
+                            <td>
+                              <%= data.minimumPurchase %>
+                            </td>
+                            <td>
+                              <%= data.startDate %>
+                            </td>
+                            <td>
+                              <%= data.expiryDate %>
+                            </td>
+                            <td>
+                              <%= data.usageLimit %>
+                            </td>
+                            <td>
+                              <button data-id="<%= data._id %>"
+                                class="badge btnActiveAndInactive <%= data.isActive ? 'badge-outline-success' : 'badge-outline-danger' %>">
+                                <%= data.isActive ? 'Active' : 'Inactive' %>
+                              </button>
+                            </td>
+
+                            <td>
+                              <a href="#" class="badge badge-outline-warning update-coupon-btn"
+                                data-id="<%= data._id %>" data-code="<%= data.couponCode %>"
+                                data-type="<%= data.discountType %>" data-value="<%= data.discountValue %>"
+                                data-minpurchase="<%= data.minimumPurchase %>"
+                                data-maxpurchase="<%= data.maximumPurchase %>" data-startdate="<%= data.startDate %>"
+                                data-expirydate="<%= data.expiryDate %>" data-usagelimit="<%= data.usageLimit %>"
+                                data-isactive="<%= data.isActive %>">
+                                Update
+                              </a>
+                            </td>
+
+                          </tr>
+                          <% }) %>
+                            <% } %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+            <!-- Previous Page Link -->
+            <% if (currentPage> 1) { %>
+              <li class="page-item">
+                <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <% } %>
+
+                <!-- Page Number Links -->
+                <% for (let i=1; i <=totalPages; i++) { %>
+                  <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                    <a class="page-link" href="?page=<%= i %>">
+                      <%= i %>
+                    </a>
+                  </li>
+                  <% } %>
+
+                    <!-- Next Page Link -->
+                    <% if (currentPage < totalPages) { %>
+                      <li class="page-item">
+                        <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                        </a>
+                      </li>
+                      <% } %>
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Modal for Adding New Coupon -->
+    <div class="modal fade" id="couponUploadModal" tabindex="-1" aria-labelledby="couponUploadModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="couponUploadModalLabel">Add New Coupon</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="addCouponForm">
+              <div class="mb-3">
+                <label for="couponCode" class="form-label">Coupon Code</label>
+                <div class="input-group">
+                  <input type="text" class="form-control" id="couponCode" name="couponCode"
+                    placeholder="Enter coupon code" required />
+                  <button type="button" class="btn btn-secondary" id="generateCoupon">Generate</button>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="discountType" class="form-label">Discount Type</label>
+                <select class="form-select" id="discountType" name="discountType" required>
+                  <option value="">Select discount type</option>
+                  <option value="percentage">Percentage</option>
+                  <option value="fixed">Fixed</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="discountValue" class="form-label">Discount Value</label>
+                <input type="number" class="form-control" id="discountValue" name="discountValue"
+                  placeholder="Enter discount value" min="0" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="minimumPurchase" class="form-label">Minimum Purchase</label>
+                <input type="number" class="form-control" id="minimumPurchase" name="minimumPurchase"
+                  placeholder="Enter minimum purchase amount" min="0" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="maximumPurchase" class="form-label">Maximum Purchase</label>
+                <input type="number" class="form-control" id="maximumPurchase" name="maximumPurchase"
+                  placeholder="Enter maximum purchase amount" min="0" />
+              </div>
+
+              <div class="mb-3">
+                <label for="startDate" class="form-label">Start Date</label>
+                <input type="date" class="form-control" id="startDate" name="startDate" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="expiryDate" class="form-label">Expiry Date</label>
+                <input type="date" class="form-control" id="expiryDate" name="expiryDate" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="usageLimit" class="form-label">Usage Limit</label>
+                <input type="number" class="form-control" id="usageLimit" name="usageLimit"
+                  placeholder="Enter usage limit" min="1" required />
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="isActive" name="isActive" checked />
+                <label class="form-check-label" for="isActive">
+                  Active
+                </label>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveCoupon">Save Coupon</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- update Coupon -->
+    <div class="modal fade" id="updateCouponModal" tabindex="-1" aria-labelledby="updateCouponModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="updateCouponModalLabel">Update Coupon</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="updateCouponForm">
+              <div class="mb-3">
+                <label for="updateCouponCode" class="form-label">Coupon Code</label>
+                <div class="input-group">
+                  <input type="text" class="form-control" id="updateCouponCode" name="updateCouponCode"
+                    placeholder="Enter coupon code" required />
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="updateDiscountType" class="form-label">Discount Type</label>
+                <select class="form-select" id="updateDiscountType" name="updateDiscountType" required>
+                  <option value="">Select discount type</option>
+                  <option value="percentage">Percentage</option>
+                  <option value="fixed">Fixed</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="updateDiscountValue" class="form-label">Discount Value</label>
+                <input type="number" class="form-control" id="updateDiscountValue" name="updateDiscountValue"
+                  placeholder="Enter discount value" min="0" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="updateMinimumPurchase" class="form-label">Minimum Purchase</label>
+                <input type="number" class="form-control" id="updateMinimumPurchase" name="updateMinimumPurchase"
+                  placeholder="Enter minimum purchase amount" min="0" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="updateMaximumPurchase" class="form-label">Maximum Purchase</label>
+                <input type="number" class="form-control" id="updateMaximumPurchase" name="updateMaximumPurchase"
+                  placeholder="Enter maximum purchase amount" min="0" />
+              </div>
+
+              <div class="mb-3">
+                <label for="updateStartDate" class="form-label">Start Date</label>
+                <input type="date" class="form-control" id="updateStartDate" name="updateStartDate" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="updateExpiryDate" class="form-label">Expiry Date</label>
+                <input type="date" class="form-control" id="updateExpiryDate" name="updateExpiryDate" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="updateUsageLimit" class="form-label">Usage Limit</label>
+                <input type="number" class="form-control" id="updateUsageLimit" name="updateUsageLimit"
+                  placeholder="Enter usage limit" min="1" required />
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="updateIsActive" name="updateIsActive" checked />
+                <label class="form-check-label" for="updateIsActive">
+                  Active
+                </label>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveUpdatedCoupon">Save Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      let currentUpdateCouponId = null;
+
+      // Handle Update Button Click
+      document.querySelectorAll('.update-coupon-btn').forEach(button => {
+        button.addEventListener('click', function (e) {
+          e.preventDefault(); // Prevent navigation
+
+          const clickedElement = e.target;
+
+          // Extract data safely with fallback in case of missing attributes
+          const couponId = clickedElement.dataset.id || '';
+          const couponCode = clickedElement.dataset.code || '';
+          const discountType = clickedElement.dataset.type || '';
+          const discountValue = clickedElement.dataset.value || '';
+          const minimumPurchase = clickedElement.dataset.minpurchase || '';
+          const maximumPurchase = clickedElement.dataset.maxpurchase || '';
+          const startDate = clickedElement.dataset.startdate || '';
+          const expiryDate = clickedElement.dataset.expirydate || '';
+          const usageLimit = clickedElement.dataset.usagelimit || '';
+          const isActive = clickedElement.dataset.isactive === 'true'; // Convert string to boolean
+
+          // Populate modal fields with extracted data safely
+          document.getElementById('updateCouponCode').value = couponCode;
+          document.getElementById('updateDiscountType').value = discountType;
+          document.getElementById('updateDiscountValue').value = discountValue;
+          document.getElementById('updateMinimumPurchase').value = minimumPurchase;
+          document.getElementById('updateMaximumPurchase').value = maximumPurchase;
+          document.getElementById('updateStartDate').value = startDate;
+          document.getElementById('updateExpiryDate').value = expiryDate;
+          document.getElementById('updateUsageLimit').value = usageLimit;
+          document.getElementById('updateIsActive').checked = isActive;
+
+          // Save current coupon ID for backend use
+          currentUpdateCouponId = couponId;
+
+          // Show the modal
+          const modal = new bootstrap.Modal(document.getElementById('updateCouponModal'));
+          modal.show();
+        });
+      });
+
+      // Handle Save Changes in the modal
+      document.getElementById('saveUpdatedCoupon').addEventListener('click', async function () {
+        const updatedCouponData = {
+          couponCode: document.getElementById('updateCouponCode').value,
+          discountType: document.getElementById('updateDiscountType').value,
+          discountValue: parseFloat(document.getElementById('updateDiscountValue').value),
+          minimumPurchase: parseFloat(document.getElementById('updateMinimumPurchase').value),
+          maximumPurchase: parseFloat(document.getElementById('updateMaximumPurchase').value),
+          startDate: document.getElementById('updateStartDate').value,
+          expiryDate: document.getElementById('updateExpiryDate').value,
+          usageLimit: parseInt(document.getElementById('updateUsageLimit').value),
+          isActive: document.getElementById('updateIsActive').checked,
+        };
+
+        try {
+          const response = await fetch(`/admin/coupon/update/${currentUpdateCouponId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedCouponData),
+          });
+
+          if (response.ok) {
+            Swal.fire({
+              title: "success",
+              text: "Coupon updated successfully",
+              icon: "success",
+              showConfirmButton: false,
+              timer: 1500
+
+            });
+
+            setTimeout(() => location.reload(), 2000);
+          } else {
+            throw new Error('Failed to update coupon');
+          }
+        } catch (error) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: error.message,
+          });
+        }
+      });
+    });
+  </script>
+
+
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Event listener for the button click
+      document.querySelectorAll('.btnActiveAndInactive').forEach(button => {
+        button.addEventListener('click', async function (event) {
+          const buttonElement = event.currentTarget; // Use event.currentTarget instead of `this`
+          const id = buttonElement.dataset.id;
+          const currentState = buttonElement.classList.contains('badge-outline-success'); // Determine current state
+
+          const result = await Swal.fire({
+            title: currentState ? 'Deactivate coupon?' : 'Activate coupon?',
+            text: currentState
+              ? 'Are you sure you want to deactivate this coupon?'
+              : 'Are you sure you want to activate this coupon?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: currentState ? 'Yes, Deactivate' : 'Yes, Activate',
+            cancelButtonText: 'Cancel',
+          });
+
+          if (result.isConfirmed) {
+            try {
+              // Disable button and show a loading state
+              buttonElement.disabled = true;
+              buttonElement.textContent = 'Processing...';
+
+              const response = await fetch('/admin/coupon/unlist', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id, newState: !currentState }), // Send ID and newState to server
+              });
+
+              // Ensure HTTP response is ok before parsing
+              if (!response.ok) throw new Error('Network response was not ok.');
+
+              const data = await response.json();
+
+              if (data.success) {
+                Swal.fire(
+                  'Success!',
+                  `Coupon is now ${data.newState ? 'Active' : 'Inactive'}.`,
+                  'success'
+                );
+
+                // Update UI based on new state
+                if (data.newState) {
+                  buttonElement.classList.remove('badge-outline-danger');
+                  buttonElement.classList.add('badge-outline-success');
+                  buttonElement.textContent = 'Active';
+                } else {
+                  buttonElement.classList.remove('badge-outline-success');
+                  buttonElement.classList.add('badge-outline-danger');
+                  buttonElement.textContent = 'Inactive';
+                }
+              } else {
+                Swal.fire('Error!', data.message || 'Could not update status.', 'error');
+              }
+            } catch (error) {
+              console.error('Error during fetch request:', error);
+              Swal.fire('Error!', 'Something went wrong.', 'error');
+            } finally {
+              // Re-enable the button and revert text in case of failure
+              buttonElement.disabled = false;
+              if (!buttonElement.classList.contains('badge-outline-success') &&
+                !buttonElement.classList.contains('badge-outline-danger')) {
+                buttonElement.textContent = currentState ? 'Active' : 'Inactive';
+              }
+            }
+          }
+        });
+      });
+    });
+  </script>
+
+
+
+
+  <script>
+    // Generate random coupon code
+    document.getElementById('generateCoupon').addEventListener('click', function () {
+      const randomCode = 'COUPON-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      document.getElementById('couponCode').value = randomCode;
+    });
+
+    // Save coupon and update table
+
+    document.getElementById('saveCoupon').addEventListener('click', async function () {
+      const couponCode = document.getElementById('couponCode').value;
+      const discountType = document.getElementById('discountType').value;
+      const discountValue = document.getElementById('discountValue').value;
+      const minimumPurchase = document.getElementById('minimumPurchase').value;
+      const maximumPurchase = document.getElementById('maximumPurchase').value;
+      const startDate = document.getElementById('startDate').value;
+      const expiryDate = document.getElementById('expiryDate').value;
+      const usageLimit = document.getElementById('usageLimit').value;
+      const isActive = document.getElementById('isActive').checked;
+
+      if (!couponCode || !discountType || !discountValue || !minimumPurchase || !startDate || !expiryDate || !usageLimit) {
+        alert('Please fill all required fields.');
+        return;
+      }
+
+      const couponData = {
+        couponCode,
+        discountType,
+        discountValue,
+        minimumPurchase,
+        maximumPurchase,
+        startDate,
+        expiryDate,
+        usageLimit,
+        isActive,
+      };
+
+      try {
+        const response = await fetch('/admin/coupon/add', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(couponData),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          alert('Coupon saved successfully!');
+          location.reload(); // Refresh the page or re-render the coupon table
+        } else {
+          alert('Failed to save the coupon: ' + result.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while saving the coupon.');
+      }
+    });
+  </script>
+
+
+
+  <script src="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+
+</body>
+
+</html>
