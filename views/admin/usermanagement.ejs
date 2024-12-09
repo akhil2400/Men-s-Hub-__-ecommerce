@@ -71,6 +71,11 @@
             <span class="menu-title">Coupen Management</span>
           </a>
         </li>
+        <li class="nav-item menu-items">
+          <a class="nav-link" href="/admin/offermanagement">
+            <span class="menu-title">Offer Management</span>
+          </a>
+        </li>
       </ul>
     </nav>
     <!-- partial -->
@@ -257,13 +262,13 @@
                             <%= value.email %>
                           </td>
                           <td>
-                            <div data-id="<%= value._id  %>"
+                            <button style="background-color: transparent;" data-id="<%= value._id  %>"
                               class="badge <%= value.isDeleted?'badge-outline-primary':'badge-outline-danger' %> btn-ban">
                               <%= value.isDeleted?'Unban':'Ban' %>
-                            </div>
+                            </button>
                           </td>
                           <td>
-                            <button data-id="<%= value.email  %>"
+                            <button style="background-color: transparent;" data-id="<%= value.email  %>"
                               class="badge badge-outline-warning btn-view" >View</button>
                           </td>
                         </tr>

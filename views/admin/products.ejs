@@ -57,6 +57,11 @@
             <span class="menu-title">Coupen Management</span>
           </a>
         </li>
+        <li class="nav-item menu-items">
+          <a class="nav-link" href="/admin/offermanagement">
+            <span class="menu-title">Offer Management</span>
+          </a>
+        </li>
       </ul>
     </nav>
     <!-- partial -->
@@ -239,21 +244,21 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th>No</th>
-                      <th>Image1</th>
-                      <th>Image2</th>
-                      <th>Image3</th>
-                      <th>Image4</th>
-                      <th>Name</th>
-                      <th>category</th>
-                      <th>Brand</th>
-                      <th>Price</th>
-                      <th>stock</th>
-                      <th>List</th>
-                      <th>Update</th>
+                      <th style="color: white;">No</th>
+                      <th style="color: white;">Image1</th>
+                      <th style="color: white;">Image2</th>
+                      <th style="color: white;">Image3</th>
+                      <th style="color: white;">Image4</th>
+                      <th style="color: white;">Name</th>
+                      <th style="color: white;">category</th>
+                      <th style="color: white;">Brand</th>
+                      <th style="color: white;">Price</th>
+                      <th style="color: white;">stock</th>
+                      <th style="color: white;">List</th>
+                      <th style="color: white;">Update</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody style="color: white;">
                     <% if(!val){ %>
                       <p>
                         <%= msg %>
@@ -296,13 +301,13 @@
                             </td>
                             <td>
                             <td>
-                              <button data-id="<%= data._id  %>"
+                              <button style="background-color: transparent;" data-id="<%= data._id  %>"
                                 class="badge btnListAndUnlist <%= data.isDeleted?'badge-outline-success':'badge-outline-primary' %>">
                                 <%= data.isDeleted?'List':'Unlist' %>
                               </button>
                             </td>
                             <td>
-                              <a href="/admin/Product/update/<%= data._id %>"><button
+                              <a href="/admin/Product/update/<%= data._id %>"><button style="background-color: transparent;"
                                   class="badge badge-outline-warning update-category-btn">Update</button></a>
                             </td>
                           </tr>

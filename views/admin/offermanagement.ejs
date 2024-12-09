@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>Admin Panel</title>
+  <!-- bootstrap:css -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+  <!-- Cropper.js CSS -->
+  <link href="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/admin.css" />
+
+  <!-- End layout styles -->
+  <!-- <link rel="shortcut icon" href="assets/images/favicon.png" /> -->
+</head>
+
+<body>
+  <div class="container-scroller">
+    <!-- partial:partials/_sidebar.html -->
+    <nav class="sidebar sidebar-offcanvas" id="sidebar">
+      <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
+        <a class="sidebar-brand brand-logo" href="index.html">MEN'S HUB </a>
+        <a class="sidebar-brand brand-logo-mini" href="index.html"><img src="/images/logo-mini.svg" alt="logo" /></a>
+        <a href="/home"><img style="width: 30px;height: 30px;" src="/images/img/home-logo/home2.png" alt="To home"></a>
+      </div>
+      <ul class="nav">
+        <li class="nav-item menu-items">
+          <a class="nav-link" href="#">
+            <span class="menu-title">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items">
+          <a class="nav-link" href="/admin/usermanagement">
+            <span class="menu-title">User Management</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items ">
+          <a class="nav-link" href="/admin/products">
+            <span class="menu-title">Products Management</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items">
+          <a class="nav-link" href="/admin/ordermanagement">
+            <span class="menu-title">Order Management</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items ">
+          <a class="nav-link" href="/admin/categorymanagement">
+            <span class="menu-title">Category Management</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items ">
+          <a class="nav-link" href="/admin/couponmanagement">
+            <span class="menu-title">Coupen Management</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items forme">
+          <a class="nav-link" href="/admin/offermanagement">
+            <span class="menu-title">Offer Management</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <!-- partial -->
+    <div class="row p-3 view-Offers">
+      <div class="col-12 grid-margin">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Offer Management</h4>
+            <div class="table-responsive">
+              <form class="nav-link mt-2 mt-md-0 d-lg-flex search">
+                <input type="text" class="form-control" placeholder="Search offers" />
+                <div style="display: flex">
+                  <button class="btn btn-primary" style="height: 33px; margin: 3px 0px 0px 10px">Search</button>
+                  <button type="button" class="btn btn-primary btn-addOfferModal" data-bs-toggle="modal"
+                    data-bs-target="#offerUploadModal" style="width: 100px; margin-left: 10px; height: 38px">
+                    Add New Offer
+                  </button>
+                </div>
+              </form>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Offer Name</th>
+                    <th>Type</th>
+                    <th>Category/Product</th>
+                    <th>Discount Type</th>
+                    <th>Discount Value</th>
+                    <th>Minimum Purchase</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                    <th>Description</th>
+                    <th>Update</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (!val) { %>
+                    <p>
+                      <%= msg %>
+                    </p>
+                    <% } else { %>
+                      <% offers.forEach((data, index)=> { %>
+                        <tr>
+                          <td>
+                            <%= index + 1 %>
+                          </td>
+                          <td>
+                            <%= data.name %>
+                          </td>
+                          <td>
+                            <%= data.type %>
+                          </td>
+                          <td>
+                            <%= data.categoryOrProductName || "N/A" %>
+                          </td>
+                          <td>
+                            <%= data.discountType %>
+                          </td>
+                          <td>
+                            <%= data.discountValue %>
+                          </td>
+                          <td>
+                            <%= data.minPurchase || "N/A" %>
+                          </td>
+                          <td>
+                            <%= data.startDate %>
+                          </td>
+                          <td>
+                            <%= data.endDate %>
+                          </td>
+                          <td>
+                            <%= data.status %>
+                          </td>
+                          <td>
+                            <%= data.description || "N/A" %>
+                          </td>
+                          <td>
+                            <a href="#" class="badge badge-outline-warning update-offer-btn" data-id="<%= data._id %>"
+                              data-name="<%= data.name %>" data-type="<%= data.type %>"
+                              data-categoryorproduct="<%= data.categoryOrProduct %>"
+                              data-discounttype="<%= data.discountType %>"
+                              data-discountvalue="<%= data.discountValue %>" data-minpurchase="<%= data.minPurchase %>"
+                              data-startdate="<%= data.startDate %>" data-enddate="<%= data.endDate %>"
+                              data-status="<%= data.status %>" data-description="<%= data.description %>">
+                              Update
+                            </a>
+                          </td>
+                        </tr>
+                        <% }) %>
+                          <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+  <!-- Modal for Adding New Offer -->
+  <div class="modal fade" id="offerUploadModal" tabindex="-1" role="dialog" aria-labelledby="offerUploadModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="offerUploadModalLabel">Add New Offer</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form id="addOfferForm" action="/admin/offer/create" method="POST">
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="offerName">Offer Name</label>
+              <input type="text" class="form-control" id="offerName" name="name" required />
+            </div>
+            <div class="form-group">
+              <label for="offerType">Offer Type</label>
+              <select class="form-control" id="offerType" name="type" required onchange="loadOptions()">
+                <option value="Category">Category</option>
+                <option value="Product">Product</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="offerCategoryOrProduct">Category/Product</label>
+              <select class="form-control" id="offerCategoryOrProduct" name="categoryOrProduct" required>
+                <!-- Dynamically populate options -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="discountType">Discount Type</label>
+              <select class="form-control" id="discountType" name="discountType" required>
+                <option value="Percentage">Percentage</option>
+                <option value="Fixed Amount">Fixed Amount</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="discountValue">Discount Value</label>
+              <input type="number" class="form-control" id="discountValue" name="discountValue" required />
+            </div>
+            <div class="form-group">
+              <label for="minPurchase">Minimum Purchase</label>
+              <input type="number" class="form-control" id="minPurchase" name="minPurchase" />
+            </div>
+            <div class="form-group">
+              <label for="startDate">Start Date</label>
+              <input type="date" class="form-control" id="startDate" name="startDate" required />
+            </div>
+            <div class="form-group">
+              <label for="endDate">End Date</label>
+              <input type="date" class="form-control" id="endDate" name="endDate" required />
+            </div>
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea class="form-control" id="description" name="description"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save Offer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- update Coupon -->
+  <div class="modal fade" id="updateOfferModal" tabindex="-1" aria-labelledby="updateOfferModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateOfferModalLabel">Update Offer</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="updateOfferForm">
+            <div class="mb-3">
+              <label for="updateOfferName" class="form-label">Offer Name</label>
+              <input type="text" class="form-control" id="updateOfferName" name="updateOfferName"
+                placeholder="Enter offer name" required />
+            </div>
+
+            <div class="mb-3">
+              <label for="updateOfferType" class="form-label">Offer Type</label>
+              <select class="form-select" id="updateOfferType" name="updateOfferType" required>
+                <option value="">Select offer type</option>
+                <option value="Category">Category</option>
+                <option value="Product">Product</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="updateCategoryOrProduct" class="form-label">Category/Product</label>
+              <select class="form-select" id="updateCategoryOrProduct" name="updateCategoryOrProduct" required>
+                <!-- Dynamically populate this dropdown -->
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="updateDiscountType" class="form-label">Discount Type</label>
+              <select class="form-select" id="updateDiscountType" name="updateDiscountType" required>
+                <option value="">Select discount type</option>
+                <option value="Percentage">Percentage</option>
+                <option value="Fixed Amount">Fixed Amount</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="updateDiscountValue" class="form-label">Discount Value</label>
+              <input type="number" class="form-control" id="updateDiscountValue" name="updateDiscountValue"
+                placeholder="Enter discount value" min="0" required />
+            </div>
+
+            <div class="mb-3">
+              <label for="updateMinimumPurchase" class="form-label">Minimum Purchase</label>
+              <input type="number" class="form-control" id="updateMinimumPurchase" name="updateMinimumPurchase"
+                placeholder="Enter minimum purchase amount" min="0" />
+            </div>
+
+            <div class="mb-3">
+              <label for="updateStartDate" class="form-label">Start Date</label>
+              <input type="date" class="form-control" id="updateStartDate" name="updateStartDate" required />
+            </div>
+
+            <div class="mb-3">
+              <label for="updateEndDate" class="form-label">End Date</label>
+              <input type="date" class="form-control" id="updateEndDate" name="updateEndDate" required />
+            </div>
+
+            <div class="mb-3">
+              <label for="updateDescription" class="form-label">Description</label>
+              <textarea class="form-control" id="updateDescription" name="updateDescription"
+                placeholder="Enter offer description"></textarea>
+            </div>
+
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="updateIsActive" name="updateIsActive" checked />
+              <label class="form-check-label" for="updateIsActive">
+                Active
+              </label>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" id="saveUpdatedOffer">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+    async function loadOptions() {
+      const offerType = document.getElementById('offerType').value;
+      const categoryOrProduct = document.getElementById('categoryOrProduct');
+
+      categoryOrProduct.innerHTML = '<option value="">Select category or product</option>';
+
+      if (!offerType) return;
+
+      try {
+
+        const endpoint = `/admin/offer/${offerType.toLowerCase()}`;
+        const response = await fetch(endpoint, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        const data = await response.json();
+
+
+        data.forEach((item) => {
+          const option = document.createElement("option");
+          option.value = item._id;
+          option.textContent = item.name
+          categoryOrProduct.appendChild(option);
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+
+
+
+  </script>
+
+
+
+
+
+
+  <script src="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+
+</body>
+
+</html>
