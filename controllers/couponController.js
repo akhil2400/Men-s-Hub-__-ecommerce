@@ -2,6 +2,7 @@ const express = require("express");
 const userModel = require("../models/userModel");
 const categoryModel = require("../models/categoryModel");
 const productModel = require("../models/productModel");
+const cartModel = require("../models/cartModel");
 const path = require("path");
 const mongoose = require("mongoose");
 const couponModel = require("../models/couponModel");
@@ -177,5 +178,88 @@ module.exports = {
       res.status(500).json({ success: false, message: 'Internal server error' });
     }
 },
+async applycoupon(req, res) {
+  try {
+    // Validate and sanitize coupon code
+    const couponCode = (req.body.couponCode || "").trim();
+    if (!couponCode) {
+      return res.status(400).json({ success: false, message: "Coupon code is required." });
+    }
+    console.log(couponCode);
+
+    // Fetch the user
+    const userId = req.params.userId;
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found." });
+    }
+
+    // Validate coupon code
+    const coupon = await couponModel.findOne({ couponCode, isActive: true });
+    if (!coupon) {
+      return res.status(400).json({ success: false, message: "Invalid or inactive coupon code." });
+    }
+
+    const currentDate = new Date().toISOString();
+    if (currentDate < coupon.startDate) {
+      return res.status(400).json({ success: false, message: "Coupon is not yet valid." });
+    }
+    if (currentDate > coupon.expiryDate) {
+      return res.status(400).json({ success: false, message: "Coupon has expired." });
+    }
+
+    // Fetch the user's cart
+    const cart = await cartModel.findOne({ userId });
+    if (!cart) {
+      return res.status(404).json({ success: false, message: "No cart found for this user." });
+    }
+    if (!Array.isArray(cart.items) || cart.items.length === 0) {
+      return res.status(400).json({ success: false, message: "Cart is empty." });
+    }
+
+    // Calculate the subtotal
+    const subtotal = cart.items.reduce(
+      (sum, item) => sum + (item.offerPrice || item.price) * item.quantity, 
+      0
+    );
+    if (subtotal < coupon.minimumPurchase) {
+      return res.status(400).json({
+        success: false,
+        message: `Subtotal must be at least $${coupon.minimumPurchase} to use this coupon.`,
+      });
+    }
+
+    // Calculate the discount
+    let discount = 0;
+    if (coupon.discountType === "percentage") {
+      discount = (subtotal * coupon.discountValue) / 100;
+    } else if (coupon.discountType === "fixed") {
+      discount = coupon.discountValue;
+    }
+
+    // Cap the discount if maximumDiscount is defined
+    if (coupon.maximumDiscount && discount > coupon.maximumDiscount) {
+      discount = coupon.maximumDiscount;
+    }
+
+    // Calculate the final cart total
+    const shippingCost = 50; // Flat shipping cost
+    const cartTotal = subtotal + shippingCost - discount;
+
+    // Respond with the updated cart data
+    res.json({
+      success: true,
+      discount,
+      cartTotal,
+      subtotal,
+      shippingCost,
+      message: "Coupon applied successfully.",
+    });
+  } catch (error) {
+    console.error("Error applying coupon:", error.message, error.stack);
+    res.status(500).json({ success: false, message: "Failed to apply coupon. Please try again later." });
+  }
+},
+
 
 };

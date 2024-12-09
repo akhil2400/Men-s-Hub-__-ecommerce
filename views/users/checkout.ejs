@@ -61,14 +61,14 @@
       <div class="container">
         <div class="row mb-5">
           <div class="col-md-12">
-            
+
           </div>
         </div>
         <div class="row">
           <div class="col-md-6 mb-5 mb-md-0">
             <h2 class="h3 mb-3 text-black">Billing Details</h2>
             <div class="p-3 p-lg-5 border bg-white">
-              <% addresses.forEach((data, index) => { %>
+              <% addresses.forEach((data, index)=> { %>
                 <div data-id="<%= data._id %>" class="address-box">
                   <div class="address-boxes">
                     <!-- Radio button for selecting the address -->
@@ -98,9 +98,9 @@
                     <button class="remove-address">REMOVE</button>
                   </div> -->
                 </div>
-              <% }); %>
+                <% }); %>
             </div>
-            
+
 
           </div>
           <div class="col-md-6">
@@ -118,6 +118,7 @@
                       </button>
                     </div>
                   </div>
+                  <p class="couponcodemsg" style="color:rgb(10, 188, 10)"></p>
                 </div>
               </div>
             </div>
@@ -163,10 +164,16 @@
                         </td>
                       </tr>
                       <tr>
+                        <th colspan="2">Discount</th>
+                        <td id="discount">₹0.00</td> <!-- Discount element added -->
+                      </tr>
+                      <tr>
                         <th colspan="2">Grand Total</th>
-                        <td><strong>₹<%= (cart.cartTotal || 0).toFixed(2) %></strong></td>
+                        <td id="cart-total"><strong>₹<%= (cart.cartTotal || 0).toFixed(2) %></strong></td>
+                        <!-- Cart total element updated with id -->
                       </tr>
                     </tfoot>
+
                   </table>
                 </div>
               </div>
@@ -259,7 +266,7 @@
                   Place Order
                 </button>
               </div>
-              
+
             </div>
           </div>
         </div>
@@ -271,209 +278,260 @@
 
     <%- include("./layouts/footer.ejs") %>
 
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script>
-  async function validateOrder() {
-      const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked');
-      const selectedPayment = document.querySelector('input[name="payment"]:checked');
+      <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-      // Validate inputs
-      if (!selectedAddress) {
-        Swal.fire({ icon: 'error', title: 'Address not selected', text: 'Please select an address.' });
-        return;
-      }
-      if (!selectedPayment) {
-        Swal.fire({ icon: 'error', title: 'Payment Method not selected', text: 'Please select a payment method.' });
-        return;
-      }
+      <script>
+        const userId = "<%= userId %>";
+        document.getElementById("button-addon2").addEventListener("click", async function () {
+          const couponCode = document.getElementById("c_code").value.trim();
+          console.log(couponCode)
 
-      try {
-        // Fetch cart items
-        const response = await fetch('/fetch-cart', { method: 'GET', headers: { 'Content-Type': 'application/json' } });
-        const cartData = await response.json();
-        const cartItems = cartData.cart.items;
-
-        if (!cartItems || cartItems.length === 0) {
-          Swal.fire({ icon: 'error', title: 'Cart is Empty', text: 'Add items to the cart before placing an order.' });
-          return;
-        }
-
-        const orderPayload = {
-          selectedAddress: selectedAddress.value,
-          items: cartItems,
-        };
-
-        if (selectedPayment.id === 'cash-on-delivery') {
-          // Place COD order
-          const orderResponse = await fetch('/place-order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(orderPayload),
-          });
-          const orderData = await orderResponse.json();
-
-          if (orderData.val) {
-            Swal.fire({ icon: 'success', title: 'Order Placed', text: orderData.msg }).then(() => {
-              window.location = '/thankyou';
-            });
-          } else {
-            Swal.fire({ icon: 'error', title: 'Order Failed', text: orderData.msg });
+          document.querySelector(".couponcodemsg").innerHTML = "";
+          if (!couponCode) {
+            const couponMsg = document.querySelector(".couponcodemsg")
+            couponMsg.innerHTML = "Please enter a coupon code.";
+            couponMsg.style.color = "red";
+            return;
           }
-        } else if (selectedPayment.id === 'razorpay') {
-          // Place Razorpay order
-          const razorpayOrderResponse = await fetch('/place-order-razorpay', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(orderPayload),
-          });
-          const razorpayOrderData = await razorpayOrderResponse.json();
 
-          if (razorpayOrderData.val) {
-            const razorpayOptions = {
-              key: 'rzp_test_mUKkruYO0ysf3W', // Your Razorpay Key
-              amount: razorpayOrderData.amount, // Amount in paise
-              currency: 'INR',
-              name: 'Your Company Name',
-              description: 'Order Payment',
-              order_id: razorpayOrderData.razorpayOrderId,
-              handler: async function (response) {
-                // Verify payment
-                const verifyResponse = await fetch('/verify-razorpay-payment', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    paymentId: response.razorpay_payment_id,
-                    orderId: razorpayOrderData.razorpayOrderId,
-                    razorpaySignature: response.razorpay_signature,
-                  }),
-                });
-                const verifyData = await verifyResponse.json();
+          try {
+            const response = await fetch(`/apply-coupon/${userId}`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ couponCode }),
+            });
 
-                if (verifyData.success) {
-                  Swal.fire({ icon: 'success', title: 'Payment Successful', text: 'Order placed successfully!' }).then(() => {
-                    window.location = '/thankyou';
-                  });
-                } else {
-                  Swal.fire({ icon: 'error', title: 'Payment Failed', text: verifyData.msg });
-                }
-              },
-              prefill: {
-                name: 'Customer Name',
-                email: 'customer@example.com',
-              },
-              theme: {
-                color: '#F37254',
-              },
+            const data = await response.json();
+
+            if (data.success) {
+              // Update the cart totals dynamically
+              document.getElementById("cart-total").textContent = `₹${data.cartTotal.toFixed(2)}`;
+              document.getElementById("discount").textContent = ` ₹${data.discount.toFixed(2)}`;
+              const couponMsg = document.querySelector(".couponcodemsg")
+              couponMsg.innerHTML = data.message;
+              couponMsg.style.color = "green";
+            } else {
+              const couponMsg = document.querySelector(".couponcodemsg")
+              couponMsg.innerHTML = data.message;
+              couponMsg.style.color = "red";
+            }
+          } catch (error) {
+            console.error("Error applying coupon:", error);
+            swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'An error occurred while applying the coupon.'
+              
+            });
+          }
+        });
+      </script>
+
+      <script>
+        async function validateOrder() {
+          const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked');
+          const selectedPayment = document.querySelector('input[name="payment"]:checked');
+
+          // Validate inputs
+          if (!selectedAddress) {
+            Swal.fire({ icon: 'error', title: 'Address not selected', text: 'Please select an address.' });
+            return;
+          }
+          if (!selectedPayment) {
+            Swal.fire({ icon: 'error', title: 'Payment Method not selected', text: 'Please select a payment method.' });
+            return;
+          }
+
+          try {
+            // Fetch cart items
+            const response = await fetch('/fetch-cart', { method: 'GET', headers: { 'Content-Type': 'application/json' } });
+            const cartData = await response.json();
+            const cartItems = cartData.cart.items;
+
+            if (!cartItems || cartItems.length === 0) {
+              Swal.fire({ icon: 'error', title: 'Cart is Empty', text: 'Add items to the cart before placing an order.' });
+              return;
+            }
+
+            const orderPayload = {
+              selectedAddress: selectedAddress.value,
+              items: cartItems,
             };
 
-            const razorpay = new Razorpay(razorpayOptions);
-            razorpay.open();
-          } else {
-            Swal.fire({ icon: 'error', title: 'Order Creation Failed', text: razorpayOrderData.msg });
+            if (selectedPayment.id === 'cash-on-delivery') {
+              // Place COD order
+              const orderResponse = await fetch('/place-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderPayload),
+              });
+              const orderData = await orderResponse.json();
+
+              if (orderData.val) {
+                Swal.fire({ icon: 'success', title: 'Order Placed', text: orderData.msg }).then(() => {
+                  window.location = '/thankyou';
+                });
+              } else {
+                Swal.fire({ icon: 'error', title: 'Order Failed', text: orderData.msg });
+              }
+            } else if (selectedPayment.id === 'razorpay') {
+              // Place Razorpay order
+              const razorpayOrderResponse = await fetch('/place-order-razorpay', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderPayload),
+              });
+              const razorpayOrderData = await razorpayOrderResponse.json();
+
+              if (razorpayOrderData.val) {
+                const razorpayOptions = {
+                  key: 'rzp_test_mUKkruYO0ysf3W', // Your Razorpay Key
+                  amount: razorpayOrderData.amount, // Amount in paise
+                  currency: 'INR',
+                  name: 'Your Company Name',
+                  description: 'Order Payment',
+                  order_id: razorpayOrderData.razorpayOrderId,
+                  handler: async function (response) {
+                    // Verify payment
+                    const verifyResponse = await fetch('/verify-razorpay-payment', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        paymentId: response.razorpay_payment_id,
+                        orderId: razorpayOrderData.razorpayOrderId,
+                        razorpaySignature: response.razorpay_signature,
+                      }),
+                    });
+                    const verifyData = await verifyResponse.json();
+
+                    if (verifyData.success) {
+                      Swal.fire({ icon: 'success', title: 'Payment Successful', text: 'Order placed successfully!' }).then(() => {
+                        window.location = '/thankyou';
+                      });
+                    } else {
+                      Swal.fire({ icon: 'error', title: 'Payment Failed', text: verifyData.msg });
+                    }
+                  },
+                  prefill: {
+                    name: 'Customer Name',
+                    email: 'customer@example.com',
+                  },
+                  theme: {
+                    color: '#F37254',
+                  },
+                };
+
+                const razorpay = new Razorpay(razorpayOptions);
+                razorpay.open();
+              } else {
+                Swal.fire({ icon: 'error', title: 'Order Creation Failed', text: razorpayOrderData.msg });
+              }
+            }
+          } catch (error) {
+            console.error('Error during order process:', error);
+            Swal.fire({ icon: 'error', title: 'Error', text: 'An error occurred while placing the order.' });
           }
         }
-      } catch (error) {
-        console.error('Error during order process:', error);
-        Swal.fire({ icon: 'error', title: 'Error', text: 'An error occurred while placing the order.' });
-      }
-    }
 
-</script>
+      </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-// async function validateOrder() {
-//   const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked');
-//   const selectedPayment = document.querySelector('input[name="payment"]:checked');
+      <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+      <script>
+        // async function validateOrder() {
+        //   const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked');
+        //   const selectedPayment = document.querySelector('input[name="payment"]:checked');
 
-//   if (!selectedAddress) {
-//     Swal.fire({
-//       icon: 'error',
-//       title: 'Address not selected',
-//       text: 'Please select an address before placing your order.',
-//       confirmButtonText: 'OK',
-//     });
-//     return false;
-//   }
+        //   if (!selectedAddress) {
+        //     Swal.fire({
+        //       icon: 'error',
+        //       title: 'Address not selected',
+        //       text: 'Please select an address before placing your order.',
+        //       confirmButtonText: 'OK',
+        //     });
+        //     return false;
+        //   }
 
-//   if (!selectedPayment) {
-//     Swal.fire({
-//       icon: 'error',
-//       title: 'Payment method not selected',
-//       text: 'Please select a payment method before placing your order.',
-//       confirmButtonText: 'OK',
-//     });
-//     return false;
-//   }
+        //   if (!selectedPayment) {
+        //     Swal.fire({
+        //       icon: 'error',
+        //       title: 'Payment method not selected',
+        //       text: 'Please select a payment method before placing your order.',
+        //       confirmButtonText: 'OK',
+        //     });
+        //     return false;
+        //   }
 
-//   try {
-//     // Fetch cart items from the database
-//     const response = await fetch('/fetch-cart', {
-//       method: 'GET',
-//       headers: { 'Content-Type': 'application/json' },
-//     });
+        //   try {
+        //     // Fetch cart items from the database
+        //     const response = await fetch('/fetch-cart', {
+        //       method: 'GET',
+        //       headers: { 'Content-Type': 'application/json' },
+        //     });
 
-//     if (!response.ok) {
-//       throw new Error('Failed to fetch cart items.');
-//     }
+        //     if (!response.ok) {
+        //       throw new Error('Failed to fetch cart items.');
+        //     }
 
-//     const cartData = await response.json();
-//     const cartItems = cartData.cart.items; // Access the items array
-//     console.log(cartItems);
+        //     const cartData = await response.json();
+        //     const cartItems = cartData.cart.items; // Access the items array
+        //     console.log(cartItems);
 
-//     if (!cartItems || cartItems.length === 0) {
-//       Swal.fire({
-//         icon: 'error',
-//         title: 'Cart is empty',
-//         text: 'Add items to the cart before placing an order.',
-//         confirmButtonText: 'OK',
-//       });
-//       return false;
-//     }
+        //     if (!cartItems || cartItems.length === 0) {
+        //       Swal.fire({
+        //         icon: 'error',
+        //         title: 'Cart is empty',
+        //         text: 'Add items to the cart before placing an order.',
+        //         confirmButtonText: 'OK',
+        //       });
+        //       return false;
+        //     }
 
-//     // Send the order details to the backend
-//     const orderResponse = await fetch('/place-order', {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({
-//         selectedAddress: selectedAddress.value,
-//         paymentMethod: selectedPayment.id,
-//         items: cartItems,
-//       }),
-//     });
+        //     // Send the order details to the backend
+        //     const orderResponse = await fetch('/place-order', {
+        //       method: 'POST',
+        //       headers: { 'Content-Type': 'application/json' },
+        //       body: JSON.stringify({
+        //         selectedAddress: selectedAddress.value,
+        //         paymentMethod: selectedPayment.id,
+        //         items: cartItems,
+        //       }),
+        //     });
 
-//     const orderData = await orderResponse.json();
+        //     const orderData = await orderResponse.json();
 
-//     if (orderData.val) {
-//       Swal.fire({
-//         icon: 'success',
-//         title: 'Order Placed Successfully',
-//         text: orderData.msg,
-//         confirmButtonText: 'OK',
-//       }).then(() => {
-//         window.location = '/thankyou'; // Redirect to thank you page
-//       });
-//     } else {
-//       Swal.fire({
-//         icon: 'error',
-//         title: 'Error',
-//         text: orderData.msg,
-//         confirmButtonText: 'OK',
-//       });
-//     }
-//   } catch (error) {
-//     console.error('Error during order validation:', error);
-//     Swal.fire({
-//       icon: 'error',
-//       title: 'Error',
-//       text: 'An error occurred while placing your order.',
-//       confirmButtonText: 'OK',
-//     });
-//   }
-// }
+        //     if (orderData.val) {
+        //       Swal.fire({
+        //         icon: 'success',
+        //         title: 'Order Placed Successfully',
+        //         text: orderData.msg,
+        //         confirmButtonText: 'OK',
+        //       }).then(() => {
+        //         window.location = '/thankyou'; // Redirect to thank you page
+        //       });
+        //     } else {
+        //       Swal.fire({
+        //         icon: 'error',
+        //         title: 'Error',
+        //         text: orderData.msg,
+        //         confirmButtonText: 'OK',
+        //       });
+        //     }
+        //   } catch (error) {
+        //     console.error('Error during order validation:', error);
+        //     Swal.fire({
+        //       icon: 'error',
+        //       title: 'Error',
+        //       text: 'An error occurred while placing your order.',
+        //       confirmButtonText: 'OK',
+        //     });
+        //   }
+        // }
 
 
-</script>
+      </script>
 
       <script src="js/bootstrap.bundle.min.js"></script>
       <script src="js/tiny-slider.js"></script>
