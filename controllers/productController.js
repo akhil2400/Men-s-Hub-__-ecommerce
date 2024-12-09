@@ -263,35 +263,46 @@ async loadupdateProducts(req, res) {
         filters.priceRange = req.query.priceRange;
       }
       if (req.query.searchTerm) {
-        filters.searchTerm = req.query.searchTerm;
+        filters.name = { $regex: req.query.searchTerm, $options: "i" }; // Search by name (case-insensitive)
       }
-
-      if(req.query.priceRange==='lowToHigh') {
-        sortOption.price = -1;
+  
+      if (req.query.priceRange === 'lowToHigh') {
+        sortOption.price = 1; // Sort by price low to high
+      } else if (req.query.priceRange === 'highToLow') {
+        sortOption.price = -1; // Sort by price high to low
       }
   
       // If there's a category filter, fetch the products by that category
       if (req.query.category) {
         const cat = await categoryModel.findOne({ name: req.query.category });
-        filters.category = cat._id;
+        if (cat) {
+          filters.category = cat._id;
+        }
       }
   
-      // Retrieve filtered products based on the filters
-      const products = await productModel.find(filters).populate('category').exec();
+      // Retrieve filtered and sorted products
+      const products = await productModel.find(filters).populate('category').sort(sortOption).exec();
       const categories = await categoryModel.find({ isDeleted: false });
+  
+      // Add offerPercentage to the products for the frontend
+      const productsWithOffer = products.map(product => ({
+        ...product.toObject(),
+        offerPercentage: product.offerPercentage || 0, // Ensure the field exists even if undefined
+      }));
   
       if (req.xhr) {  // Check if it's an AJAX request (for fetch)
         // Render only the product grid for AJAX requests
-        return res.status(200).render('partials/product-grid', { products, categories });
+        return res.status(200).render('partials/product-grid', { products: productsWithOffer, categories });
       }
-
-      console.log(products);
+  
+      console.log(productsWithOffer);
   
       // Otherwise, render the full page (shop page)
-      return res.status(200).render('shop', { products, categories });
+      return res.status(200).render('shop', { products: productsWithOffer, categories });
   
     } catch (err) {
       console.log(err);
+      res.status(500).send("Server error");
     }
   },
   

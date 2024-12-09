@@ -9,66 +9,159 @@ const couponModel = require("../models/couponModel");
 const offerModel = require("../models/offerModel");
 
 module.exports = {
-  async loadoffer(req, res){
+  async loadoffer(req, res) {
     try {
       // Fetch all offers from the database
       const offers = await offerModel.find();
-  
+
       // Check if any offers exist
       if (!offers || offers.length === 0) {
-        return res.render('offermanagement', {
+        return res.render("offermanagement", {
           val: false, // No offers available
-          msg: 'No offers found.', // Message to display when no offers exist
+          msg: "No offers found.", // Message to display when no offers exist
         });
       }
-  
+
       // Render the page with offers data
-      res.render('offermanagement', {
+      res.render("offermanagement", {
         val: true, // Offers exist
-        offers: offers.map(offer => ({
+        offers: offers.map((offer) => ({
           _id: offer._id,
           name: offer.name,
           type: offer.type,
           categoryOrProduct: offer.categoryOrProduct,
-          categoryOrProductName: offer.categoryOrProductName, // Use correct field name if populated
+          categoryOrProductName: offer.name, // Use correct field name if populated
           discountType: offer.discountType,
           discountValue: offer.discountValue,
           minPurchase: offer.minPurchase || null,
-          startDate: offer.startDate.toISOString().split('T')[0],
-          endDate: offer.endDate.toISOString().split('T')[0],
-          status: offer.status ? 'Active' : 'Inactive',
+          startDate: offer.startDate.toISOString().split("T")[0],
+          endDate: offer.endDate.toISOString().split("T")[0],
+          status: offer.status ? "Active" : "Inactive",
           description: offer.description || null,
         })),
       });
     } catch (error) {
-      console.error('Error loading offers:', error);
-      res.status(500).render('offermanagement', {
+      console.error("Error loading offers:", error);
+      res.status(500).render("offermanagement", {
         val: false,
-        msg: 'An error occurred while fetching offers.',
+        msg: "An error occurred while fetching offers.",
       });
     }
   },
 
- async loadproductoffer(req, res) {
+  async loadproductoffer(req, res) {
     try {
       // Fetch all products from the database
       const products = await productModel.find();
-      res.json(products);
+      res.json({ items: products });
     } catch (error) {
-      console.error('Error loading products:', error);  
-      res.status(500).json({ error: 'Failed to fetch products' });
+      console.error("Error loading products:", error);
+      res.status(500).json({ error: "Failed to fetch products" });
     }
-},
-async loadcategoryoffer(req, res) {
+  },
+  async loadcategoryoffer(req, res) {
     try {
       // Fetch all categories from the database
       const categories = await categoryModel.find();
-      res.json(categories);
+      res.json({ items: categories });
     } catch (error) {
-      console.error('Error loading categories:', error);  
-      res.status(500).json({ error: 'Failed to fetch categories' });
+      console.error("Error loading categories:", error);
+      res.status(500).json({ error: "Failed to fetch categories" });
     }
-},
+  },
+  async createoffer(req, res) {
+    try {
+      const {
+        name,
+        type,
+        categoryOrProduct,
+        discountType,
+        discountValue,
+        startDate,
+        endDate,
+        description,
+      } = req.body;
+  
+      console.log("2222:", categoryOrProduct);
+  
+      const newOffer = new offerModel({
+        name,
+        type,
+        categoryOrProduct,
+        discountType,
+        discountValue,
+        startDate,
+        endDate,
+        status: "Active",
+        description: description || "",
+      });
+  
+      // Calculate new offer price if the offer applies to a product
+      if (type === "Product") {
+        const product = await productModel.findById(categoryOrProduct);
+  
+        if (product) {
+          // Save old offer price
+          product.previousOfferPrice = product.offerPrice || product.price;
+  
+          // Calculate discount
+          if (discountType === "Percentage") {
+            const discountAmount = (product.price * discountValue) / 100;
+            product.offerPrice = product.price - discountAmount;
+            product.offerPercentage = discountValue;
+          } else if (discountType === "Fixed Amount") {
+            product.offerPrice = product.price - discountValue;
+            product.offerPercentage = ((discountValue / product.price) * 100).toFixed(2);
+          }
+  
+          // Save updated product
+          await product.save();
+        }
+      }
+  
+      const savedOffer = await newOffer.save();
+  
+      res.status(201).json({ success: true, offer: savedOffer });
+    } catch (error) {
+      console.error("Error creating offer:", error);
+      res.status(500).json({ success: false, message: "Server error" });
+    }
+  },
 
-
-}
+  async deleteoffer (req, res){
+    try {
+      const { id } = req.params;
+  
+      // Delete the offer from the database
+      const result = await offerModel.findByIdAndDelete(id);
+  
+      if (result) {
+        return res.status(200).json({ success: true, message: "Offer deleted successfully" });
+      } else {
+        return res.status(404).json({ success: false, message: "Offer not found" });
+      }
+    } catch (error) {
+      console.error("Error deleting offer:", error);
+      return res.status(500).json({ success: false, message: "Server error" });
+    }
+  },
+  
+  async updateoffer(req,res){
+    const offerId = req.params.id;
+    const updatedData = req.body;
+  
+    try {
+      const updatedOffer = await offerModel.findByIdAndUpdate(offerId, updatedData, { new: true });
+  
+      if (!updatedOffer) {
+        return res.status(404).json({ success: false, message: "Offer not found." });
+      }
+  
+      res.status(200).json({ success: true, message: "Offer updated successfully.", data: updatedOffer });
+    } catch (error) {
+      console.error("Error updating offer:", error);
+      res.status(500).json({ success: false, message: "Internal server error." });
+    }
+  },
+  
+};

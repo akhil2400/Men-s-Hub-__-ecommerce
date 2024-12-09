@@ -11,7 +11,6 @@ const offerSchema = new mongoose.Schema(
     },
     discountType: { type: String, enum: ["Percentage", "Fixed Amount"], required: false },
     discountValue: { type: Number, required: true },
-    minPurchase: { type: Number, default: null },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
     status: { type: String, enum: ["Active", "Inactive", "Scheduled"], default: "Scheduled" },

@@ -82,20 +82,19 @@
                 </div>
               </form>
               <table class="table">
-                <thead>
+                <thead style="color: white;">
                   <tr>
-                    <th>No</th>
-                    <th>Offer Name</th>
-                    <th>Type</th>
-                    <th>Category/Product</th>
-                    <th>Discount Type</th>
-                    <th>Discount Value</th>
-                    <th>Minimum Purchase</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Status</th>
-                    <th>Description</th>
-                    <th>Update</th>
+                    <th style="color: white;">No</th>
+                    <th style="color: white;">Offer Name</th>
+                    <th style="color: white;">Type</th>
+                    <th style="color: white;">Category/Product</th>
+                    <th style="color: white;">Discount</th>
+                    <th style="color: white;">Start Date</th>
+                    <th style="color: white;">End Date</th>
+                    <th style="color: white;">Status</th>
+                    <th style="color: white;">Description</th>
+                    <th style="color: white;">Update</th>
+                    <th style="color: white;">Delete</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -105,7 +104,7 @@
                     </p>
                     <% } else { %>
                       <% offers.forEach((data, index)=> { %>
-                        <tr>
+                        <tr style="color: white;">
                           <td>
                             <%= index + 1 %>
                           </td>
@@ -116,17 +115,12 @@
                             <%= data.type %>
                           </td>
                           <td>
-                            <%= data.categoryOrProductName || "N/A" %>
+                            <%= data.categoryOrProduct || "N/A" %>
                           </td>
                           <td>
-                            <%= data.discountType %>
+                            <%= data.discountValue %>%
                           </td>
-                          <td>
-                            <%= data.discountValue %>
-                          </td>
-                          <td>
-                            <%= data.minPurchase || "N/A" %>
-                          </td>
+
                           <td>
                             <%= data.startDate %>
                           </td>
@@ -144,11 +138,19 @@
                               data-name="<%= data.name %>" data-type="<%= data.type %>"
                               data-categoryorproduct="<%= data.categoryOrProduct %>"
                               data-discounttype="<%= data.discountType %>"
-                              data-discountvalue="<%= data.discountValue %>" data-minpurchase="<%= data.minPurchase %>"
-                              data-startdate="<%= data.startDate %>" data-enddate="<%= data.endDate %>"
-                              data-status="<%= data.status %>" data-description="<%= data.description %>">
+                              data-discountvalue="<%= data.discountValue %>" data-startdate="<%= data.startDate %>"
+                              data-enddate="<%= data.endDate %>" data-status="<%= data.status %>"
+                              data-description="<%= data.description %>">
+
                               Update
+
                             </a>
+                          </td>
+                          <td>
+                            <button class="badge badge-outline-danger delete-offer-btn"
+                              style="background-color: transparent;" data-id="<%= data._id %>">
+                              Delete
+                            </button>
                           </td>
                         </tr>
                         <% }) %>
@@ -171,55 +173,54 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="offerUploadModalLabel">Add New Offer</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+          <button style="display: flex; justify-content: center; align-items: center;" type="button" class="btn-close badge-outline-warning" data-bs-dismiss="modal"
+          aria-label="Close"><span style="color: white;font-weight: bold; margin-bottom: 2px; ">x</span></button>            
           </button>
         </div>
         <form id="addOfferForm" action="/admin/offer/create" method="POST">
-          <div class="modal-body">
+          <div style="color: white;" class="modal-body">
             <div class="form-group">
               <label for="offerName">Offer Name</label>
-              <input type="text" class="form-control" id="offerName" name="name" required />
+              <input style="color: white;" type="text" class="form-control" id="offerName" name="name" required />
             </div>
             <div class="form-group">
               <label for="offerType">Offer Type</label>
-              <select class="form-control" id="offerType" name="type" required onchange="loadOptions()">
+              <select style="color: white;" class="form-control" id="offerType" name="type" required
+                onchange="loadOptions()">
                 <option value="Category">Category</option>
                 <option value="Product">Product</option>
               </select>
             </div>
             <div class="form-group">
               <label for="offerCategoryOrProduct">Category/Product</label>
-              <select class="form-control" id="offerCategoryOrProduct" name="categoryOrProduct" required>
+              <select style="color: white;" class="form-control" id="offerCategoryOrProduct" name="categoryOrProduct"
+                required>
                 <!-- Dynamically populate options -->
               </select>
             </div>
             <div class="form-group">
               <label for="discountType">Discount Type</label>
-              <select class="form-control" id="discountType" name="discountType" required>
+              <select style="color: white;" class="form-control" id="discountType" name="discountType" required>
                 <option value="Percentage">Percentage</option>
                 <option value="Fixed Amount">Fixed Amount</option>
               </select>
             </div>
             <div class="form-group">
               <label for="discountValue">Discount Value</label>
-              <input type="number" class="form-control" id="discountValue" name="discountValue" required />
-            </div>
-            <div class="form-group">
-              <label for="minPurchase">Minimum Purchase</label>
-              <input type="number" class="form-control" id="minPurchase" name="minPurchase" />
+              <input style="color: white;" type="number" class="form-control" id="discountValue" name="discountValue"
+                required />
             </div>
             <div class="form-group">
               <label for="startDate">Start Date</label>
-              <input type="date" class="form-control" id="startDate" name="startDate" required />
+              <input style="color: white;" type="date" class="form-control" id="startDate" name="startDate" required />
             </div>
             <div class="form-group">
               <label for="endDate">End Date</label>
-              <input type="date" class="form-control" id="endDate" name="endDate" required />
+              <input style="color: white;" type="date" class="form-control" id="endDate" name="endDate" required />
             </div>
             <div class="form-group">
               <label for="description">Description</label>
-              <textarea class="form-control" id="description" name="description"></textarea>
+              <textarea style="color: white;" class="form-control" id="description" name="description"></textarea>
             </div>
           </div>
           <div class="modal-footer">
@@ -238,19 +239,21 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="updateOfferModalLabel">Update Offer</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button style="display: flex; justify-content: center; align-items: center;" type="button" class="btn-close badge-outline-warning" data-bs-dismiss="modal"
+            aria-label="Close"><span style="color: white;font-weight: bold; margin-bottom: 2px; ">x</span></button>
         </div>
         <div class="modal-body">
           <form id="updateOfferForm">
             <div class="mb-3">
               <label for="updateOfferName" class="form-label">Offer Name</label>
-              <input type="text" class="form-control" id="updateOfferName" name="updateOfferName"
+              <input style="color: white;" type="text" class="form-control" id="updateOfferName" name="updateOfferName"
                 placeholder="Enter offer name" required />
             </div>
 
             <div class="mb-3">
               <label for="updateOfferType" class="form-label">Offer Type</label>
-              <select class="form-select" id="updateOfferType" name="updateOfferType" required>
+              <select style="color: rgb(0, 0, 0);" class="form-select" id="updateOfferType" name="updateOfferType"
+                required>
                 <option value="">Select offer type</option>
                 <option value="Category">Category</option>
                 <option value="Product">Product</option>
@@ -259,14 +262,16 @@
 
             <div class="mb-3">
               <label for="updateCategoryOrProduct" class="form-label">Category/Product</label>
-              <select class="form-select" id="updateCategoryOrProduct" name="updateCategoryOrProduct" required>
+              <select style="color: rgb(0, 0, 0);" class="form-select" id="updateCategoryOrProduct"
+                name="updateCategoryOrProduct" required>
                 <!-- Dynamically populate this dropdown -->
               </select>
             </div>
 
             <div class="mb-3">
               <label for="updateDiscountType" class="form-label">Discount Type</label>
-              <select class="form-select" id="updateDiscountType" name="updateDiscountType" required>
+              <select style="color: rgb(0, 0, 0);" class="form-select" id="updateDiscountType" name="updateDiscountType"
+                required>
                 <option value="">Select discount type</option>
                 <option value="Percentage">Percentage</option>
                 <option value="Fixed Amount">Fixed Amount</option>
@@ -275,29 +280,25 @@
 
             <div class="mb-3">
               <label for="updateDiscountValue" class="form-label">Discount Value</label>
-              <input type="number" class="form-control" id="updateDiscountValue" name="updateDiscountValue"
-                placeholder="Enter discount value" min="0" required />
-            </div>
-
-            <div class="mb-3">
-              <label for="updateMinimumPurchase" class="form-label">Minimum Purchase</label>
-              <input type="number" class="form-control" id="updateMinimumPurchase" name="updateMinimumPurchase"
-                placeholder="Enter minimum purchase amount" min="0" />
+              <input style="color: white;" type="number" class="form-control" id="updateDiscountValue"
+                name="updateDiscountValue" placeholder="Enter discount value" min="0" required />
             </div>
 
             <div class="mb-3">
               <label for="updateStartDate" class="form-label">Start Date</label>
-              <input type="date" class="form-control" id="updateStartDate" name="updateStartDate" required />
+              <input style="color: white;" type="date" class="form-control" id="updateStartDate" name="updateStartDate"
+                required />
             </div>
 
             <div class="mb-3">
               <label for="updateEndDate" class="form-label">End Date</label>
-              <input type="date" class="form-control" id="updateEndDate" name="updateEndDate" required />
+              <input style="color: white;" type="date" class="form-control" id="updateEndDate" name="updateEndDate"
+                required />
             </div>
 
             <div class="mb-3">
               <label for="updateDescription" class="form-label">Description</label>
-              <textarea class="form-control" id="updateDescription" name="updateDescription"
+              <textarea style="color: white;" class="form-control" id="updateDescription" name="updateDescription"
                 placeholder="Enter offer description"></textarea>
             </div>
 
@@ -323,11 +324,13 @@
 
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
     async function loadOptions() {
       const offerType = document.getElementById('offerType').value;
-      const categoryOrProduct = document.getElementById('categoryOrProduct');
+      const categoryOrProduct = document.getElementById('offerCategoryOrProduct');
 
       categoryOrProduct.innerHTML = '<option value="">Select category or product</option>';
 
@@ -346,9 +349,9 @@
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         const data = await response.json();
+        console.log(data)
 
-
-        data.forEach((item) => {
+        data.items?.forEach((item) => {
           const option = document.createElement("option");
           option.value = item._id;
           option.textContent = item.name
@@ -359,22 +362,238 @@
       }
     }
 
+    document.addEventListener("DOMContentLoaded", function () {
+      const addOfferForm = document.getElementById("addOfferForm");
+
+      addOfferForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(addOfferForm);
+        const offerData = {
+          name: formData.get("name"),
+          type: formData.get("type"),
+          categoryOrProduct: formData.get("categoryOrProduct"),
+          discountType: formData.get("discountType"),
+          discountValue: parseFloat(formData.get("discountValue")),
+          startDate: formData.get("startDate"),
+          endDate: formData.get("endDate"),
+          description: formData.get("description"),
+        };
+
+        try {
+          const response = await fetch("/admin/offer/create", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(offerData),
+          });
+
+          const result = await response.json();
+
+          if (response.ok && result.success) {
+            Swal.fire({
+              title: "Offer Created!",
+              text: "The new offer was successfully created.",
+              icon: "success",
+              showConfirmButton: false, // Correct property name
+              timer: 1500, // Auto-close after 1.5 seconds
+            });
+
+            setTimeout(() => {
+              window.location.reload()
+            }, 1500)
 
 
+            // Optionally, reset the form and close modal
+            addOfferForm.reset();
+            const offerUploadModal = document.getElementById("offerUploadModal");
+            const modal = bootstrap.Modal.getInstance(offerUploadModal);
+            modal.hide();
+          } else {
+            Swal.fire({
+              title: "Error!",
+              text: result.message || "Could not create offer.",
+              icon: "error",
+              confirmButtonText: "Retry",
+            });
+          }
+        } catch (error) {
+          console.error("Unexpected error:", error);
+          Swal.fire({
+            title: "Unexpected Error",
+            text: "An error occurred while processing your request.",
+            icon: "error",
+            confirmButtonText: "Retry",
+          });
+        }
+      });
+    });
+  </script>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Open Update Modal with Pre-Filled Data
+      const updateButtons = document.querySelectorAll(".update-offer-btn");
+      const updateOfferModal = new bootstrap.Modal(document.getElementById("updateOfferModal"));
+      const updateOfferForm = document.getElementById("updateOfferForm");
+
+      updateButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          // Pre-fill the modal with data attributes from the clicked button
+          document.getElementById("updateOfferName").value = button.dataset.name;
+          document.getElementById("updateOfferType").value = button.dataset.type;
+          document.getElementById("updateCategoryOrProduct").value = button.dataset.categoryorproduct;
+          document.getElementById("updateDiscountType").value = button.dataset.discounttype;
+          document.getElementById("updateDiscountValue").value = button.dataset.discountvalue;
+          document.getElementById("updateStartDate").value = button.dataset.startdate;
+          document.getElementById("updateEndDate").value = button.dataset.enddate;
+          document.getElementById("updateDescription").value = button.dataset.description;
+          document.getElementById("updateIsActive").checked = button.dataset.status === "Active";
+
+          // Store the ID of the offer being updated
+          updateOfferForm.dataset.id = button.dataset.id;
+
+          // Show the modal
+          updateOfferModal.show();
+        });
+      });
+
+      // Save Changes to Offer
+      const saveUpdatedOfferButton = document.getElementById("saveUpdatedOffer");
+      saveUpdatedOfferButton.addEventListener("click", async () => {
+        const offerId = updateOfferForm.dataset.id;
+
+        const updatedData = {
+          name: document.getElementById("updateOfferName").value,
+          type: document.getElementById("updateOfferType").value,
+          categoryOrProduct: document.getElementById("updateCategoryOrProduct").value,
+          discountType: document.getElementById("updateDiscountType").value,
+          discountValue: parseFloat(document.getElementById("updateDiscountValue").value),
+          startDate: document.getElementById("updateStartDate").value,
+          endDate: document.getElementById("updateEndDate").value,
+          description: document.getElementById("updateDescription").value,
+          status: document.getElementById("updateIsActive").checked ? "Active" : "Inactive",
+        };
+
+        try {
+          const response = await fetch(`/admin/offer/update/${offerId}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updatedData),
+          });
+
+          const result = await response.json();
+
+          if (response.ok && result.success) {
+            Swal.fire({
+              title: "Offer Updated!",
+              text: "The offer was successfully updated.",
+              icon: "success",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+
+            // Update the row dynamically
+            const updatedRow = document.querySelector(`.update-offer-btn[data-id='${offerId}']`).closest("tr");
+            updatedRow.querySelector("td:nth-child(2)").textContent = updatedData.name;
+            updatedRow.querySelector("td:nth-child(3)").textContent = updatedData.type;
+            updatedRow.querySelector("td:nth-child(4)").textContent = updatedData.categoryOrProduct || "N/A";
+            updatedRow.querySelector("td:nth-child(5)").textContent = `${updatedData.discountValue}%`;
+            updatedRow.querySelector("td:nth-child(6)").textContent = updatedData.startDate;
+            updatedRow.querySelector("td:nth-child(7)").textContent = updatedData.endDate;
+            updatedRow.querySelector("td:nth-child(8)").textContent = updatedData.status;
+            updatedRow.querySelector("td:nth-child(9)").textContent = updatedData.description || "N/A";
+
+            // Close the modal
+            updateOfferModal.hide();
+          } else {
+            Swal.fire({
+              title: "Error!",
+              text: result.message || "Could not update the offer.",
+              icon: "error",
+              confirmButtonText: "Retry",
+            });
+          }
+        } catch (error) {
+          console.error("Error updating offer:", error);
+          Swal.fire({
+            title: "Unexpected Error",
+            text: "An error occurred while processing your request.",
+            icon: "error",
+            confirmButtonText: "Retry",
+          });
+        }
+      });
+    });
   </script>
 
 
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const deleteButtons = document.querySelectorAll(".delete-offer-btn");
 
+      deleteButtons.forEach((button) => {
+        button.addEventListener("click", async (e) => {
+          const offerId = button.getAttribute("data-id");
 
+          // Show SweetAlert confirmation
+          const result = await Swal.fire({
+            title: "Are you sure?",
+            text: "This will permanently delete the offer.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel",
+          });
 
+          if (result.isConfirmed) {
+            try {
+              // Send DELETE request to the server
+              const response = await fetch(`/admin/offer/delete/${offerId}`, {
+                method: "DELETE",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              });
 
-  <script src="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+              const result = await response.json();
 
+              if (response.ok && result.success) {
+                Swal.fire({
+                  title: "Deleted!",
+                  text: "The offer has been deleted.",
+                  icon: "success",
+                  confirmButtonText: "OK",
+                });
 
-
-
+                // Remove the row from the table dynamically
+                const row = button.closest("tr");
+                row.remove();
+              } else {
+                Swal.fire({
+                  title: "Error!",
+                  text: result.message || "Failed to delete the offer.",
+                  icon: "error",
+                  confirmButtonText: "Retry",
+                });
+              }
+            } catch (error) {
+              console.error("Error deleting offer:", error);
+              Swal.fire({
+                title: "Unexpected Error",
+                text: "An error occurred while processing your request.",
+                icon: "error",
+                confirmButtonText: "Retry",
+              });
+            }
+          }
+        });
+      });
+    });
+  </script>
 </body>
 
 </html>

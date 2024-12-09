@@ -48,5 +48,7 @@ router.post('/admin/coupon/update/:id', couponController.updateCoupon);
 router.get("/admin/offermanagement", offerController.loadoffer);
 router.get('/admin/offer/category', offerController.loadcategoryoffer);
 router.get('/admin/offer/product', offerController.loadproductoffer);
-
+router.post("/admin/offer/create",offerController.createoffer)
+router.delete("/admin/offer/delete/:id",offerController.deleteoffer)
+router.put("/admin/offer/update/:id",offerController.updateoffer)
 module.exports = router;
