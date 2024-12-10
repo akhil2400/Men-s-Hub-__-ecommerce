@@ -70,14 +70,9 @@
                 <div class="products">
                   <% order.products.forEach(product=> { %>
                     <div class="product-item">
-                      <img height="100px" width="100px" src="http://localhost:3001/<%= product.image %>"
-                        alt="Product Image" class="product-image">
-
                       <p><strong>Name:</strong> <%= product.name %>
                       </p>
                       <p><strong>Category:</strong> <%= product.category %>
-                      </p>
-                      <p><strong>Quantity:</strong> <%= product.quantity %>
                       </p>
                       <p><strong>Price:</strong> &#8377;<%= product.price.toFixed(2) %>
                       </p>
@@ -85,8 +80,9 @@
                     <% }) %>
                 </div>
 
-                <div class="order-actions d-flex justify-content-end">
-                  <a href="/order/details/<%= order.id %>" class="btn btn-details">View Details</a>
+                <div class="order-actions d-flex justify-content-end ">
+                  <a href="/order/details/<%= order.id %>" class="btn btn-details" style="margin-right: 4px;background-color: rgb(186, 31, 31); border-radius: 8px;border: none;">Return</a>
+                  <a href="/order/details/<%= order.id %>" class="btn btn-details" style="margin-right: 4px;background-color: #FFAB00; color: #000000;  border-radius: 8px;border: none;">View Details</a>
                 </div>
               </div>
               <% }); %>

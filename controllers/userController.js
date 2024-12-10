@@ -68,7 +68,7 @@ module.exports = {
   },
 
   async registerUser(req, res) {
-    console.log("Kamira wovo ");
+    
     const { otp } = req.body;
     console.log("otp1:", otp);
     if (!req.session.userData) {

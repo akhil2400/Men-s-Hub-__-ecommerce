@@ -5,6 +5,7 @@ const noCache = require('../middlewares/noCache');
 const productController = require('../controllers/productController');
 const orderController = require('../controllers/orderController');
 const couponController = require('../controllers/couponController');
+const walletController = require('../controllers/walletController')
 
 
 router.get('/',noCache,userController.loadstartingpage);
@@ -52,10 +53,7 @@ router.get('/wishlist',userController.loadwishlist)
 router.post('/addToWishlist', userController.addToWishlist);
 router.delete('/removeFromWishlist', userController.removeFromWishlist);
 router.post('/apply-coupon/:userId',couponController.applycoupon)
-
-
-// router.get('/checkout',userController.loadcheckout)
-
 router.post('/checkout', userController.processCheckout);
+router.get('/wallet',walletController.loadWallet)
 
 module.exports = router;

@@ -113,8 +113,13 @@
                     <input type="text" class="form-control me-2" id="c_code" placeholder="Coupon Code"
                       aria-label="Coupon Code" aria-describedby="button-addon2" />
                     <div class="input-group-append">
-                      <button class="btn btn-black btn-sm" type="button" id="button-addon2">
+                      <button class="btn" style="background-color: rgb(47, 120, 47); color: white" type="button"
+                        id="button-addon2">
                         Apply
+                      </button>
+                      <button class="btn btn-black btn-sm" style="background-color: rgb(186, 35, 35); color: white"
+                        type="button" id="button-remove2">
+                        Remove
                       </button>
                     </div>
                   </div>
@@ -281,6 +286,37 @@
       <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+
+      <script>
+        document.getElementById('button-remove2').addEventListener("click", function () {
+          Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, remove it!"
+          }).then((result) => {
+            if (result.isConfirmed) {
+              Swal.fire({
+                title: "Deleted!",
+                text: "Your file has been deleted.",
+                icon: "success",
+                showCancelButton: false,
+                timer:1500
+              });
+            }
+          });
+            
+          setTimeout(() =>{
+            window.location.reload();
+          },1500)
+
+        })
+
+
+      </script>
       <script>
         const userId = "<%= userId %>";
         document.getElementById("button-addon2").addEventListener("click", async function () {
@@ -324,7 +360,7 @@
               icon: 'error',
               title: 'Error',
               text: 'An error occurred while applying the coupon.'
-              
+
             });
           }
         });
@@ -529,10 +565,7 @@
         //     });
         //   }
         // }
-
-
       </script>
-
       <script src="js/bootstrap.bundle.min.js"></script>
       <script src="js/tiny-slider.js"></script>
       <script src="js/custom.js"></script>
