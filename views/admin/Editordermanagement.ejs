@@ -7,6 +7,26 @@
   <title>Order Details</title>
   <link rel="stylesheet" href="/css/admin.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">
+  <style>
+    .approve-btn {
+      display: hide;
+      background-color: rgb(97, 182, 97);
+      border: none;
+      border-radius: 5px;
+      padding: 8px;
+      color: white;
+
+    }
+
+    .reject-btn {
+      display: hide;
+      background-color: rgb(146, 30, 30);
+      border: none;
+      border-radius: 5px;
+      padding: 8px;
+      color: white;
+    }
+  </style>
 </head>
 
 <body>
@@ -20,7 +40,7 @@
       </div>
       <ul class="nav">
         <li class="nav-item menu-items">
-          <a class="nav-link" href="#">
+          <a class="nav-link" href="/admin/dashboard">
             <span class="menu-title">Dashboard</span>
           </a>
         </li>
@@ -45,7 +65,7 @@
           </a>
         </li>
         <li class="nav-item menu-items">
-          <a class="nav-link" href="/admin/couponmanagement">
+          <a class="nav-link" href="#">
             <span class="menu-title">Coupen Management</span>
           </a>
         </li>
@@ -59,7 +79,7 @@
 
     <!-- Page Content -->
     <div class="container-fluid page-body-wrapper" style="background-color: #191c24; color: white;">
-      <div class="custom-table-container mt-5">
+      <div class="custom-table-container mt-5" style="margin: 15%;">
         <h3 class="text-center">Order Details</h3>
 
         <!-- Product Details -->
@@ -77,22 +97,27 @@
             <tbody>
               <% productsDetails.forEach(item=> { %>
                 <tr>
-                  <td><img src="/<%= item.productData.images[0] %>" alt="<%= item.productData.name %>"
-                      style="width: 100px; height: auto;"></td>
                   <td>
-                    <%= item.productData.name %>
+                    <% if (item.productData && item.productData.images && item.productData.images.length> 0) { %>
+                      <img src="/<%= item.productData.images[0] %>" alt="<%= item.productData.name %>"
+                        style="width: 100px; height: auto;">
+                      <% } else { %>
+                        <span>No Image Available</span>
+                        <% } %>
                   </td>
-                  <td>
-                    <%= item.price.toFixed(2) %>
-                  </td>
-                  <td>
-                    <%= item.quantity %>
-                  </td>
+                  <td><span style="color: white;">
+                      <%= item.productData ? item.productData.name : 'Unknown Product' %>
+                    </span></td>
+                  <td><span style="color: white;">&#8377;<%= item.price ? item.price.toFixed(2) : '0.00' %></span></td>
+                  <td><span style="color: white;">
+                      <%= item.quantity ? item.quantity : '0' %>
+                    </span></td>
                 </tr>
                 <% }) %>
             </tbody>
           </table>
         </div>
+
 
         <!-- Shipping Details -->
         <div class="order-section mt-5">
@@ -100,7 +125,7 @@
           <table class="table table-bordered">
             <thead class="thead-dark">
               <tr>
-                <th>House Name</th>
+                <th>House Number</th>
                 <th>Country</th>
                 <th>State</th>
                 <th>District</th>
@@ -108,8 +133,37 @@
                 <th>Pincode</th>
               </tr>
             </thead>
+            <tbody>
+              <% if (deliveryAddress) { %>
+                <tr>
+                  <td><span style="color: white;">
+                      <%= deliveryAddress.houseNumber %>
+                    </span></td>
+                  <td><span style="color: white;">
+                      <%= deliveryAddress.country %>
+                    </span></td>
+                  <td><span style="color: white;">
+                      <%= deliveryAddress.state %>
+                    </span></td>
+                  <td><span style="color: white;">
+                      <%= deliveryAddress.district %>
+                    </span></td>
+                  <td><span style="color: white;">
+                      <%= deliveryAddress.city %>
+                    </span></td>
+                  <td><span style="color: white;">
+                      <%= deliveryAddress.pinCode %>
+                    </span></td>
+                </tr>
+                <% } else { %>
+                  <tr>
+                    <td colspan="6">No Address Available</td>
+                  </tr>
+                  <% } %>
+            </tbody>
           </table>
         </div>
+
 
         <!-- Order Status -->
         <div class="order-status-section mt-5">
@@ -121,10 +175,17 @@
                 <option value="pending" <%=order.status==='pending' ? 'selected' : '' %>>Pending</option>
                 <option value="completed" <%=order.status==='completed' ? 'selected' : '' %>>Completed</option>
                 <option value="cancelled" <%=order.status==='cancelled' ? 'selected' : '' %>>Cancelled</option>
+                <option value="cancelled" <%=order.status==='return' ? 'selected' : '' %>>Returned</option>
+                <option value="cancelled" <%=order.status==='cancelled' ? 'selected' : '' %>>shiped</option>
               </select>
             </div>
             <button type="submit" class="btn btn-primary">Update Status</button>
           </form>
+          <br>
+          <br>
+          <button class="approve-btn">Approve Return</button>
+          <button class="reject-btn">Reject Return</button>
+
         </div>
       </div>
     </div>
@@ -133,48 +194,37 @@
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
   <script>
-    // Wait for the DOM to be fully loaded before running the script
-    document.addEventListener('DOMContentLoaded', function () {
-      const currentStatus = '<%= order.status %>';
-      const statusDropdownContainer = document.getElementById('statusDropdownContainer');
-
-      console.log('Current Status:', currentStatus); // Debugging the order status
-
-      if (currentStatus === 'cancelled') {
-        statusDropdownContainer.style.display = 'none'; // Hide the status dropdown if the order is cancelled
-      }
-    });
-
-    // Form submission handler
     document.getElementById('statusForm').addEventListener('submit', async function (e) {
-      e.preventDefault(); // Prevent the default form submission
-      const status = document.getElementById('orderStatus').value; // Get the new status value
-      const orderId = '<%= order._id %>'; // Use the server-rendered order ID
+      e.preventDefault();
+
+      const status = document.getElementById('orderStatus').value;
+      const orderId = '<%= order._id %>'; // Ensure this renders correctly
+
+      if (!orderId) {
+        console.error('Order ID is undefined. Please check the EJS rendering.');
+        return;
+      }
 
       try {
-        // Send the new status to the server
         const response = await fetch(`/admin/order/${orderId}/updatestatus`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ status }),
         });
 
-        const data = await response.json(); // Parse the JSON response
-
+        const data = await response.json();
         if (data.success) {
-          // Display a success Swal alert
           Swal.fire({
             title: 'Success!',
             text: data.message,
             icon: 'success',
-            confirmButtonText: 'OK',
-          }).then(() => {
-            location.reload(); // Reload the page after the user confirms
+            showConfirmButton: false,
           });
+          setTimeout(() => {
+            window.location.href = '/admin/ordermanagement';
+          }, 1500)
         } else {
-          // Display an error Swal alert with the server's message
           Swal.fire({
             title: 'Error!',
             text: data.message,
@@ -183,16 +233,17 @@
           });
         }
       } catch (error) {
-        // Display a generic error Swal alert if the fetch fails
+        console.error('Error updating status:', error);
         Swal.fire({
           title: 'Error!',
-          text: 'Something went wrong while updating the status. Please try again later.',
+          text: 'Failed to update status.',
           icon: 'error',
           confirmButtonText: 'OK',
         });
-        console.error('Error updating status:', error); // Log the error for debugging
       }
     });
+
+
   </script>
 </body>
 

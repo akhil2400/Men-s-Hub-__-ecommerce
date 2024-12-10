@@ -28,7 +28,7 @@
       </div>
       <ul class="nav">
         <li class="nav-item menu-items">
-          <a class="nav-link" href="#">
+          <a class="nav-link" href="/admin/dashboard">
             <span class="menu-title">Dashboard</span>
           </a>
         </li>
@@ -109,41 +109,40 @@
                             <%= index + 1 %>
                           </td>
                           <td>
-                            <%= data.name %>
+                            <%= data.name || "N/A" %>
                           </td>
                           <td>
-                            <%= data.type %>
+                            <%= data.type || "N/A" %>
                           </td>
                           <td>
-                            <%= data.categoryOrProduct || "N/A" %>
+                            <%= data.categoryOrProductName || "N/A" %>
                           </td>
                           <td>
-                            <%= data.discountValue %>%
-                          </td>
-
-                          <td>
-                            <%= data.startDate %>
+                            <%= data.discountValue !=null ? `${data.discountValue}%` : "N/A" %>
                           </td>
                           <td>
-                            <%= data.endDate %>
+                            <%= data.startDate ? data.startDate : "N/A" %>
                           </td>
                           <td>
-                            <%= data.status %>
+                            <%= data.endDate ? data.endDate : "N/A" %>
+                          </td>
+                          <td>
+                            <%= data.status || "Inactive" %>
                           </td>
                           <td>
                             <%= data.description || "N/A" %>
                           </td>
                           <td>
                             <a href="#" class="badge badge-outline-warning update-offer-btn" data-id="<%= data._id %>"
-                              data-name="<%= data.name %>" data-type="<%= data.type %>"
-                              data-categoryorproduct="<%= data.categoryOrProduct %>"
-                              data-discounttype="<%= data.discountType %>"
-                              data-discountvalue="<%= data.discountValue %>" data-startdate="<%= data.startDate %>"
-                              data-enddate="<%= data.endDate %>" data-status="<%= data.status %>"
-                              data-description="<%= data.description %>">
+                              data-name="<%= data.name || '' %>" data-type="<%= data.type || '' %>"
+                              data-categoryorproduct="<%= data.categoryOrProduct._id|| data.categoryOrProductName %>"
+                              data-discounttype="<%= data.discountType || '' %>"
+                              data-discountvalue="<%= data.discountValue != null ? data.discountValue : '' %>"
+                              data-startdate="<%= data.startDate || '' %>" data-enddate="<%= data.endDate || '' %>"
+                              data-status="<%= data.status || false %>"
+                              data-description="<%= data.description || '' %>">
 
                               Update
-
                             </a>
                           </td>
                           <td>
@@ -156,6 +155,7 @@
                         <% }) %>
                           <% } %>
                 </tbody>
+
               </table>
             </div>
           </div>
@@ -173,8 +173,9 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="offerUploadModalLabel">Add New Offer</h5>
-          <button style="display: flex; justify-content: center; align-items: center;" type="button" class="btn-close badge-outline-warning" data-bs-dismiss="modal"
-          aria-label="Close"><span style="color: white;font-weight: bold; margin-bottom: 2px; ">x</span></button>            
+          <button style="display: flex; justify-content: center; align-items: center;" type="button"
+            class="btn-close badge-outline-warning" data-bs-dismiss="modal" aria-label="Close"><span
+              style="color: white;font-weight: bold; margin-bottom: 2px; ">x</span></button>
           </button>
         </div>
         <form id="addOfferForm" action="/admin/offer/create" method="POST">
@@ -239,8 +240,9 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="updateOfferModalLabel">Update Offer</h5>
-          <button style="display: flex; justify-content: center; align-items: center;" type="button" class="btn-close badge-outline-warning" data-bs-dismiss="modal"
-            aria-label="Close"><span style="color: white;font-weight: bold; margin-bottom: 2px; ">x</span></button>
+          <button style="display: flex; justify-content: center; align-items: center;" type="button"
+            class="btn-close badge-outline-warning" data-bs-dismiss="modal" aria-label="Close"><span
+              style="color: white;font-weight: bold; margin-bottom: 2px; ">x</span></button>
         </div>
         <div class="modal-body">
           <form id="updateOfferForm">
@@ -262,10 +264,9 @@
 
             <div class="mb-3">
               <label for="updateCategoryOrProduct" class="form-label">Category/Product</label>
-              <select style="color: rgb(0, 0, 0);" class="form-select" id="updateCategoryOrProduct"
+              <input style="color: rgb(0, 0, 0);" class="form-select" id="updateCategoryOrProduct"
                 name="updateCategoryOrProduct" required>
-                <!-- Dynamically populate this dropdown -->
-              </select>
+
             </div>
 
             <div class="mb-3">
@@ -361,6 +362,7 @@
         console.error("Error fetching data:", error);
       }
     }
+
 
     document.addEventListener("DOMContentLoaded", function () {
       const addOfferForm = document.getElementById("addOfferForm");
@@ -495,6 +497,9 @@
               showConfirmButton: false,
               timer: 1500,
             });
+            setTimeout(() => {
+              window.location.reload()
+            },1000);
 
             // Update the row dynamically
             const updatedRow = document.querySelector(`.update-offer-btn[data-id='${offerId}']`).closest("tr");

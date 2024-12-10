@@ -829,7 +829,7 @@ module.exports = {
       let discount = 0;
 
       if (couponCode) {
-        const coupon = await Coupon.findOne({ couponCode, isActive: true });
+        const coupon = await couponModel.findOne({ couponCode, isActive: true });
 
         if (coupon) {
           const currentDate = new Date().toISOString();

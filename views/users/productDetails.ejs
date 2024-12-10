@@ -1,33 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <% if (product) { %>
-    <title>
-      <%= product.name %> - Product Details
-    </title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <% if (product) { %>
+    <title><%= product.name %> - Product Details</title>
     <% } else { %>
-      <title>Product Not Found</title>
-      <% } %>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-          integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link href="/css/tiny-slider.css" rel="stylesheet" />
-        <link rel="stylesheet" href="/css/pdtDetails.css" />
-        <link rel="stylesheet" href="/css/style.css" />
-        <link href="/css/bootstrap.min.css" rel="stylesheet" />
-</head>
+    <title>Product Not Found</title>
+    <% } %>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link href="/css/tiny-slider.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/pdtDetails.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+  </head>
 
-<body>
-  <%- include("./layouts/header.ejs") %>
+  <body>
+    <%- include("./layouts/header.ejs") %>
     <nav aria-label="breadcrumb" class="mb-4">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
           <a href="/home" class="d-flex align-items-center"> Home </a>
         </li>
-        <li class="breadcrumb-item active" aria-current="page" style="color: rgb(27, 94, 27)">
+        <li
+          class="breadcrumb-item active"
+          aria-current="page"
+          style="color: rgb(27, 94, 27)"
+        >
           Shop View
         </li>
       </ol>
@@ -35,180 +40,247 @@
 
     <div class="container mt-5 product-detail-container">
       <% if (product) { %>
-        <div class="row">
-          <!-- Left: Main Product Image and Thumbnails -->
-          <div class="col-md-6 product-images">
-            <div class="main-image mb-3" id="mainImageContainer">
-              <img id="mainImage" src="/<%= product?.images[0] %>" class="img-fluid" alt="<%= product.name %>" />
-              <div class="zoom-circle" id="zoomCircle"></div>
-              <!-- Zoom circle -->
-            </div>
-            <div class="thumbnail-images d-flex">
-              <% product.images.forEach((image, index)=> { %>
-                <img src="/<%= image %>" class="thumbnail img-thumbnail" alt="<%= product.name %>" />
-                <% }) %>
-            </div>
+      <div class="row">
+        <!-- Left: Main Product Image and Thumbnails -->
+        <div class="col-md-6 product-images">
+          <div class="main-image mb-3" id="mainImageContainer">
+            <img
+              id="mainImage"
+              src="/<%= product?.images[0] %>"
+              class="img-fluid"
+              alt="<%= product.name %>"
+            />
+            <div class="zoom-circle" id="zoomCircle"></div>
+            <!-- Zoom circle -->
           </div>
-
-          <!-- Right: Product Details -->
-          <div class="col-md-6 product-info">
-            <h1 class="product-title">
-              <%= product.name %>
-            </h1>
-            <p class="price">
-              <span class="offer-price">&#8377;<%= product.offerPrice ? product.offerPrice : product.price %></span>
-              <span class="original-price">&#8377;<%= product.price %></span>
-              <% if (product.offerPrice && product.offerPrice < product.price) { %>
-                <span class="discount">
-                  <%= Math.round(((product.price - product.offerPrice) / product.price) * 100) %>% Off
-                </span>
-                <% } %>
-            </p>
-            <p class="description">
-              <%= product.description %>
-            </p>
-
-            <ul class="features">
-              <li>
-                <%= product.warranty%>
-              </li>
-              <li>
-                <%= product. returnPolicy%>
-              </li>
-              <li>
-                Cash On Delivery: <% if (product.cashOnDelivery===true) { %>Available<% } else { %>Not Available<% } %>
-              </li>
-            </ul>
-
-            <!-- Color and Size Options -->
-            <div class="options mt-4">
-              <div class="color-options mb-3">
-                <label>Color:</label>
-                <% product.colors.forEach(color=> { %>
-                  <button class="color-option" style="background-color: '<%= color %>'"></button>
-                  <% }) %>
-              </div>
-              <div class="size-options mb-3">
-                <label>Size:</label>
-                <% product.sizes.forEach(size=> { %>
-                  <label class="size-option"><input class="size-selection" type="radio" name="size"
-                      value="<%= size %>" />
-                    <%= size %>
-                  </label>
-                  <% }) %>
-              </div>
-            </div>
-            <div>
-              <% if(product.stock> 0) { %>
-                <p style="color: green">In Stock: <%= product.stock %>
-                </p>
-                <% } else { %>
-                  <p style="color: red">Out of Stock</p>
-                  <% } %>
-            </div>
-
-            <div class="wrap-num-product flex-w m-r-20 m-tb-10">
-              <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m" onclick="decreaseQuantity()">
-                <i class="fs-16 zmdi zmdi-minus"></i>
-              </div>
-              <div style="display: flex">
-                <p style="margin-top: 8px; margin-right: 8px">Quantity</p>
-                <input class="mtext-104 cl3 txt-center num-product" style="width: 66px; height: 32px; margin-top: 4px"
-                  type="number" name="num-product" value="1" data-stock="<%= product.stock %>" id="quantityInput"
-                  min="1" max="<%= Math.min(product.stock, 10) %>" />
-
-                <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m" oninput="validateQuantity()"
-                  onclick="increaseQuantity()">
-                  <i class="fs-16 zmdi zmdi-plus"></i>
-                </div>
-                <p id="QuantityError" style="color: red"></p>
-              </div>
-            </div>
-            <!-- Add to Cart and Buy Now -->
-            <div class="actions mt-3">
-              <button class="btn btn-primary add-to-cart-btn" data-id="<%= product._id %>"
-                data-name="<%= product.name %>" data-price="<%= product.offerPrice || product.price %>"
-                data-image="/<%= product.images[0] %>">
-                Add to Cart
-              </button>
-
-              <button class="btn btn-warning">Buy Now</button>
-              <img class="heart-icon" src="/images/img/wishicon/icons8-heart-64.png" alt="" data-id="<%= product._id %>"
-                onclick="toggleWishlist(this)" />
-
-            </div>
+          <div class="thumbnail-images d-flex">
+            <% product.images.forEach((image, index)=> { %>
+            <img
+              src="/<%= image %>"
+              class="thumbnail img-thumbnail"
+              alt="<%= product.name %>"
+            />
+            <% }) %>
           </div>
         </div>
 
-        <!-- Reviews and Related Products -->
-        <div class="row mt-5">
-          <div class="col-12">
-            <h3>Reviews</h3>
+        <!-- Right: Product Details -->
+        <div class="col-md-6 product-info">
+          <h1 class="product-title"><%= product.name %></h1>
+          <p class="price">
+            <span class="offer-price"
+              >&#8377;<%= product.offerPrice ? product.offerPrice :
+              product.price %></span
+            >
+            <span class="original-price">&#8377;<%= product.price %></span>
+            <% if (product.offerPrice && product.offerPrice < product.price) {
+            %>
+            <span class="discount">
+              <%= Math.round(((product.price - product.offerPrice) /
+              product.price) * 100) %>% Off
+            </span>
+            <% } %>
+          </p>
+          <p class="description"><%= product.description %></p>
 
-            <!-- Add Reviews Section Here -->
+          <ul class="features">
+            <li><%= product.warranty%></li>
+            <li><%= product. returnPolicy%></li>
+            <li>
+              Cash On Delivery: <% if (product.cashOnDelivery===true) {
+              %>Available<% } else { %>Not Available<% } %>
+            </li>
+          </ul>
 
-            <h3 class="mt-5">Related Products</h3>
-            <div class="related-products d-flex flex-wrap">
-              <% relatedProducts.forEach(function(relatedProduct) { %>
-                <div class="col-md-3 text-center related-product">
-                  <img src="/<%= relatedProduct.images[0] %>" class="img-fluid" alt="<%= relatedProduct.name %>" />
-                  <p>
-                    <%= relatedProduct.name %>
-                  </p>
-                  <p class="price">&#8377;<%= relatedProduct.offerPrice %>
-                  </p>
-                  <a href="/productDetails/<%= relatedProduct._id %>" class="btn btn-outline-primary">View</a>
-                </div>
-                <% }) %>
+          <!-- Color and Size Options -->
+          <div class="options mt-4">
+            <div class="color-options mb-3">
+              <label>Color:</label>
+              <% product.colors.forEach(color=> { %>
+              <button
+                class="color-option"
+                style="background-color: '<%= color %>'"
+              ></button>
+              <% }) %>
+            </div>
+            <div class="size-options mb-3">
+              <label>Size:</label>
+              <% product.sizes.forEach(size=> { %>
+              <label class="size-option"
+                ><input
+                  class="size-selection"
+                  type="radio"
+                  name="size"
+                  value="<%= size %>"
+                />
+                <%= size %>
+              </label>
+              <% }) %>
             </div>
           </div>
+          <div>
+            <% if(product.stock> 0) { %>
+            <p style="color: green">In Stock: <%= product.stock %></p>
+            <% } else { %>
+            <p style="color: red">Out of Stock</p>
+            <% } %>
+          </div>
+
+          <div class="wrap-num-product flex-w m-r-20 m-tb-10">
+            <div
+              class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m"
+              onclick="decreaseQuantity()"
+            >
+              <i class="fs-16 zmdi zmdi-minus"></i>
+            </div>
+            <div style="display: flex">
+              <p style="margin-top: 8px; margin-right: 8px">Quantity</p>
+              <input
+                class="mtext-104 cl3 txt-center num-product"
+                style="width: 66px; height: 32px; margin-top: 4px"
+                type="number"
+                name="num-product"
+                value="1"
+                data-stock="<%= product.stock %>"
+                id="quantityInput"
+                min="1"
+                max="<%= Math.min(product.stock, 10) %>"
+              />
+
+              <div
+                class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m"
+                oninput="validateQuantity()"
+                onclick="increaseQuantity()"
+              >
+                <i class="fs-16 zmdi zmdi-plus"></i>
+              </div>
+              <p id="QuantityError" style="color: red"></p>
+            </div>
+          </div>
+          <!-- Add to Cart and Buy Now -->
+          <div class="actions mt-3">
+            <button
+              class="btn btn-primary add-to-cart-btn"
+              data-id="<%= product._id %>"
+              data-name="<%= product.name %>"
+              data-price="<%= product.offerPrice || product.price %>"
+              data-image="/<%= product.images[0] %>"
+            >
+              Add to Cart
+            </button>
+
+            <button class="btn btn-warning">Buy Now</button>
+            
+              <img
+                class="heart-icon"
+                src="/images/img/wishicon/icons8-heart-64.png"
+                alt=""
+                data-id="<%= product._id %>"
+                data-name="<%= product.name %>"
+                data-price="<%= product.offerPrice %>"
+                onclick="toggleWishlist(this)"
+            />
+          </div>
         </div>
-        <% } else { %>
-          <p>Product not found.</p>
-          <% } %>
+      </div>
+
+      <!-- Reviews and Related Products -->
+      <div class="row mt-5">
+        <div class="col-12">
+          <h3>Reviews</h3>
+
+          <!-- Add Reviews Section Here -->
+
+          <h3 class="mt-5">Related Products</h3>
+          <div class="related-products d-flex flex-wrap">
+            <% relatedProducts.forEach(function(relatedProduct) { %>
+            <div class="col-md-3 text-center related-product">
+              <img
+                src="/<%= relatedProduct.images[0] %>"
+                class="img-fluid"
+                alt="<%= relatedProduct.name %>"
+              />
+              <p><%= relatedProduct.name %></p>
+              <p class="price">&#8377;<%= relatedProduct.offerPrice %></p>
+              <a
+                href="/productDetails/<%= relatedProduct._id %>"
+                class="btn btn-outline-primary"
+                >View</a
+              >
+            </div>
+            <% }) %>
+          </div>
+        </div>
+      </div>
+      <% } else { %>
+      <p>Product not found.</p>
+      <% } %>
     </div>
     <%- include("./layouts/footer.ejs") %>
 
-      <script>
-        async function toggleWishlist(icon) {
-          const productId = icon.dataset.id;
+    <script>
+      async function toggleWishlist(icon) {
+        try {
+          const productId = icon.getAttribute("data-id");
+          const productName = icon.getAttribute("data-name");
+          const productPrice = icon.getAttribute("data-price");
 
-          try {
-            const response = await fetch(`/addToWishlist`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ productId }),
+          const response = await fetch("/addToWishlist", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              productId: productId,
+              productName: productName,
+              productPrice: productPrice,
+            }),
+          });
+
+          const data = await response.json();
+
+          if (response.status === 400 || response.status === 500) {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: data.message || "Something went wrong!",
+              showConfirmButton: false,
+              timer: 1500,
             });
-
-            const data = await response.json();
-
-            if (response.status === 201) {
-              // Change the heart icon color based on action
-              if (data.action === "added") {
-                icon.src = "/images/img/wishicon/icons8-heart-red-64.png"; // Change to red heart
-                Swal.fire("Added!", "Product added to wishlist.", "success");
-              } else if (response.status === 500) {
-                icon.src = "/images/img/wishicon/icons8-heart-64.png"; // Change back to gray/empty heart
-                Swal.fire("Removed!", "Product removed from wishlist.", "info");
-              }
-            } else {
-              Swal.fire("Error!", "Could not update wishlist. Please try again.", "error");
-            }
-          } catch (error) {
-            Swal.fire("Error!", "An error occurred. Please try again.", "error");
+          } else if (response.status === 201) {
+            Swal.fire({
+              icon: "success",
+              title: "Product added to wishlist!",
+              text: "Your item has been added successfully.",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Unexpected Error",
+              text: "An unexpected error occurred. Please try again.",
+              showConfirmButton: false,
+              timer: 1500,
+            });
           }
+        } catch (error) {
+          console.error("Error adding product to wishlist:", error);
+
+          Swal.fire({
+            icon: "error",
+            title: "Something went wrong!",
+            text: "Please try again later.",
+            showConfirmButton: false,
+            timer: 1500,
+          });
         }
+      }
+    </script>
 
-      </script>
-
-
-
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-      <script src="/js/jquery.min.js"></script>
-      <script src="/js/users/pDetails.js"></script>
-      <script src="/js/bootstrap.bundle.min.js"></script>
-</body>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/users/pDetails.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>

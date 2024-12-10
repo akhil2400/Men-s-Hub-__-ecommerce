@@ -33,10 +33,10 @@
     <div class="containerdac">
       <div class="sidebar">
         <ul>
-          <li><a  href="/dashboard"><i class="fa-solid fa-user" style="color: #000000;"></i><span style="margin-left: 3px;">Dashboard</span> </a></li>
-          <li><a href="/orders"><i class="fa-solid fa-briefcase" style="color: #000000;"></i><span  style="margin-left: 3px;">Orders</span></a></li>
-          <li><a  href="/my-address"><i class="fa-solid fa-location-dot" style="color: #000000;"></i><span style="margin-left: 3px; ">My Address</span></a></li>
-          <% if(user.isGoogleLogin === false){ %>
+          <li><a href="/dashboard"><i class="fa-solid fa-user" style="color: #000000;"></i><span style="margin-left: 3px;">Dashboard</span></a></li>
+          <li><a href="/orders"><i class="fa-solid fa-briefcase" style="color: #000000;"></i><span style="margin-left: 3px;">Orders</span></a></li>
+          <li><a href="/my-address"><i class="fa-solid fa-location-dot" style="color: #000000;"></i><span style="margin-left: 3px;">My Address</span></a></li>
+          <% if(user.isGoogleLogin === false) { %>
           <li><a href="/change-password"><i class="fa-solid fa-key" style="color: #000000;"></i><span style="margin-left: 3px;">Change Password</span></a></li>
           <% } %>
           <li><a class="sdashbord" href="/wallet"><i class="fa-solid fa-wallet" style="color: #ffffff;"></i><span style="margin-left: 3px;color: #ffffff;">Wallet</span></a></li>
@@ -45,66 +45,45 @@
       </div>
       <div class="content">
         <div class="dash-box">
-        <p style="color: #000000; font-weight: bold;">Wallet</p>
+          <p style="color: #000000; font-weight: bold;">Wallet</p>
         </div>
         <!-- Wallet Section -->
         <br>
-    <div class="section" id="wallet">
-      <div class="wallet-card">
-          <div class="wallet-holder">Akhil</div>
-          <div class="wallet-number">**** **** **** 9667</div>
-          <div class="wallet-balance">Rs. 4,322.89</div>
+        <div class="section" id="wallet">
+          <div class="wallet-card">
+            <div class="wallet-holder"><%= walletData.holderName %></div>
+            <div class="wallet-number">**** **** **** <%= walletData.cardLastDigits %></div>
+            <div class="wallet-balance">Rs. <%= walletData.balance %></div>
+          </div>
+          <table class="transactions-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Amount</th>
+                <th>Type</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% walletData.transactions.forEach((transaction, index) => { %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td>Rs. <%= transaction.amount %></td>
+                <td><%= transaction.type %></td>
+                <td><%= new Date(transaction.date).toLocaleDateString() %></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <table class="transactions-table">
-          <thead>
-              <tr>
-                  <th>#</th>
-                  <th>Amount</th>
-                  <th>Type</th>
-                  <th>Date</th>
-              </tr>
-          </thead>
-          <tbody>
-              <tr>
-                  <td>1</td>
-                  <td>Rs. 499.90</td>
-                  <td>Debit</td>
-                  <td>12/05/2024</td>
-              </tr>
-              <tr>
-                  <td>2</td>
-                  <td>Rs. 549.90</td>
-                  <td>EMI</td>
-                  <td>06/05/2024</td>
-              </tr>
-              <tr>
-                  <td>3</td>
-                  <td>Rs. 200.00</td>
-                  <td>EMI</td>
-                  <td>05/02/2024</td>
-              </tr>
-              <tr>
-                  <td>4</td>
-                  <td>Rs. 149.90</td>
-                  <td>Debit</td>
-                  <td>20/12/2023</td>
-              </tr>
-          </tbody>
-      </table>
-
-  </div>
-  </div>
-  </div>
-  
-        
+    </div>
+    
     <%- include("./layouts/footer.ejs") %>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Fix the script path -->
     <script src="js/users/myAddress.js"></script>
 
-    <script>
-      
-    </script>
   </body>
 </html>

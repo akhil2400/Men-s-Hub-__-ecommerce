@@ -9,6 +9,8 @@ const categoryModel = require('../models/categoryModel');
 const cartModel = require('../models/cartModel');
 const addressModel = require('../models/addressModel')
 const orderModel = require('../models/orderModel');
+const walletModel = require('../models/walletModel');
+
 const mongoose = require('mongoose');
 const path = require('path');
 
@@ -202,26 +204,46 @@ module.exports = {
   async cancelOrder(req, res) {
     try {
       const orderId = req.params.id;
-
-      // Update the order status to "Cancelled"
-      const updatedOrder = await orderModel.findByIdAndUpdate(
-        orderId,
-        { status: "Cancelled" },
-        { new: true }
-      );
-
-      if (!updatedOrder) {
+  
+      // Find the order
+      const order = await orderModel.findById(orderId);
+      if (!order) {
         return res.status(404).json({ success: false, message: "Order not found" });
       }
-
+  
+      // Update the order status to "Cancelled"
+      order.status = "Cancelled";
+  
+      if (order.paymentMethod === "razorpay" && order.paymentStatus === "paid") {
+        const refundAmount = order.totalAmount;
+  
+        // Process refund to wallet
+        const wallet = await walletModel.findOne({ userId: order.userId });
+        if (wallet) {
+          wallet.balance += refundAmount;
+          wallet.transactions.push({
+            id: `REFUND-${order._id}`,
+            type: "Credit",
+            amount: refundAmount,
+            date: new Date(),
+          });
+          await wallet.save();
+  
+          // Update refund status in the order
+          order.refundStatus = "completed";
+          order.refundAmount = refundAmount;
+        }
+      }
+  
+      await order.save();
+  
       res.status(200).json({ success: true, message: "Order cancelled successfully" });
     } catch (error) {
       console.error("Error cancelling order:", error);
       res.status(500).json({ success: false, message: "Failed to cancel order" });
     }
-
-
   },
+  
 
 }
 

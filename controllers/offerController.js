@@ -11,9 +11,14 @@ const offerModel = require("../models/offerModel");
 module.exports = {
   async loadoffer(req, res) {
     try {
-      // Fetch all offers from the database
-      const offers = await offerModel.find();
-
+      // Fetch all offers from the database and populate the referenced field properly
+      const offers = await offerModel.find().populate({
+        path: "categoryOrProduct", // Ensure the correct path is provided
+        select: "name", // Select only the name field from the referenced document
+      });
+  
+      console.log(`offers: ${offers}`);
+  
       // Check if any offers exist
       if (!offers || offers.length === 0) {
         return res.render("offermanagement", {
@@ -21,7 +26,7 @@ module.exports = {
           msg: "No offers found.", // Message to display when no offers exist
         });
       }
-
+  
       // Render the page with offers data
       res.render("offermanagement", {
         val: true, // Offers exist
@@ -29,13 +34,13 @@ module.exports = {
           _id: offer._id,
           name: offer.name,
           type: offer.type,
-          categoryOrProduct: offer.categoryOrProduct,
-          categoryOrProductName: offer.name, // Use correct field name if populated
+          categoryOrProduct: offer.categoryOrProduct ? offer.categoryOrProduct._id : null, // Ensure it's null if categoryOrProduct isn't defined
+          categoryOrProductName: offer.categoryOrProduct ? offer.categoryOrProduct.name : null, // Handle null safely
           discountType: offer.discountType,
           discountValue: offer.discountValue,
           minPurchase: offer.minPurchase || null,
-          startDate: offer.startDate.toISOString().split("T")[0],
-          endDate: offer.endDate.toISOString().split("T")[0],
+          startDate: offer.startDate ? offer.startDate.toISOString().split("T")[0] : null,
+          endDate: offer.endDate ? offer.endDate.toISOString().split("T")[0] : null,
           status: offer.status ? "Active" : "Inactive",
           description: offer.description || null,
         })),
@@ -48,6 +53,7 @@ module.exports = {
       });
     }
   },
+  
 
   async loadproductoffer(req, res) {
     try {
@@ -120,7 +126,8 @@ module.exports = {
       }
   
       const savedOffer = await newOffer.save();
-  
+      
+      console.log("savedoffer:"+ savedOffer)
       res.status(201).json({ success: true, offer: savedOffer });
     } catch (error) {
       console.error("Error creating offer:", error);
@@ -149,10 +156,12 @@ module.exports = {
   async updateoffer(req,res){
     const offerId = req.params.id;
     const updatedData = req.body;
+    console.log("OfferId:"+offerId)
+    console.log(updatedData)
   
     try {
       const updatedOffer = await offerModel.findByIdAndUpdate(offerId, updatedData, { new: true });
-  
+       console.log(`krgwekogj:${updatedOffer}`)
       if (!updatedOffer) {
         return res.status(404).json({ success: false, message: "Offer not found." });
       }

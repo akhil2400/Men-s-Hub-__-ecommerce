@@ -148,3 +148,28 @@
   padding: 5px;
   margin-bottom: 5px;
 }
+
+/* pagination*/
+.pagination-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.pagination-btn {
+  display: inline-block;
+  margin: 0 5px;
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.pagination-btn.active {
+  background-color: #0056b3;
+}
+
+.pagination-btn:hover {
+  background-color: #0056b3;
+}
+
