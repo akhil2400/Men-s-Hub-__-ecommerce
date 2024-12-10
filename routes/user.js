@@ -6,6 +6,7 @@ const productController = require('../controllers/productController');
 const orderController = require('../controllers/orderController');
 const couponController = require('../controllers/couponController');
 const walletController = require('../controllers/walletController')
+const wishlistController = require("../controllers/wishlistController")
 
 
 router.get('/',noCache,userController.loadstartingpage);
@@ -49,9 +50,10 @@ router.get('/orders',orderController.loadorders)
 router.get('/order/details/:id', orderController.viewOrderDetails);
 router.post('/cancel-order/:id',orderController.cancelOrder)
 router.get('/search',userController.loadsearch)
-router.get('/wishlist',userController.loadwishlist)
-router.post('/addToWishlist', userController.addToWishlist);
-router.delete('/removeFromWishlist', userController.removeFromWishlist);
+router.get('/wishlist',wishlistController.loadwishlist)
+router.post('/addToWishlist', wishlistController.addToWishlist);
+router.delete('/removeFromWishlist/:id', wishlistController.removeFromWishlist);
+router.post("/addToCartFromWishlist/:id",wishlistController.addToCartFromWishlist)
 router.post('/apply-coupon/:userId',couponController.applycoupon)
 router.post('/checkout', userController.processCheckout);
 router.get('/wallet',walletController.loadWallet)

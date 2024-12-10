@@ -77,8 +77,8 @@
                         ₹<%= item.price %>
                       </td>
                       <td class="product-action">
-                        <a href="/productDetails/<%= item.productId %>" class="addcartbtn">Add to cart</a>
-                      </td>
+                        <button class="add-to-cart-btn btn btn-success" data-id="<%= item._id %>">Add to Cart</button>
+                      </td>                      
                       <td>
                         <button class="btn btn-danger remove-wishlist-btn" data-id="<%= item._id %>">
                           <i class="fa-solid fa-trash"></i> Remove
@@ -145,10 +145,42 @@
       });
     });
   </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const addToCartButtons = document.querySelectorAll(".add-to-cart-btn");
+  
+      addToCartButtons.forEach(button => {
+        button.addEventListener("click", async (e) => {
+          const productId = e.target.dataset.id;
+  
+          try {
+            const response = await fetch(`/addToCartFromWishlist/${productId}`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" }
+            });
+  
+            const data = await response.json();
+  
+            if (data.success) {
+              Swal.fire("Success!", "Product added to cart and removed from wishlist.", "success");
+              location.reload(); // Reload page to update wishlist
+            } else {
+              Swal.fire("Error!", data.message || "Unable to add product to cart.", "error");
+            }
+          } catch (error) {
+            Swal.fire("Error!", "An error occurred. Please try again.", "error");
+          }
+        });
+      });
+    });
+  </script>
+  
+  
 
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="js/tiny-slider.js"></script>
   <script src="js/custom.js"></script>
 
 </body>
+
 </html>
