@@ -110,9 +110,19 @@
             <h1>Order Details</h1>
             <div>
 
-              <% if (order.status !=='Cancelled' ) { %>
+              <% if (order.status === 'Pending') { %>
                 <a href="#" class="btn btn-secondary cancel-order-btn">Cancel Order</a>
-                <% } %>
+              <% } %>
+              
+              <% if (order.status === 'Delivered') { %>
+                <form id="returnOrderForm" action="/initiate-return" method="POST" style="display:inline;">
+                  <input type="hidden" name="orderId" value="<%= order._id %>">
+                  <button type="submit" class="btn btn-secondary return-order-btn">Return Order</button>
+                </form>
+                <p id="successMessage" style="color: green; display: none;">Return request initiated successfully!</p>
+              <% } %>
+              
+                
             </div>
           </div>
 
@@ -213,15 +223,14 @@
 
       <script>
         document.addEventListener("DOMContentLoaded", function () {
-          const cancelOrderBtn = document.querySelector(".btn-secondary");
-
+          // Cancel Order Logic
+          const cancelOrderBtn = document.querySelector(".cancel-order-btn");
           if (cancelOrderBtn) {
             cancelOrderBtn.addEventListener("click", async function (e) {
               e.preventDefault(); // Prevent default link behavior
-
-              const orderId = "<%= order.id %>"; // Pass the order ID dynamically
-
-              // Use SweetAlert for the confirmation dialog
+      
+              const orderId = "<%= order._id %>"; // Pass the order ID dynamically
+      
               const result = await Swal.fire({
                 title: "Are you sure?",
                 text: "Do you want to cancel this order?",
@@ -232,25 +241,22 @@
                 confirmButtonText: "Yes, cancel it!",
                 cancelButtonText: "No, keep it",
               });
-
+      
               if (result.isConfirmed) {
                 try {
                   const response = await fetch(`/cancel-order/${orderId}`, {
                     method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
+                    headers: { "Content-Type": "application/json" },
                   });
-
+      
                   const responseData = await response.json();
-
+      
                   if (response.ok && responseData.success) {
                     await Swal.fire("Cancelled!", responseData.message, "success");
-
-
+      
                     // Hide the cancel button
                     cancelOrderBtn.style.display = "none";
-
+      
                     // Update order status dynamically
                     const statusElement = document.querySelector(".status-<%= order.statusClass %>");
                     if (statusElement) {
@@ -267,8 +273,60 @@
               }
             });
           }
+      
+          // Return Order Logic
+          const returnOrderForm = document.getElementById("returnOrderForm");
+          if (returnOrderForm) {
+            returnOrderForm.addEventListener("submit", async function (e) {
+              e.preventDefault(); // Prevent default form submission
+      
+              const formData = new FormData(returnOrderForm);
+              const orderId = formData.get("orderId");
+      
+              const result = await Swal.fire({
+                title: "Are you sure?",
+                text: "Do you want to initiate a return request for this order?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, initiate return!",
+                cancelButtonText: "No, keep it",
+              });
+      
+              if (result.isConfirmed) {
+                try {
+                  const response = await fetch(returnOrderForm.action, {
+                    method: "POST",
+                    body: JSON.stringify({ orderId }),
+                    headers: { "Content-Type": "application/json" },
+                  });
+      
+                  const responseData = await response.json();
+      
+                  if (response.ok && responseData.success) {
+                    await Swal.fire("Return Requested!", responseData.message, "success");
+      
+                    // Hide the return button
+                    const returnButton = document.querySelector(".return-order-btn");
+                    if (returnButton) returnButton.style.display = "none";
+      
+                    // Show success message
+                    const successMessage = document.getElementById("successMessage");
+                    if (successMessage) successMessage.style.display = "block";
+                  } else {
+                    Swal.fire("Error", responseData.message, "error");
+                  }
+                } catch (error) {
+                  console.error("Error initiating return request:", error);
+                  Swal.fire("Error", "Something went wrong while initiating the return request.", "error");
+                }
+              }
+            });
+          }
         });
       </script>
+      
 
 </body>
 

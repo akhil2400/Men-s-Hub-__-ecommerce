@@ -3,6 +3,7 @@ const userModel = require('../models/userModel');
 const categoryModel = require('../models/categoryModel');
 const productModel = require('../models/productModel');
 const orderModel = require('../models/orderModel')
+const walletModel = require('../models/walletModel')
 const path = require('path');
 const mongoose = require('mongoose');
 const adminModel = require('../models/adminModel');
@@ -127,7 +128,7 @@ module.exports = {
   },
   async dashboardData(req, res) {
     const { range, startDate, endDate } = req.query;
-   
+
     try {
       console.log(range, startDate, endDate);
 
@@ -343,16 +344,16 @@ module.exports = {
       });
     }
   },
-  
+
   async downloadReport(req, res) {
     console.log("Processing downloadReport...");
-  
+
     try {
       const { startDate, endDate, range } = req.body;
-  
+
       let start, end;
       const today = new Date();
-  
+
       if (range === "daily") {
         start = new Date(today.setHours(0, 0, 0, 0));
         end = new Date(today.setHours(23, 59, 59, 999));
@@ -372,11 +373,11 @@ module.exports = {
         start = new Date(startDate);
         end = new Date(endDate);
       }
-  
+
       console.log(range);
       console.log(startDate, endDate);
       console.log(start, end);
-  
+
       const salesDataResult = await orderModel.aggregate([
         {
           $match: {
@@ -397,20 +398,20 @@ module.exports = {
           },
         },
       ]);
-  
+
       const salesData = salesDataResult[0] || {
         totalRevenue: 0,
         totalSales: 0,
         itemsSold: 0,
       };
-  
+
       const detailedOrders = await orderModel
         .find({
           orderStatus: "delivered",
           createdAt: { $gte: start, $lte: end },
         })
         .populate("items.product", "name price");
-  
+
       const totalDiscounts = await orderModel.aggregate([
         {
           $match: {
@@ -425,47 +426,116 @@ module.exports = {
           },
         },
       ]);
-  
+
       const discountAmount = totalDiscounts[0]?.totalDiscount || 0;
-  
+
       const pdfDoc = new PDFDocument({ margin: 30 });
       res.setHeader("Content-Disposition", `attachment; filename=SalesReport.pdf`);
       res.setHeader("Content-Type", "application/pdf");
       pdfDoc.pipe(res);
-  
+
+      // Title of the report
       pdfDoc.fontSize(20).text("Sales Report", { align: "center" }).moveDown();
+
+      // Date Range and Discount
       pdfDoc.fontSize(12).text(`Start Date: ${start.toISOString().split("T")[0]}`, { align: "left" });
       pdfDoc.text(`End Date: ${end.toISOString().split("T")[0]}`, { align: "left" });
       pdfDoc.text(`Overall Discount: ₹${discountAmount.toFixed(2)}`, { align: "left" });
       pdfDoc.moveDown();
+
+      // Summary Section
       pdfDoc.text("Summary:", { underline: true }).moveDown();
       pdfDoc.text(`Total Revenue: ₹${salesData.totalRevenue.toFixed(2)}`, { align: "left" });
       pdfDoc.text(`Total Sales: ${salesData.totalSales}`, { align: "left" });
       pdfDoc.text(`Items Sold: ${salesData.itemsSold}`, { align: "left" });
       pdfDoc.moveDown();
+
+      // Detailed Orders Section
       pdfDoc.text("Detailed Orders:", { underline: true }).moveDown();
       pdfDoc.text(
         `Product Name`.padEnd(30) +
-          `Quantity`.padEnd(10) +
-          `Price`.padEnd(15),
+        `Quantity`.padEnd(10) +
+        `Price`.padEnd(15),
         { align: "left" }
       );
-  
+
+      // Loop through orders and display each item's details
       detailedOrders.forEach(order => {
         order.items.forEach(item => {
           const productName = item.product.name.padEnd(30);
           const quantity = String(item.quantity).padEnd(10);
           const price = `₹${item.product.price.toFixed(2)}`;
-  
+
+          // Add each line with the appropriate data
           pdfDoc.text(`${productName}${quantity}${price}`);
         });
       });
-  
+
+      // End the PDF document
       pdfDoc.end();
     } catch (error) {
       console.error("Error in downloadReport:", error);
 
       res.status(500).json({ msg: "An error occurred while generating the report." });
+    }
+  },
+  async handleReturn(req, res) {
+    try {
+      const { orderId } = req.params;
+      const { action } = req.body; // "approve" or "reject"
+
+      // Find the order
+      const order = await orderModel.findById(orderId);
+      if (!order) {
+        return res.status(404).json({ success: false, message: "Order not found" });
+      }
+
+      // Ensure the order is in "Return Requested" status
+      if (order.status !== "Return Requested") {
+        return res.status(400).json({ success: false, message: "No return request found for this order" });
+      }
+
+      if (action === "approve") {
+        // Approve the return request and process the refund
+        const refundAmount = order.totalAmount;
+
+        // Find or create the user's wallet
+        let wallet = await walletModel.findOne({ userId: order.userId });
+        if (!wallet) {
+          wallet = new walletModel({
+            userId: order.userId,
+            balance: 0,
+            transactions: [],
+          });
+        }
+
+        // Add the refund to the wallet
+        wallet.balance += refundAmount;
+        wallet.transactions.push({
+          id: `REFUND-${order._id}`,
+          type: "Credit",
+          amount: refundAmount,
+          date: new Date(),
+        });
+        await wallet.save();
+
+        // Update the order status and refund details
+        order.status = "Return Approved";
+        order.refundStatus = "completed";
+        order.refundAmount = refundAmount;
+      } else if (action === "reject") {
+        // Reject the return request
+        order.status = "Return Rejected";
+      } else {
+        return res.status(400).json({ success: false, message: "Invalid action" });
+      }
+
+      await order.save();
+
+      res.status(200).json({ success: true, message: `Return request ${action}ed successfully` });
+    } catch (error) {
+      console.error("Error handling return request:", error);
+      res.status(500).json({ success: false, message: "Failed to handle return request" });
     }
   },
 

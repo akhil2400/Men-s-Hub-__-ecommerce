@@ -278,7 +278,7 @@ module.exports = {
     const { email } = req.session.userData;
     try {
       const user = await userModel.findOne({ email });
-      const address = await addressModel.find({ userId: user._id });
+      const address = await addressModel.find({ userId: user._id ,isDeleted: false });
       // console.log(address)
       res.render("myaddress", { user, address });
     } catch (err) {
@@ -391,6 +391,29 @@ module.exports = {
         st: false,
         msg: "Error in updating address",
       });
+    }
+  },
+   async removeAddress(req, res){
+    try {
+      const { addressId } = req.params;
+     const user = await userModel.findOne({ email: req.session.userData.email });
+     const userId =  user._id;
+  
+      // Find the address and set `isDeleted` to true
+      const address = await addressModel.findOneAndUpdate(
+        { _id: addressId, userId },
+        { isDeleted: true },
+        { new: true }
+      );
+  
+      if (!address) {
+        return res.status(404).json({ success: false, message: 'Address not found.' });
+      }
+  
+      res.status(200).json({ success: true, message: 'Address removed successfully.' });
+    } catch (error) {
+      console.error('Error removing address:', error);
+      res.status(500).json({ success: false, message: 'Failed to remove address.' });
     }
   },
 
@@ -1019,7 +1042,7 @@ module.exports = {
         products: items,
         totalAmount: totalOrderPrice,
         paymentMethod: "razorpay",
-        paymentStatus: "pending", // Payment will be pending until verified by Razorpay
+        paymentStatus: "paid", // Payment will be pending until verified by Razorpay
       });
 
       await order.save();
@@ -1128,4 +1151,34 @@ module.exports = {
       return res.status(500).json({ error: "Failed to fetch search results" });
     }
   },
+  async getAddresses (req, res) {
+    try {
+      const user = await userModel.findOne({
+        email: req.session.userData.email,
+      });
+      const userId = user.id;
+      const page = parseInt(req.query.page) || 1; // Default to page 1
+      const limit =  2; // Default to 5 items per page
+  
+      // Fetch paginated addresses
+      const addresses = await addressModel
+        .find({ userId })
+        .skip((page - 1) * limit)
+        .limit(limit);
+  
+      // Get total number of addresses for pagination calculation
+      const totalAddresses = await addressModel.countDocuments({ userId });
+  
+      res.status(200).json({
+        success: true,
+        addresses,
+        currentPage: page,
+        totalPages: Math.ceil(totalAddresses / limit),
+      });
+    } catch (error) {
+      console.error('Error fetching addresses:', error);
+      res.status(500).json({ success: false, message: 'Failed to fetch addresses' });
+    }
+  },
+  
 };

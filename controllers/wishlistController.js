@@ -71,8 +71,11 @@ module.exports = {
 
   async addToCartFromWishlist(req, res) {
     try {
-      const { userId } = req.session.userData;
+      const user = await userModel.findOne({ email: req.session.userData.email });
+      const userId = user.id;
+      console.log("hkehk"+userId);
       const productId = req.params.id;
+      console.log("hkehk"+productId);
 
       // Fetch user's wishlist
       const wishlist = await wishlistModel.findOne({ userId });
@@ -85,6 +88,7 @@ module.exports = {
       const wishlistItem = wishlist.items.find(
         (item) => item._id.toString() === productId
       );
+      console.log("wishlistItem", wishlistItem);
       if (!wishlistItem)
         return res
           .status(404)

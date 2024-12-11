@@ -351,3 +351,57 @@ document.querySelectorAll('.edit-address-form').forEach(form => {
     editaddressFormValidation(e);
   });
 });
+
+
+// delete
+document.addEventListener('DOMContentLoaded', function () {
+  // Handle Remove Address button click
+  document.querySelectorAll('.remove-address').forEach(button => {
+    button.addEventListener('click', async function () {
+      const addressId = this.closest('.address-box').getAttribute('data-id');
+
+      // Confirmation popup
+      const result = await swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you want to remove this address?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, remove it!',
+      });
+
+      if (result.isConfirmed) {
+        try {
+          // Send request to backend
+          const response = await fetch(`/my-address/${addressId}`, {
+            method: 'DELETE',
+          });
+
+          const data = await response.json();
+          if (data.success) {
+            // Remove the address from the frontend
+            const addressBox = document.querySelector(`.address-box[data-id="${addressId}"]`);
+            addressBox.remove();
+
+            swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Address removed successfully",
+              showConfirmButton: false,
+              timer: 1500
+          })
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+          } else {
+            Swal.fire('Error', data.message, 'error');
+          }
+        } catch (error) {
+          console.error('Error removing address:', error);
+          Swal.fire('Error', 'Failed to remove the address.', 'error');
+        }
+      }
+    });
+  });
+});

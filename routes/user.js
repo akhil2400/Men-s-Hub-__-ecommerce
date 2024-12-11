@@ -22,6 +22,7 @@ router.get('/my-address',userController.loadmyaddress)
 router.post('/my-address',userController.myAddAddress)
 router.get('/my-address-edit/:id',userController.preloadAddress)
 router.put('/my-address-edit/:address_id', userController.myAddAddressEdit);
+router.delete('/my-address/:addressId', userController.removeAddress);
 router.get('/forgotpasswordemailverification',userController.loademailverify)
 router.post('/forgotpasswordemailverification',userController.emailverify)
 router.get('/forgotpassword',noCache,userController.loadforgotpassword)
@@ -57,5 +58,6 @@ router.post("/addToCartFromWishlist/:id",wishlistController.addToCartFromWishlis
 router.post('/apply-coupon/:userId',couponController.applycoupon)
 router.post('/checkout', userController.processCheckout);
 router.get('/wallet',walletController.loadWallet)
-
+router.post("/initiate-return", orderController.initiateReturn);
+router.get('/get-addresses', userController.getAddresses);
 module.exports = router;

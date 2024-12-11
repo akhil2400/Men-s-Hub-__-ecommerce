@@ -94,32 +94,28 @@ module.exports = {
 
 
 
-  //User side
   async loadorders(req, res) {
     try {
-      // Fetch the user by email from session data
+     
       const user = await userModel.findOne({ email: req.session.userData.email });
       const userId = user._id;
 
       req.session.userId = userId;
 
-      // Fetch user's addresses (if needed for multiple addresses)
       const addresses = await addressModel.find({ userId });
 
-      // Fetch orders and populate product details, category, and address
       const orders = await orderModel
         .find({ userId })
         .populate({
           path: "products.productId",
           populate: {
             path: "category",
-            select: "name", // Populate the category field inside the products
+            select: "name", 
           },
         })
-        .populate("deliveryAddress") // Correctly populate the deliveryAddress field
-        .sort({ createdAt: -1 }); // Sort by latest order first
+        .populate("deliveryAddress")
+        .sort({ createdAt: -1 });
 
-      // Transform the fetched orders into the desired format
       const transformedOrders = orders.map((order) => ({
         id: order._id,
         date: order.createdAt ? order.createdAt.toLocaleDateString() : "N/A",
@@ -133,7 +129,7 @@ module.exports = {
         totalPrice: order.totalAmount || 0,
         status: order.status || "Unknown",
         statusClass: order.status ? order.status.toLowerCase() : "unknown",
-        // Assuming the shipping address comes from the populated deliveryAddress
+        
         shippingAddress: order.deliveryAddress ? {
           houseNumber: order.deliveryAddress.houseNumber || "N/A",
           street: order.deliveryAddress.street || "N/A",
@@ -147,7 +143,6 @@ module.exports = {
         detailsLink: `/my-orders/order-details/${order._id}`,
       }));
 
-      // Send the transformed orders to the view
       res.render("orders", {
         user: req.session.user,
         orders: transformedOrders,
@@ -163,33 +158,30 @@ module.exports = {
     try {
       const orderId = req.params.id;
   
-      // Fetch the order details and populate the product details (including images) and delivery address
+     
       const order = await orderModel
         .findById(orderId)
-        .populate('products.productId')  // Populating products with details
-        .populate('deliveryAddress');    // Populating the delivery address
+        .populate('products.productId')  
+        .populate('deliveryAddress');    
   
       if (!order) {
         return res.status(404).send("Order not found");
       }
   
-      // Ensure order.total, shippingAddress, and paymentMethod are set
       if (!order.total) {
-        order.total = 0; // Default value if not already calculated
+        order.total = 0; 
       }
   
       if (!order.paymentMethod) {
-        order.paymentMethod = {}; // Default to an empty object if missing
+        order.paymentMethod = {}; 
       }
   
-      // Dynamically handle Razorpay last 4 digits if payment method is Razorpay
       if (order.paymentMethod === "razorpay" && order.razorpayPaymentId) {
         order.paymentMethodLast4 = order.razorpayPaymentId.slice(-4);
       } else {
         order.paymentMethodLast4 = null;
       }
   
-      // Render the order details page with the populated order data
       res.render("orderDetails", {
         user: req.user,
         order,
@@ -205,34 +197,43 @@ module.exports = {
     try {
       const orderId = req.params.id;
   
-      // Find the order
       const order = await orderModel.findById(orderId);
       if (!order) {
         return res.status(404).json({ success: false, message: "Order not found" });
       }
   
-      // Update the order status to "Cancelled"
       order.status = "Cancelled";
   
       if (order.paymentMethod === "razorpay" && order.paymentStatus === "paid") {
         const refundAmount = order.totalAmount;
   
-        // Process refund to wallet
-        const wallet = await walletModel.findOne({ userId: order.userId });
-        if (wallet) {
-          wallet.balance += refundAmount;
-          wallet.transactions.push({
-            id: `REFUND-${order._id}`,
-            type: "Credit",
-            amount: refundAmount,
-            date: new Date(),
+        let wallet = await walletModel.findOne({ userId: order.userId });
+        if (!wallet) {
+          
+          console.log(`Wallet not found for userId: ${order.userId}. Creating a new wallet.`);
+          wallet = new walletModel({
+            userId: order.userId,
+            balance: 0,
+            transactions: [],
           });
-          await wallet.save();
-  
-          // Update refund status in the order
-          order.refundStatus = "completed";
-          order.refundAmount = refundAmount;
         }
+  
+        console.log("Current Balance:", wallet.balance);
+        console.log("Refund Amount:", refundAmount);
+  
+        wallet.balance += refundAmount;
+        wallet.transactions.push({
+          id: `REFUND-${order._id}`,
+          type: "Credit",
+          amount: refundAmount,
+          date: new Date(),
+        });
+        console.log("Updated Balance:", wallet.balance);
+  
+        await wallet.save();
+  
+        order.refundStatus = "completed";
+        order.refundAmount = refundAmount;
       }
   
       await order.save();
@@ -243,6 +244,33 @@ module.exports = {
       res.status(500).json({ success: false, message: "Failed to cancel order" });
     }
   },
+  async initiateReturn(req, res) {
+    try {
+      const { orderId } = req.body;
+  
+      // Find the order
+      const order = await orderModel.findById(orderId);
+      if (!order) {
+        return res.status(404).json({ success: false, message: "Order not found" });
+      }
+  
+      // Check if the order is already in the return process
+      if (order.status === "Return Requested" || order.status === "Return Approved") {
+        return res.status(400).json({ success: false, message: "Return already initiated or approved" });
+      }
+  
+      // Update the order status to "Return Requested"
+      order.status = "Return Requested";
+      await order.save();
+  
+      res.status(200).json({ success: true, message: "Return request initiated successfully" });
+    } catch (error) {
+      console.error("Error initiating return request:", error);
+      res.status(500).json({ success: false, message: "Failed to initiate return request" });
+    }
+  },
+  
+  
   
 
 }

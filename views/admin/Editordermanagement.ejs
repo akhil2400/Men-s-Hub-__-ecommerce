@@ -183,13 +183,127 @@
           </form>
           <br>
           <br>
-          <button class="approve-btn">Approve Return</button>
-          <button class="reject-btn">Reject Return</button>
-
+          <% if (order.status === 'Return Requested') { %>
+            <button class="btn btn-success approve-return-btn">Approve Return</button>
+            <button class="btn btn-danger reject-return-btn">Reject Return</button>
+          <% } %>
+          
         </div>
       </div>
     </div>
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const approveReturnBtn = document.querySelector(".approve-return-btn");
+      const rejectReturnBtn = document.querySelector(".reject-return-btn");
+  
+      // Approve Return Logic
+      if (approveReturnBtn) {
+        approveReturnBtn.addEventListener("click", async function (e) {
+          e.preventDefault();
+  
+          const orderId = "<%= order._id %>"; // Dynamically pass the order ID
+  
+          const result = await Swal.fire({
+            title: "Are you sure?",
+            text: "Do you want to approve this return request?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#28a745",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, approve it!",
+            cancelButtonText: "No, keep it pending",
+          });
+  
+          if (result.isConfirmed) {
+            try {
+              const response = await fetch(`/handle-return/${orderId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action: "approve" }),
+              });
+  
+              const responseData = await response.json();
+  
+              if (response.ok && responseData.success) {
+                await Swal.fire("Approved!", responseData.message, "success");
+  
+                // Update order status dynamically
+                const statusElement = document.querySelector(".status-<%= order.statusClass %>");
+                if (statusElement) {
+                  statusElement.textContent = "Return Approved";
+                  statusElement.className = "status-approved"; // Apply a different class for styling
+                }
+  
+                // Hide buttons after action
+                approveReturnBtn.style.display = "none";
+                rejectReturnBtn.style.display = "none";
+              } else {
+                Swal.fire("Error", responseData.message, "error");
+              }
+            } catch (error) {
+              console.error("Error approving return request:", error);
+              Swal.fire("Error", "Something went wrong while approving the return.", "error");
+            }
+          }
+        });
+      }
+  
+      // Reject Return Logic
+      if (rejectReturnBtn) {
+        rejectReturnBtn.addEventListener("click", async function (e) {
+          e.preventDefault();
+  
+          const orderId = "<%= order._id %>"; // Dynamically pass the order ID
+  
+          const result = await Swal.fire({
+            title: "Are you sure?",
+            text: "Do you want to reject this return request?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, reject it!",
+            cancelButtonText: "No, keep it pending",
+          });
+  
+          if (result.isConfirmed) {
+            try {
+              const response = await fetch(`/handle-return/${orderId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action: "reject" }),
+              });
+  
+              const responseData = await response.json();
+  
+              if (response.ok && responseData.success) {
+                await Swal.fire("Rejected!", responseData.message, "success");
+  
+                // Update order status dynamically
+                const statusElement = document.querySelector(".status-<%= order.statusClass %>");
+                if (statusElement) {
+                  statusElement.textContent = "Return Rejected";
+                  statusElement.className = "status-rejected"; // Apply a different class for styling
+                }
+  
+                // Hide buttons after action
+                approveReturnBtn.style.display = "none";
+                rejectReturnBtn.style.display = "none";
+              } else {
+                Swal.fire("Error", responseData.message, "error");
+              }
+            } catch (error) {
+              console.error("Error rejecting return request:", error);
+              Swal.fire("Error", "Something went wrong while rejecting the return.", "error");
+            }
+          }
+        });
+      }
+    });
+  </script>
+  
 
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>

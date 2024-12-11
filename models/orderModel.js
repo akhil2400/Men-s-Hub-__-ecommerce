@@ -9,7 +9,7 @@ const orderSchema = new mongoose.Schema({
       price: { type: Number, required: true },
     },
   ],
-  status: { type: String, default: 'Pending' },
+  status: { type: String, default: 'Pending', enum:['Return Requested','Return Approved','Pending','Delivered','Cancelled'] },
   deliveryAddress: { type: mongoose.Schema.Types.ObjectId, ref: 'Address', required: true },
   totalAmount: { type: Number, required: true },
   paymentMethod: { type: String, enum: ['cod', 'razorpay'], required: true },

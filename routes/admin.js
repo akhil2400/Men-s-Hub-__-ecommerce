@@ -54,4 +54,5 @@ router.put("/admin/offer/update/:id",offerController.updateoffer)
 router.get('/admin/dashboard', adminController.whenDashboardLoad);
 router.get('/admin/dashboard/data', adminController.dashboardData);
 router.post('/admin/dashboard/download-report', adminController.downloadReport);
+router.put("/handle-return/:orderId", adminController.handleReturn);
 module.exports = router;
