@@ -919,6 +919,7 @@ module.exports = {
       req.session.userId = userId;
 
       const { selectedAddress, items } = req.body;
+      console.log("items:", items);
       if (!selectedAddress || !items || items.length === 0) {
         return res
           .status(400)
@@ -952,9 +953,10 @@ module.exports = {
 
       // Calculate total price based on product price and quantity
       const totalOrderPrice = items.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
+        (sum, item) => sum + item.offerPrice * item.quantity,
+        50
       );
+      
 
       // Create the order with COD payment method
       const order = new orderModel({
@@ -1031,8 +1033,8 @@ module.exports = {
 
       // Calculate total price based on product price and quantity
       const totalOrderPrice = items.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
+        (sum, item) => sum + item.offerPrice * item.quantity,
+        50
       );
 
       // Create the order with Razorpay payment method

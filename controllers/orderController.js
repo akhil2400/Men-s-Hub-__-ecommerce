@@ -121,7 +121,7 @@ module.exports = {
         date: order.createdAt ? order.createdAt.toLocaleDateString() : "N/A",
         products: order.products.map((product) => ({
           name: product.productId?.name || "Unknown Product",
-          price: product.productId?.price || 0,
+          price: product.productId?.offerPrice || product.productId?.price || 0,
           category: product.productId?.category?.name || "Unknown Category",
           quantity: product.quantity || 0,
           image: product.productId?.images?.[0] || "/images/placeholder.jpg",
