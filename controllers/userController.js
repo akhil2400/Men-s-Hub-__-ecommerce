@@ -69,7 +69,7 @@ module.exports = {
   },
 
   async registerUser(req, res) {
-    
+
     const { otp } = req.body;
     console.log("otp1:", otp);
     if (!req.session.userData) {
@@ -278,7 +278,7 @@ module.exports = {
     const { email } = req.session.userData;
     try {
       const user = await userModel.findOne({ email });
-      const address = await addressModel.find({ userId: user._id ,isDeleted: false });
+      const address = await addressModel.find({ userId: user._id, isDeleted: false }).sort({ createdAt: -1 });
       // console.log(address)
       res.render("myaddress", { user, address });
     } catch (err) {
@@ -297,6 +297,7 @@ module.exports = {
       state,
       country,
       pinCode,
+      mobileNumber
     } = req.body;
     const { email } = req.session.userData;
     try {
@@ -311,6 +312,7 @@ module.exports = {
         state,
         country,
         pinCode,
+        mobileNumber
       });
       return res.status(200).json({
         type: null,
@@ -350,6 +352,7 @@ module.exports = {
       state,
       country,
       pinCode,
+      mobileNumber,
     } = req.body;
 
     console.log("Request Params ID:", address_id, req.body);
@@ -366,6 +369,7 @@ module.exports = {
           state,
           country,
           pinCode,
+          mobileNumber,
         },
         { new: true } // Ensures the updated document is returned
       );
@@ -393,23 +397,23 @@ module.exports = {
       });
     }
   },
-   async removeAddress(req, res){
+  async removeAddress(req, res) {
     try {
       const { addressId } = req.params;
-     const user = await userModel.findOne({ email: req.session.userData.email });
-     const userId =  user._id;
-  
+      const user = await userModel.findOne({ email: req.session.userData.email });
+      const userId = user._id;
+
       // Find the address and set `isDeleted` to true
       const address = await addressModel.findOneAndUpdate(
         { _id: addressId, userId },
         { isDeleted: true },
         { new: true }
       );
-  
+
       if (!address) {
         return res.status(404).json({ success: false, message: 'Address not found.' });
       }
-  
+
       res.status(200).json({ success: true, message: 'Address removed successfully.' });
     } catch (error) {
       console.error('Error removing address:', error);
@@ -833,6 +837,7 @@ module.exports = {
       if (!addresses || addresses.length === 0) {
         return res.status(400).send("No addresses found for this user");
       }
+      console.log("address",addresses);
 
       const cartData = req.body.cartData ? JSON.parse(req.body.cartData) : {};
       if (!cartData.items || cartData.items.length === 0) {
@@ -896,13 +901,13 @@ module.exports = {
       cartData.discount = discount;
       cartData.cartTotal = cartTotal;
 
-      res.render("checkout", { cart: cartData, addresses , userId });
+      res.render("checkout", { cart: cartData, addresses, userId });
     } catch (error) {
       console.error("Error processing checkout:", error);
       res.status(500).send("Internal Server Error");
     }
   },
-  
+
   async loadthankyou(req, res) {
     res.render("thankyou");
   },
@@ -956,7 +961,7 @@ module.exports = {
         (sum, item) => sum + item.offerPrice * item.quantity,
         50
       );
-      
+
 
       // Create the order with COD payment method
       const order = new orderModel({
@@ -1153,24 +1158,25 @@ module.exports = {
       return res.status(500).json({ error: "Failed to fetch search results" });
     }
   },
-  async getAddresses (req, res) {
+  async getAddresses(req, res) {
     try {
       const user = await userModel.findOne({
         email: req.session.userData.email,
       });
       const userId = user.id;
       const page = parseInt(req.query.page) || 1; // Default to page 1
-      const limit =  2; // Default to 5 items per page
-  
+      const limit = 2; 
+
       // Fetch paginated addresses
       const addresses = await addressModel
         .find({ userId })
         .skip((page - 1) * limit)
-        .limit(limit);
-  
+        .limit(limit)
+        .sort({ createdAt: -1 });
+
       // Get total number of addresses for pagination calculation
       const totalAddresses = await addressModel.countDocuments({ userId });
-  
+
       res.status(200).json({
         success: true,
         addresses,
@@ -1182,5 +1188,5 @@ module.exports = {
       res.status(500).json({ success: false, message: 'Failed to fetch addresses' });
     }
   },
-  
+
 };

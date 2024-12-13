@@ -172,4 +172,11 @@
 .pagination-btn:hover {
   background-color: #077c33;
 }
+.mobileNumber{
+  width: 100%;
+  padding: 9px;
+  border-radius: 5px;
+  border: 1px solid #c1bfbf;
+}
+
 

@@ -153,11 +153,33 @@ module.exports = {
   },
   async updateCoupon(req, res) {
     const couponId = req.params.id;
-    const { couponCode, discountType, discountValue, minimumPurchase, maximumPurchase, startDate, expiryDate, usageLimit, isActive } = req.body;
+    const {
+      couponCode,
+      discountType,
+      discountValue,
+      minimumPurchase,
+      maximumPurchase,
+      startDate,
+      expiryDate,
+      usageLimit,
+      isActive,
+    } = req.body;
   
     try {
-      await couponModel.updateOne(
-        { _id: couponId },
+      // Validate the coupon ID
+      if (!mongoose.Types.ObjectId.isValid(couponId)) {
+        return res.status(400).json({ success: false, message: 'Invalid coupon ID.' });
+      }
+  
+      // Check if the coupon exists
+      const existingCoupon = await couponModel.findById(couponId);
+      if (!existingCoupon) {
+        return res.status(404).json({ success: false, message: 'Coupon not found.' });
+      }
+  
+      // Update the coupon
+      const updatedCoupon = await couponModel.findByIdAndUpdate(
+        couponId,
         {
           couponCode,
           discountType,
@@ -168,16 +190,17 @@ module.exports = {
           expiryDate,
           usageLimit,
           isActive,
-
-        }
+        },
+        { new: true } // Return the updated document
       );
   
-      res.status(200).json({ success: true });
+      // Respond with the updated coupon
+      res.status(200).json({ success: true, coupon: updatedCoupon });
     } catch (error) {
-      console.error('Error updating coupon:', error);
-      res.status(500).json({ success: false, message: 'Internal server error' });
+      console.error('Error updating coupon:', error.message);
+      res.status(500).json({ success: false, message: 'Internal server error.' });
     }
-},
+  },
 async applycoupon(req, res) {
   try {
     // Validate and sanitize coupon code

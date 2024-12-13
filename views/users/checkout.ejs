@@ -92,6 +92,8 @@
                 <p id="CountryError" style="color: red; font-size: 14px; margin-top: 5px;"></p>
                 <input type="text" name="" id="pinCode" placeholder="Pin Code">
                 <p id="pinCodeError" style="color: red; font-size: 14px; margin-top: 5px;"></p>
+                <input type="number" name="" id="mobileNumber" placeholder="Mobile Number" class="mobileNumber">
+                <p id="mobileNumberError" style="color: red; font-size: 14px; margin-top: 5px;"></p>
                 <button class="add-address">Create</button>
               </form>
               <div id="address-container">
@@ -100,7 +102,7 @@
               <div id="pagination-controls">
                 <!-- Pagination buttons will be dynamically generated here -->
               </div>
-              
+
             </div>
 
 
@@ -207,7 +209,7 @@
                     <p class="mb-0">
                       Make your payment directly into our bank account.
                       Please use your Order ID as the payment reference.
-                      Your order won’t be shipped until the funds have
+                      Your order won't be shipped until the funds have
                       cleared in our account.
                     </p>
                   </div>
@@ -261,7 +263,7 @@
                     <p class="mb-0">
                       Make your payment directly into our bank account.
                       Please use your Order ID as the payment reference.
-                      Your order won’t be shipped until the funds have
+                      Your order won't be shipped until the funds have
                       cleared in our account.
                     </p>
                   </div>
@@ -285,31 +287,31 @@
 
     <%- include("./layouts/footer.ejs") %>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-  const addressContainer = document.getElementById('address-container');
-  const paginationControls = document.getElementById('pagination-controls');
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const addressContainer = document.getElementById('address-container');
+          const paginationControls = document.getElementById('pagination-controls');
 
-  async function fetchAddresses(page = 1) {
-    try {
-      const response = await fetch(`/get-addresses?page=${page}&limit=5`);
-      const data = await response.json();
+          async function fetchAddresses(page = 1) {
+            try {
+              const response = await fetch(`/get-addresses?page=${page}&limit=5`);
+              const data = await response.json();
+              console.log(data);
+              if (data.success) {
+                renderAddresses(data.addresses);
+                renderPagination(data.currentPage, data.totalPages);
+              } else {
+                console.error('Error fetching addresses:', data.message);
+              }
+            } catch (error) {
+              console.error('Error fetching addresses:', error);
+            }
+          }
 
-      if (data.success) {
-        renderAddresses(data.addresses);
-        renderPagination(data.currentPage, data.totalPages);
-      } else {
-        console.error('Error fetching addresses:', data.message);
-      }
-    } catch (error) {
-      console.error('Error fetching addresses:', error);
-    }
-  }
-
-  function renderAddresses(addresses) {
-    addressContainer.innerHTML = '';
-    addresses.forEach((address, index) => {
-      addressContainer.innerHTML += `
+          function renderAddresses(addresses) {
+            addressContainer.innerHTML = '';
+            addresses.forEach((address, index) => {
+              addressContainer.innerHTML += `
         <div data-id="${address._id}" class="address-box">
           <div class="address-boxes">
             <input type="radio" name="selectedAddress" id="address-${index}" value="${address._id}" class="form-check-input" />
@@ -322,42 +324,43 @@
               <p>State: ${address.state}</p>
               <p>Country: ${address.country}</p>
               <p>Pin Code: ${address.pinCode}</p>
+              <P>Mobile Number: ${address.mobileNumber}</P>
             </label>
           </div>
         </div>`;
-    });
-  }
+            });
+          }
 
-  function renderPagination(currentPage, totalPages) {
-    paginationControls.innerHTML = '';
+          function renderPagination(currentPage, totalPages) {
+            paginationControls.innerHTML = '';
 
-    if (currentPage > 1) {
-      paginationControls.innerHTML += `<button class="pagination-btn" data-page="${currentPage - 1}">Previous</button>`;
-    }
+            if (currentPage > 1) {
+              paginationControls.innerHTML += `<button class="pagination-btn" data-page="${currentPage - 1}">Previous</button>`;
+            }
 
-    for (let i = 1; i <= totalPages; i++) {
-      paginationControls.innerHTML += `
+            for (let i = 1; i <= totalPages; i++) {
+              paginationControls.innerHTML += `
         <button class="pagination-btn" data-page="${i}" ${i === currentPage ? 'disabled' : ''}>${i}</button>`;
-    }
+            }
 
-    if (currentPage < totalPages) {
-      paginationControls.innerHTML += `<button class="pagination-btn" data-page="${currentPage + 1}">Next</button>`;
-    }
+            if (currentPage < totalPages) {
+              paginationControls.innerHTML += `<button class="pagination-btn" data-page="${currentPage + 1}">Next</button>`;
+            }
 
-    // Add click event listeners for pagination buttons
-    document.querySelectorAll('.pagination-btn').forEach(button => {
-      button.addEventListener('click', () => {
-        const page = button.getAttribute('data-page');
-        fetchAddresses(page);
-      });
-    });
-  }
+            // Add click event listeners for pagination buttons
+            document.querySelectorAll('.pagination-btn').forEach(button => {
+              button.addEventListener('click', () => {
+                const page = button.getAttribute('data-page');
+                fetchAddresses(page);
+              });
+            });
+          }
 
-  // Initial fetch
-  fetchAddresses();
-});
+          // Initial fetch
+          fetchAddresses();
+        });
 
-    </script>
+      </script>
 
       <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -578,6 +581,7 @@
           document.getElementById("stateError").innerText = "";
           document.getElementById("CountryError").innerText = "";
           document.getElementById("pinCodeError").innerText = "";
+          document.getElementById("mobileNumberError").innerText = "";
 
           // Get input values
           const houseNumber = document.getElementById("houseNumber").value.trim();
@@ -588,6 +592,7 @@
           const state = document.getElementById("state").value.trim();
           const country = document.getElementById("Country").value.trim();
           const pinCode = document.getElementById("pinCode").value.trim();
+          const mobileNumber = document.getElementById("mobileNumber").value.trim();
 
           let valid = true;
 
@@ -600,9 +605,10 @@
           const statePattern = /^[a-zA-Z\s]+$/; // Letters and spaces
           const countryPattern = /^[a-zA-Z\s]+$/; // Letters and spaces
           const pinCodePattern = /^\d{6}$/; // Exactly 6 digits
+          const mobileNumberPattern =/^\d{10}$/;// Exactly 10 digits 
 
           // Check for empty fields and display sweetalert for missing fields
-          if (!houseNumber || !street || !city || !landmark || !district || !state || !country || !pinCode) {
+          if (!houseNumber || !street || !city || !landmark || !district || !state || !country || !pinCode || !mobileNumber) {
             swal.fire({
               title: "Error",
               text: "All fields are required!",
@@ -676,6 +682,13 @@
             valid = false;
             setTimeout(() => (error.innerText = ""), 16000);
           }
+          // Phone Number validation
+          if (!mobileNumberPattern.test(mobileNumber)) {
+            const error = document.getElementById("mobileNumberError");
+            error.innerText = "Phone Number must be exactly 10 digits.";
+            valid = false;
+            setTimeout(() => (error.innerText = ""), 16000);
+          }
 
           // Submit form if valid
           if (valid) {
@@ -697,7 +710,8 @@
                     district: district,
                     state: state,
                     country: country,
-                    pinCode: pinCode
+                    pinCode: pinCode,
+                    mobileNumber: mobileNumber
                   })
                 });
                 const data = await response.json();
@@ -727,6 +741,10 @@
                     document.getElementById('pinCodeError').innerText = data.msg;
                     setTimeout(() => (document.getElementById('pinCodeError').innerText = ""), 16000);
                   }
+                  else if (data.type === "mobileNumber") {
+                    document.getElementById('mobileNumberError').innerText = data.msg;
+                    setTimeout(() => (document.getElementById('mobileNumberError').innerText = ""), 16000);
+                  }
                 } else {
                   swal.fire("Address Added Successfully");
                   console.log(data.msg);
@@ -743,99 +761,8 @@
           }
           return valid;
         }
-      </script>
-
-      <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
-      <script>
-        // async function validateOrder() {
-        //   const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked');
-        //   const selectedPayment = document.querySelector('input[name="payment"]:checked');
-
-        //   if (!selectedAddress) {
-        //     Swal.fire({
-        //       icon: 'error',
-        //       title: 'Address not selected',
-        //       text: 'Please select an address before placing your order.',
-        //       confirmButtonText: 'OK',
-        //     });
-        //     return false;
-        //   }
-
-        //   if (!selectedPayment) {
-        //     Swal.fire({
-        //       icon: 'error',
-        //       title: 'Payment method not selected',
-        //       text: 'Please select a payment method before placing your order.',
-        //       confirmButtonText: 'OK',
-        //     });
-        //     return false;
-        //   }
-
-        //   try {
-        //     // Fetch cart items from the database
-        //     const response = await fetch('/fetch-cart', {
-        //       method: 'GET',
-        //       headers: { 'Content-Type': 'application/json' },
-        //     });
-
-        //     if (!response.ok) {
-        //       throw new Error('Failed to fetch cart items.');
-        //     }
-
-        //     const cartData = await response.json();
-        //     const cartItems = cartData.cart.items; // Access the items array
-        //     console.log(cartItems);
-
-        //     if (!cartItems || cartItems.length === 0) {
-        //       Swal.fire({
-        //         icon: 'error',
-        //         title: 'Cart is empty',
-        //         text: 'Add items to the cart before placing an order.',
-        //         confirmButtonText: 'OK',
-        //       });
-        //       return false;
-        //     }
-
-        //     // Send the order details to the backend
-        //     const orderResponse = await fetch('/place-order', {
-        //       method: 'POST',
-        //       headers: { 'Content-Type': 'application/json' },
-        //       body: JSON.stringify({
-        //         selectedAddress: selectedAddress.value,
-        //         paymentMethod: selectedPayment.id,
-        //         items: cartItems,
-        //       }),
-        //     });
-
-        //     const orderData = await orderResponse.json();
-
-        //     if (orderData.val) {
-        //       Swal.fire({
-        //         icon: 'success',
-        //         title: 'Order Placed Successfully',
-        //         text: orderData.msg,
-        //         confirmButtonText: 'OK',
-        //       }).then(() => {
-        //         window.location = '/thankyou'; // Redirect to thank you page
-        //       });
-        //     } else {
-        //       Swal.fire({
-        //         icon: 'error',
-        //         title: 'Error',
-        //         text: orderData.msg,
-        //         confirmButtonText: 'OK',
-        //       });
-        //     }
-        //   } catch (error) {
-        //     console.error('Error during order validation:', error);
-        //     Swal.fire({
-        //       icon: 'error',
-        //       title: 'Error',
-        //       text: 'An error occurred while placing your order.',
-        //       confirmButtonText: 'OK',
-        //     });
-        //   }
-        // }
+      
+      
       </script>
       <script src="js/bootstrap.bundle.min.js"></script>
       <script src="js/tiny-slider.js"></script>
