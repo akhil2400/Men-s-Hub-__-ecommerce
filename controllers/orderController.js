@@ -19,7 +19,7 @@ module.exports = {
   async loadordermanagement(req, res) {
     try {
       // Fetch all orders with populated fields
-      const orders = await orderModel.find()
+      const orders = await orderModel.find().sort({ createdAt: -1 })
         .populate('userId', 'userName')  // Populate the userName field from the User model
         .populate('products.productId', 'name price')  // Populate product details (name, price)
         .exec();
@@ -60,6 +60,7 @@ module.exports = {
       console.log('Order:', order);
       console.log('Delivery Address:', deliveryAddress);
 
+      console.log( productsDetails);
       // Render the page with fetched data
       res.render('Editordermanagement', {
         order,
@@ -73,8 +74,10 @@ module.exports = {
   },
 
   async updateOrderStatus(req, res) {
-    const { orderId } = req.params;
+    const orderId  = req.params.id;
   const { status } = req.body;
+
+  console.log(orderId, status);
 
   try {
     const order = await orderModel.findById(orderId);

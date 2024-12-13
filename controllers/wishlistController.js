@@ -18,7 +18,7 @@ module.exports = {
       const wishlistItems = await wishlistModel
         .find({ userId })
         .populate("productId");
-       console.log(wishlistItems)
+      console.log(wishlistItems)
       res.render("wishlist", { wishlistItems });
 
     } catch (error) {
@@ -29,8 +29,10 @@ module.exports = {
   async addToWishlist(req, res) {
     try {
       const { productId, productName, productPrice } = req.body;
-      console.log("product Id : " + productId + "product Name : " + productName + "product price : " + productPrice);
+      console.log("product Id : " + productId + "product Name : " + productName + "product price : " + productPrice );
 
+      const productImage = await productModel.findOne({ _id: productId }).select("images");
+      const wishlistImage = productImage.images[0];
       const user = await userModel.findOne({ email: req.session.userData.email });
       const userId = user.id;
 
@@ -44,7 +46,9 @@ module.exports = {
         productId,
         productName,
         productPrice,
+        wishlistImage
       });
+      console.log(newWishlistItem);
       
       await newWishlistItem.save();
       res.status(201).json({ message: "Product added to wishlist" });

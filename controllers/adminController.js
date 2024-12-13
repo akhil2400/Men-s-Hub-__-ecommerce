@@ -381,7 +381,7 @@ module.exports = {
       const salesDataResult = await orderModel.aggregate([
         {
           $match: {
-            orderStatus: "delivered",
+            status: "Delivered",
             createdAt: { $gte: start, $lte: end },
           },
         },
@@ -392,7 +392,7 @@ module.exports = {
             totalSales: { $sum: 1 },
             itemsSold: {
               $sum: {
-                $sum: "$items.quantity",
+                $sum: "$products.quantity",
               },
             },
           },
@@ -407,27 +407,14 @@ module.exports = {
 
       const detailedOrders = await orderModel
         .find({
-          orderStatus: "delivered",
+          status: "Delivered",
           createdAt: { $gte: start, $lte: end },
         })
-        .populate("items.product", "name price");
+        .populate("products.productId", "name price");
 
-      const totalDiscounts = await orderModel.aggregate([
-        {
-          $match: {
-            createdAt: { $gte: start, $lte: end },
-            "coupon.code": { $exists: true },
-          },
-        },
-        {
-          $group: {
-            _id: null,
-            totalDiscount: { $sum: "$coupon.discountApplied" },
-          },
-        },
-      ]);
 
-      const discountAmount = totalDiscounts[0]?.totalDiscount || 0;
+        console.log(salesData);
+        console.log(detailedOrders);
 
       const pdfDoc = new PDFDocument({ margin: 30 });
       res.setHeader("Content-Disposition", `attachment; filename=SalesReport.pdf`);
@@ -440,7 +427,7 @@ module.exports = {
       // Date Range and Discount
       pdfDoc.fontSize(12).text(`Start Date: ${start.toISOString().split("T")[0]}`, { align: "left" });
       pdfDoc.text(`End Date: ${end.toISOString().split("T")[0]}`, { align: "left" });
-      pdfDoc.text(`Overall Discount: ₹${discountAmount.toFixed(2)}`, { align: "left" });
+      pdfDoc.text(`Overall Discount: ₹100`, { align: "left" });
       pdfDoc.moveDown();
 
       // Summary Section
@@ -461,10 +448,10 @@ module.exports = {
 
       // Loop through orders and display each item's details
       detailedOrders.forEach(order => {
-        order.items.forEach(item => {
-          const productName = item.product.name.padEnd(30);
+        order.products.forEach(item => {
+          const productName = item.productId.name.padEnd(30);
           const quantity = String(item.quantity).padEnd(10);
-          const price = `₹${item.product.price.toFixed(2)}`;
+          const price = `₹${item.productId.price.toFixed(2)}`;
 
           // Add each line with the appropriate data
           pdfDoc.text(`${productName}${quantity}${price}`);

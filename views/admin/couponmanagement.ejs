@@ -367,8 +367,8 @@
                     placeholder="Enter coupon code" required />
                   <button type="button" class="btn btn-secondary" id="generateCoupon">Generate</button>
                 </div>
+                <p id="couponCodeError" class="error-message text-danger"></p>
               </div>
-
               <div class="mb-3">
                 <label for="discountType" class="form-label">Discount Type</label>
                 <select class="form-select" id="discountType" name="discountType" required>
@@ -376,49 +376,46 @@
                   <option value="percentage">Percentage</option>
                   <option value="fixed">Fixed</option>
                 </select>
+                <p id="discountTypeError" class="error-message text-danger"></p>
               </div>
-
               <div class="mb-3">
                 <label for="discountValue" class="form-label">Discount Value</label>
                 <input type="number" class="form-control" id="discountValue" name="discountValue"
                   placeholder="Enter discount value" min="0" required />
+                <p id="discountValueError" class="error-message text-danger"></p>
               </div>
-
               <div class="mb-3">
                 <label for="minimumPurchase" class="form-label">Minimum Purchase</label>
                 <input type="number" class="form-control" id="minimumPurchase" name="minimumPurchase"
                   placeholder="Enter minimum purchase amount" min="0" required />
+                <p id="minimumPurchaseError" class="error-message text-danger"></p>
               </div>
-
               <div class="mb-3">
                 <label for="maximumPurchase" class="form-label">Maximum Purchase</label>
                 <input type="number" class="form-control" id="maximumPurchase" name="maximumPurchase"
                   placeholder="Enter maximum purchase amount" min="0" />
+                <p id="maximumPurchaseError" class="error-message text-danger"></p>
               </div>
-
               <div class="mb-3">
                 <label for="startDate" class="form-label">Start Date</label>
                 <input type="date" class="form-control" id="startDate" name="startDate" required />
+                <p id="startDateError" class="error-message text-danger"></p>
               </div>
-
               <div class="mb-3">
                 <label for="expiryDate" class="form-label">Expiry Date</label>
                 <input type="date" class="form-control" id="expiryDate" name="expiryDate" required />
+                <p id="expiryDateError" class="error-message text-danger"></p>
               </div>
-
               <div class="mb-3">
                 <label for="usageLimit" class="form-label">Usage Limit</label>
                 <input type="number" class="form-control" id="usageLimit" name="usageLimit"
                   placeholder="Enter usage limit" min="1" required />
+                <p id="usageLimitError" class="error-message text-danger"></p>
               </div>
-
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="isActive" name="isActive" checked />
-                <label class="form-check-label" for="isActive">
-                  Active
-                </label>
+                <label class="form-check-label" for="isActive">Active</label>
               </div>
-
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" id="saveCoupon">Save Coupon</button>
@@ -428,6 +425,7 @@
         </div>
       </div>
     </div>
+
 
     <!-- update Coupon -->
     <div class="modal fade" id="updateCouponModal" tabindex="-1" aria-labelledby="updateCouponModalLabel"
@@ -443,15 +441,15 @@
               <div class="mb-3">
                 <label for="updateCouponCode" class="form-label">Coupon Code</label>
                 <div class="input-group">
-                  <input type="text" class="form-control" id="updateCouponCode" name="updateCouponCode"
+                  <input style="color: white;" type="text" class="form-control" id="updateCouponCode" name="updateCouponCode"
                     placeholder="Enter coupon code" required />
                 </div>
               </div>
 
               <div class="mb-3">
                 <label for="updateDiscountType" class="form-label">Discount Type</label>
-                <select class="form-select" id="updateDiscountType" name="updateDiscountType" required>
-                  <option value="">Select discount type</option>
+                <select style="color: white; class="form-select" id="updateDiscountType" name="updateDiscountType" required>
+                  <option  value="">Select discount type</option>
                   <option value="percentage">Percentage</option>
                   <option value="fixed">Fixed</option>
                 </select>
@@ -459,40 +457,40 @@
 
               <div class="mb-3">
                 <label for="updateDiscountValue" class="form-label">Discount Value</label>
-                <input type="number" class="form-control" id="updateDiscountValue" name="updateDiscountValue"
+                <input style="color: white; type="number" class="form-control" id="updateDiscountValue" name="updateDiscountValue"
                   placeholder="Enter discount value" min="0" required />
               </div>
 
               <div class="mb-3">
                 <label for="updateMinimumPurchase" class="form-label">Minimum Purchase</label>
-                <input type="number" class="form-control" id="updateMinimumPurchase" name="updateMinimumPurchase"
+                <input style="color: white; type="number" class="form-control" id="updateMinimumPurchase" name="updateMinimumPurchase"
                   placeholder="Enter minimum purchase amount" min="0" required />
               </div>
 
               <div class="mb-3">
                 <label for="updateMaximumPurchase" class="form-label">Maximum Purchase</label>
-                <input type="number" class="form-control" id="updateMaximumPurchase" name="updateMaximumPurchase"
+                <input style="color: white; type="number" class="form-control" id="updateMaximumPurchase" name="updateMaximumPurchase"
                   placeholder="Enter maximum purchase amount" min="0" />
               </div>
 
               <div class="mb-3">
                 <label for="updateStartDate" class="form-label">Start Date</label>
-                <input type="date" class="form-control" id="updateStartDate" name="updateStartDate" required />
+                <input style="color: white; type="date" class="form-control" id="updateStartDate" name="updateStartDate" required />
               </div>
 
               <div class="mb-3">
                 <label for="updateExpiryDate" class="form-label">Expiry Date</label>
-                <input type="date" class="form-control" id="updateExpiryDate" name="updateExpiryDate" required />
+                <input style="color: white; type="date" class="form-control" id="updateExpiryDate" name="updateExpiryDate" required />
               </div>
 
               <div class="mb-3">
                 <label for="updateUsageLimit" class="form-label">Usage Limit</label>
-                <input type="number" class="form-control" id="updateUsageLimit" name="updateUsageLimit"
+                <input style="color: white; type="number" class="form-control" id="updateUsageLimit" name="updateUsageLimit"
                   placeholder="Enter usage limit" min="1" required />
               </div>
 
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="updateIsActive" name="updateIsActive" checked />
+                <input style="color: white; class="form-check-input" type="checkbox" id="updateIsActive" name="updateIsActive" checked />
                 <label class="form-check-label" for="updateIsActive">
                   Active
                 </label>
@@ -512,6 +510,146 @@
 
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+    document.getElementById('saveCoupon').addEventListener('click', async function (e) {
+      e.preventDefault(); // Prevent default form submission
+
+      // Clear all previous error messages
+      const errorFields = document.querySelectorAll('.error-message');
+      errorFields.forEach(field => (field.innerText = ''));
+
+      // Collect field values
+      const couponCode = document.getElementById('couponCode').value.trim();
+      const discountType = document.getElementById('discountType').value;
+      const discountValue = document.getElementById('discountValue').value;
+      const minimumPurchase = document.getElementById('minimumPurchase').value;
+      const maximumPurchase = document.getElementById('maximumPurchase').value;
+      const startDate = document.getElementById('startDate').value;
+      const expiryDate = document.getElementById('expiryDate').value;
+      const usageLimit = document.getElementById('usageLimit').value;
+      const isActive = document.getElementById('isActive').checked;
+
+      let isValid = true;
+
+      // Validate Coupon Code
+      if (!couponCode) {
+        document.getElementById('couponCodeError').innerText = 'Coupon code is required.';
+        isValid = false;
+      }
+
+      // Validate Discount Type
+      if (!discountType) {
+        document.getElementById('discountTypeError').innerText = 'Discount type is required.';
+        isValid = false;
+      }
+
+      // Validate Discount Value
+      if (!discountValue || discountValue <= 0) {
+        document.getElementById('discountValueError').innerText = 'Discount value must be greater than 0.';
+        isValid = false;
+      }
+
+      // Validate Minimum Purchase
+      if (!minimumPurchase || minimumPurchase <= 0) {
+        document.getElementById('minimumPurchaseError').innerText = 'Minimum purchase must be greater than 0.';
+        isValid = false;
+      }
+
+      // Validate Maximum Purchase
+      if (maximumPurchase && Number(maximumPurchase) < Number(minimumPurchase)) {
+        document.getElementById('maximumPurchaseError').innerText =
+          'Maximum purchase must be greater than or equal to minimum purchase.';
+        isValid = false;
+      }
+
+      // Validate Start and Expiry Dates
+      if (!startDate) {
+        document.getElementById('startDateError').innerText = 'Start date is required.';
+        isValid = false;
+      }
+
+      if (!expiryDate) {
+        document.getElementById('expiryDateError').innerText = 'Expiry date is required.';
+        isValid = false;
+      }
+
+      if (startDate && expiryDate && new Date(startDate) > new Date(expiryDate)) {
+        document.getElementById('startDateError').innerText = 'Start date cannot be after expiry date.';
+        document.getElementById('expiryDateError').innerText = 'Expiry date cannot be before start date.';
+        isValid = false;
+      }
+
+      // Validate Usage Limit
+      if (!usageLimit || usageLimit <= 0) {
+        document.getElementById('usageLimitError').innerText = 'Usage limit must be greater than 0.';
+        isValid = false;
+      }
+
+      // If form is invalid, stop further execution
+      if (!isValid) {
+        return;
+      }
+
+      // Prepare coupon data for submission
+      const couponData = {
+        couponCode,
+        discountType,
+        discountValue: parseFloat(discountValue),
+        minimumPurchase: parseFloat(minimumPurchase),
+        maximumPurchase: maximumPurchase ? parseFloat(maximumPurchase) : null,
+        startDate,
+        expiryDate,
+        usageLimit: parseInt(usageLimit),
+        isActive,
+      };
+
+      try {
+        // Send coupon data to the server
+        const response = await fetch('/admin/coupon/add', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(couponData),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          // Success: Display a success message and add coupon to the list
+          Swal.fire({
+            title: 'Success',
+            text: 'Coupon added successfully!',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 2000
+          });
+          setTimeout(() => {
+            window.location.reload(),
+              2000
+          });
+        } else {
+          // Handle server-side validation errors
+          Swal.fire({
+            title: 'Error',
+            text: result.error || 'Failed to add coupon.',
+            icon: 'error',
+          });
+        }
+      } catch (error) {
+        console.error('Error submitting coupon data:', error);
+        Swal.fire({
+          title: 'Error',
+          text: 'An unexpected error occurred.',
+          icon: 'error',
+        });
+      }
+    });
+
+  </script>
+
+  
 
 
   <script>
@@ -690,58 +828,6 @@
     document.getElementById('generateCoupon').addEventListener('click', function () {
       const randomCode = 'COUPON-' + Math.random().toString(36).substring(2, 8).toUpperCase();
       document.getElementById('couponCode').value = randomCode;
-    });
-
-    // Save coupon and update table
-
-    document.getElementById('saveCoupon').addEventListener('click', async function () {
-      const couponCode = document.getElementById('couponCode').value;
-      const discountType = document.getElementById('discountType').value;
-      const discountValue = document.getElementById('discountValue').value;
-      const minimumPurchase = document.getElementById('minimumPurchase').value;
-      const maximumPurchase = document.getElementById('maximumPurchase').value;
-      const startDate = document.getElementById('startDate').value;
-      const expiryDate = document.getElementById('expiryDate').value;
-      const usageLimit = document.getElementById('usageLimit').value;
-      const isActive = document.getElementById('isActive').checked;
-
-      if (!couponCode || !discountType || !discountValue || !minimumPurchase || !startDate || !expiryDate || !usageLimit) {
-        alert('Please fill all required fields.');
-        return;
-      }
-
-      const couponData = {
-        couponCode,
-        discountType,
-        discountValue,
-        minimumPurchase,
-        maximumPurchase,
-        startDate,
-        expiryDate,
-        usageLimit,
-        isActive,
-      };
-
-      try {
-        const response = await fetch('/admin/coupon/add', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(couponData),
-        });
-
-        const result = await response.json();
-        if (response.ok) {
-          alert('Coupon saved successfully!');
-          location.reload(); // Refresh the page or re-render the coupon table
-        } else {
-          alert('Failed to save the coupon: ' + result.message);
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred while saving the coupon.');
-      }
     });
   </script>
 

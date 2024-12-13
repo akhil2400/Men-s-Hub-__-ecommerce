@@ -5,6 +5,7 @@ const wishlistSchema = new mongoose.Schema({
   productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true }, // Referencing the product
   productName: { type: String, required: true }, // Product name for quick access
   productPrice: { type: Number, required: true }, // Product price
+  wishlistImage:{type:String , required: true},
 }, { timestamps: true }); // For created/updated timestamps
 
 module.exports = mongoose.model('Wishlist', wishlistSchema);

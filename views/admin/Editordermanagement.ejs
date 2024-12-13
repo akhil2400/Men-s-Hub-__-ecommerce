@@ -91,30 +91,32 @@
                 <th>Product Image</th>
                 <th>Product Name</th>
                 <th>Price</th>
-                <th>Quantity</th>
+                <th>Shipping Charge</th>
               </tr>
             </thead>
             <tbody>
-              <% productsDetails.forEach(item=> { %>
+              <% productsDetails.forEach(item => { %>
                 <tr>
                   <td>
-                    <% if (item.productData && item.productData.images && item.productData.images.length> 0) { %>
-                      <img src="/<%= item.productData.images[0] %>" alt="<%= item.productData.name %>"
-                        style="width: 100px; height: auto;">
-                      <% } else { %>
-                        <span>No Image Available</span>
-                        <% } %>
+                    <% if (item.productData && item.productData.images && item.productData.images.length > 0) { %>
+                      <img src="/<%= item.productData.images[0] %>" alt="<%= item.productData.name %>" style="width: 100px; height: auto;">
+                    <% } else { %>
+                      <span>No Image Available</span>
+                    <% } %>
                   </td>
-                  <td><span style="color: white;">
-                      <%= item.productData ? item.productData.name : 'Unknown Product' %>
-                    </span></td>
-                  <td><span style="color: white;">&#8377;<%= item.price ? item.price.toFixed(2) : '0.00' %></span></td>
-                  <td><span style="color: white;">
-                      <%= item.quantity ? item.quantity : '0' %>
-                    </span></td>
+                  <td><span style="color: white;"><%= item.productData ? item.productData.name : 'Unknown Product' %></span></td>
+                  <td><span style="color: white;">&#8377;<%= item.productData ? item.productData.offerPrice.toFixed(2) : '0.00' %></span></td>
+                  <td><span style="color: white;"><%= item.products ? item.products.quantity : '50' %></span></td>
                 </tr>
-                <% }) %>
+              <% }) %>
+            
+              <!-- Assuming order.totalAmount is where you need to access the total order price -->
+              <tr>
+                <td colspan="3" style="text-align: right; font-weight: bold; color: white;">Total Amount</td>
+                <td style="font-weight: bold; color: white;">&#8377;<%= order.totalAmount.toFixed(2) %></td>
+              </tr>
             </tbody>
+            
           </table>
         </div>
 
@@ -172,11 +174,10 @@
             <div class="form-group" id="statusDropdownContainer">
               <label for="orderStatus">Status:</label>
               <select class="form-control" id="orderStatus">
-                <option value="pending" <%=order.status==='pending' ? 'selected' : '' %>>Pending</option>
-                <option value="completed" <%=order.status==='completed' ? 'selected' : '' %>>Completed</option>
-                <option value="cancelled" <%=order.status==='cancelled' ? 'selected' : '' %>>Cancelled</option>
-                <option value="cancelled" <%=order.status==='return' ? 'selected' : '' %>>Returned</option>
-                <option value="cancelled" <%=order.status==='cancelled' ? 'selected' : '' %>>shiped</option>
+                <option value="Pending" <%=order.status==='Pending' ? 'selected' : '' %>>Pending</option>
+                <option value="Delivered" <%=order.status==='Delivered' ? 'selected' : '' %>>Delivered</option>
+                <option value="Cancelled" <%=order.status==='Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                <option value="Cancelled" <%=order.status==='return' ? 'selected' : '' %>>Returned</option>
               </select>
             </div>
             <button type="submit" class="btn btn-primary">Update Status</button>
@@ -319,6 +320,8 @@
         console.error('Order ID is undefined. Please check the EJS rendering.');
         return;
       }
+
+      console.log(orderId)
 
       try {
         const response = await fetch(`/admin/order/${orderId}/updatestatus`, {
