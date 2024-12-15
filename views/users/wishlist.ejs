@@ -236,63 +236,63 @@
           });
         });
       </script> -->
-      <script>
-        document.addEventListener("DOMContentLoaded", () => {
-          const addToCartButtons = document.querySelectorAll(".add-to-cart-btn");
-      
-          addToCartButtons.forEach((button) => {
-            button.addEventListener("click", async (e) => {
-              const productId = e.target.dataset.id;
-              const productSize = "M"; // You can modify this as per your UI for size
-              const color = "blue"; // Modify based on the selected color
-              const quantity = 1; // Set default quantity to 1
-              const productPrice = parseFloat(e.target.dataset.price); // Get price from dataset
-              const total = productPrice * quantity; // Calculate the total price
-      
-              try {
-                // Send data to the server to add to cart
-                const response = await fetch(`/addToCart/${productId}`, {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    productId,
-                    quantity,
-                    productSize,
-                    color,
-                    price: productPrice,
-                    total,
-                  }),
-                });
-      
-                const data = await response.json();
-      
-                if (response.ok && data.success) {
-                  Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "Product added to cart!",
-                    showConfirmButton: false,
-                    timer: 1500,
-                  });
-                  location.reload(); // Reload the page to update the cart
-                } else {
-                  Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: data.message || "Something went wrong.",
-                  });
-                }
-              } catch (err) {
-                console.error(err);
-                Swal.fire("Error!", "An error occurred. Please try again.", "error");
-              }
-            });
+       <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const addToCartButtons = document.querySelectorAll(".add-to-cart-btn");
+
+    addToCartButtons.forEach((button) => {
+      button.addEventListener("click", async (e) => {
+        const productId = e.target.dataset.id;
+        const productSize = "M"; // You can modify this as per your UI for size
+        const color = "blue"; // Modify based on the selected color
+        const quantity = 1; // Set default quantity to 1
+        const productPrice = parseFloat(e.target.dataset.price); // Get price from dataset
+        const total = productPrice * quantity; // Calculate the total price
+
+        try {
+          // Send data to the server to add to cart
+          const response = await fetch(`/addToCart/${productId}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              productId,
+              quantity,
+              productSize,
+              color,
+              price: productPrice,
+              total,
+            }),
           });
-        });
-      </script>
-      
+
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Product added to cart!",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            location.reload(); // Reload the page to update the cart
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: data.message || "Something went wrong.",
+            });
+          }
+        } catch (err) {
+          console.error(err);
+          Swal.fire("Error!", "An error occurred. Please try again.", "error");
+        }
+      });
+    });
+  });
+</script>
+
       <script src="js/bootstrap.bundle.min.js"></script>
       <script src="js/tiny-slider.js"></script>
       <script src="js/custom.js"></script>

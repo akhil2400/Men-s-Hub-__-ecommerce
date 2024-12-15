@@ -327,7 +327,7 @@
 
 
 
-      <script>
+      <!-- <script>
         // JavaScript logic for handling the return request
         document.getElementById('confirmReturnBtn').addEventListener('click', async function () {
           const returnMessageInput = document.getElementById('returnMessage');
@@ -370,7 +370,7 @@
         document.getElementById('cancelReturnBtn').addEventListener('click', function () {
           document.getElementById('returnMessageContainer').style.display = 'none';
         });
-      </script>
+      </script> -->
 
       <!-- Return individula order -->
       <script>
@@ -410,6 +410,78 @@
         });
 
       </script>
+     <script>
+      // Confirm the return request using async/await and SweetAlert2 confirmation
+      document.getElementById('confirmReturnBtn').addEventListener('click', async function () {
+        var returnMessage = document.getElementById('returnMessage').value;
+        var errorMessage = document.getElementById('errorMessage');
+    
+        if (returnMessage.trim() === "") {
+          errorMessage.style.display = 'block';
+        } else {
+          errorMessage.style.display = 'none';
+    
+          // Get the orderId from the hidden input
+          var orderId = document.querySelector('input[name="orderId"]').value;
+    
+          // Display SweetAlert2 confirmation dialog
+          const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you really want to return this order?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, confirm return!',
+            cancelButtonText: 'No, cancel',
+            reverseButtons: true
+          });
+    
+          if (result.isConfirmed) {
+            try {
+              // Send the request to the server
+              const response = await fetch('/save-return-reason', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  orderId: orderId,
+                  returnReason: returnMessage
+                })
+              });
+    
+              const data = await response.json();
+    
+              if (data.success) {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Return Request Initiated',
+                  text: 'Your return request has been successfully submitted!',
+                });
+                setTimeout(()=>{
+                  window.location.reload();
+                },1500)
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('returnMessageContainer').style.display = 'none'; // Hide the return message form
+              } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: 'An error occurred while saving the return reason. Please try again.',
+                });
+              }
+            } catch (error) {
+              console.error('Error:', error);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An error occurred while saving the return reason.',
+              });
+            }
+          }
+        }
+      });
+    </script>
+    
 
       <!-- Return Confirmation -->
       <!-- <script>

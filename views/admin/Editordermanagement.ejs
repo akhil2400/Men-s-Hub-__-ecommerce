@@ -74,6 +74,11 @@
             <span class="menu-title">Offer Management</span>
           </a>
         </li>
+        <li class="nav-item menu-items ">
+          <a class="nav-link" href="/admin/salesReport">
+            <span class="menu-title">sales Report</span>
+          </a>
+        </li>
       </ul>
     </nav>
 
@@ -93,8 +98,6 @@
                 <th>Product Name</th>
                 <th>Price</th>
                 <th>Shipping Charge</th>
-                <th>Return Reason</th>
-                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -116,37 +119,17 @@
                   <td><span style="color: white;">
                       <%= item.products ? item.products.quantity : '50' %>
                     </span></td>
-                  <td>
-                    <% if (item.returnReason) { %>
-                      <span style="color: white;">
-                        <%= item.returnReason %>
-                      </span>
-                      <% } else { %>
-                        <span style="color: white;">No reason provided</span>
-                        <% } %>
-                  </td>
-                  <td>
-                    <% if (item.status==='Return Requested' ) { %>
-                      <button class="btn btn-success approve-return-btn" data-product-id="<%= item._id %>">Approve
-                        Return</button>
-                      <button class="btn btn-danger reject-return-btn" data-product-id="<%= item._id %>">Reject
-                        Return</button>
-                      <% } %>
-                  </td>
                 </tr>
                 <% }) %>
                   <!-- Total Amount -->
                   <tr>
-                    <td colspan="4" style="text-align: right; font-weight: bold; color: white;">Total Amount</td>
+                    <td colspan="3" style="text-align: right; font-weight: bold; color: white;">Total Amount</td>
                     <td style="font-weight: bold; color: white;">&#8377;<%= order.totalAmount.toFixed(2) %>
                     </td>
                   </tr>
             </tbody>
           </table>
         </div>
-
-
-
         <!-- Shipping Details -->
         <div class="order-section mt-5">
           <h4>Shipping Details</h4>
@@ -217,6 +200,7 @@
           <br>
           <br>
           <% if (order.status==='Return Requested' ) { %>
+            <input type="text" vslue="" id="returnReason" readonly>
             <button class="btn btn-success approve-return-btn">Approve Return</button>
             <button class="btn btn-danger reject-return-btn">Reject Return</button>
             <% } %>

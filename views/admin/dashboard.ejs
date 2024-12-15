@@ -60,6 +60,11 @@
             <span class="menu-title">Offer Management</span>
           </a>
         </li>
+        <li class="nav-item menu-items ">
+          <a class="nav-link" href="/admin/salesReport">
+            <span class="menu-title">sales Report</span>
+          </a>
+        </li>
       </ul>
     </nav>
 
@@ -231,54 +236,10 @@
           <div class="col-md-12 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
-                <h4 class="card-title text-center mb-4">Generate Report</h4>
-                <div class="d-flex justify-content-center mb-4">
-                  <button class="btn btn-outline-primary mx-2 btnDateRange" data-range="daily">
-                    Daily
-                  </button>
-                  <button class="btn btn-outline-primary mx-2 btnDateRange" data-range="weekly">
-                    Weekly
-                  </button>
-                  <button class="btn btn-outline-primary mx-2 btnDateRange" data-range="monthly">
-                    Monthly
-                  </button>
-                  <button class="btn btn-outline-primary mx-2 btnDateRange" data-range="custom">
-                    Custom Date
-                  </button>
-                </div>
-                <div id="customDateInputs" class="inputSet mt-4" style="display: none">
-                  <div class="row">
-                    <div class="col-md-6 mb-3">
-                      <label for="start-date" class="form-label">Start Date:</label>
-                      <input type="date" id="start-date" class="form-control" />
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="end-date" class="form-label">End Date:</label>
-                      <input type="date" id="end-date" class="form-control" />
-                    </div>
-                  </div>
+                <h1 class="card-title text-center mb-4">WELCOME TO DASHBOARD</h1>
                   <div class="text-center">
-                    <!-- <button id="custom-download-btn" class="btn btn-primary">Download Custom Report</button> -->
+                    <a href="/admin/salesReport"><button class="btn btn-primary">View Sales Report</button></a>
                   </div>
-                </div>
-                <div class="text-center mt-3">
-                  <button id="download-btn" class="btn btn-success btnDownloadPdf">
-                    Download Report
-                  </button>
-                  <button id="viewReportBtn" class="btn btn-primary">View Report</button>
-                  <table id="salesReportTable" class="table table-striped mt-4" style="display: none;">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Quantity Sold</th>
-                            <th>Total Sales</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Table rows will be dynamically inserted here -->
-                    </tbody>
-                </table>
                 </div>
                 <div id="error-msg" class="error text-danger text-center mt-3"></div>
               </div>

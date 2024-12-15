@@ -294,6 +294,30 @@ module.exports = {
     }
   },
 
+  async saveReturnReason(req, res) {
+    const { orderId, returnReason } = req.body;
+
+    try {
+      // Find the order by ID and update the returnReason field
+      const order = await orderModel.findByIdAndUpdate(
+        orderId,
+        { returnReason: returnReason, status: 'Return Requested' },
+        { new: true } // Return the updated order
+      );
+
+      if (!order) {
+        return res.status(404).json({ success: false, message: 'Order not found.' });
+      }
+
+      // Successfully updated the order
+      res.json({ success: true });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Server error' });
+    }
+  
+},
+
   // async initiateIndividualReturn(req, res) {
   //   const orderId = req.params.id;
   //   const { reason } = req.body;
