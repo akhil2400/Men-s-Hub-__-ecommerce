@@ -265,6 +265,20 @@
                   <button id="download-btn" class="btn btn-success btnDownloadPdf">
                     Download Report
                   </button>
+                  <button id="viewReportBtn" class="btn btn-primary">View Report</button>
+                  <table id="salesReportTable" class="table table-striped mt-4" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity Sold</th>
+                            <th>Total Sales</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Table rows will be dynamically inserted here -->
+                    </tbody>
+                </table>
                 </div>
                 <div id="error-msg" class="error text-danger text-center mt-3"></div>
               </div>
@@ -368,7 +382,110 @@
       <!-- main-panel ends -->
     </div>
 
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+  // Event listeners for the filter buttons
+  const filterButtons = document.querySelectorAll('.btnDateRange');
+  const reportTable = document.getElementById('salesReportTable');
+  const errorMsg = document.getElementById('error-msg');
+  const customDateInputs = document.getElementById('customDateInputs');
+  const startDateInput = document.getElementById('start-date');
+  const endDateInput = document.getElementById('end-date');
+  
+  // Sample data for testing
+  const sampleData = {
+    daily: [
+      { product: 'Product 1', quantitySold: 10, totalSales: '$100', date: '2024-12-15' },
+      { product: 'Product 2', quantitySold: 5, totalSales: '$50', date: '2024-12-15' }
+    ],
+    weekly: [
+      { product: 'Product 1', quantitySold: 50, totalSales: '$500', date: '2024-12-10' },
+      { product: 'Product 2', quantitySold: 30, totalSales: '$300', date: '2024-12-12' }
+    ],
+    monthly: [
+      { product: 'Product 1', quantitySold: 200, totalSales: '$2000', date: '2024-12-01' },
+      { product: 'Product 2', quantitySold: 150, totalSales: '$1500', date: '2024-12-05' }
+    ]
+  };
 
+  // Function to show/hide the table
+  function showReportTable(data) {
+    if (data.length === 0) {
+      errorMsg.textContent = 'No data available for this period.';
+      reportTable.style.display = 'none';
+    } else {
+      errorMsg.textContent = '';
+      reportTable.style.display = 'block';
+      const tbody = reportTable.querySelector('tbody');
+      tbody.innerHTML = ''; // Clear previous rows
+
+      // Populate table rows dynamically
+      data.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.product}</td>
+          <td>${item.quantitySold}</td>
+          <td>${item.totalSales}</td>
+          <td>${item.date}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+  }
+
+  // Event listener for filter buttons
+  filterButtons.forEach(button => {
+    button.addEventListener('click', function () {
+      const range = this.getAttribute('data-range');
+      
+      if (range === 'custom') {
+        customDateInputs.style.display = 'block';
+      } else {
+        customDateInputs.style.display = 'none';
+        let data = [];
+
+        // Select the appropriate data based on range
+        if (range === 'daily') {
+          data = sampleData.daily;
+        } else if (range === 'weekly') {
+          data = sampleData.weekly;
+        } else if (range === 'monthly') {
+          data = sampleData.monthly;
+        }
+
+        // Display the report table
+        showReportTable(data);
+      }
+    });
+  });
+
+  // Handle custom date range selection
+  document.getElementById('viewReportBtn').addEventListener('click', function () {
+    const startDate = startDateInput.value;
+    const endDate = endDateInput.value;
+
+    // Validate custom date inputs
+    if (!startDate || !endDate) {
+      errorMsg.textContent = 'Please select both start and end dates.';
+      reportTable.style.display = 'none';
+      return;
+    }
+
+    // Filter data for custom date range
+    const customData = sampleData.monthly.filter(item => {
+      const itemDate = new Date(item.date);
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      return itemDate >= start && itemDate <= end;
+    });
+
+    // Display the report table
+    showReportTable(customData);
+  });
+});
+
+    </script>
+  
 
     <script src="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

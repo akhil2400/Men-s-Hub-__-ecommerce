@@ -11,8 +11,6 @@ const cartSchema = new mongoose.Schema({
     total: { type: Number, required: true }
   }],
   cartTotal: { type: Number, default: 0 },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
-});
+},{timestamps:true});
 
 module.exports = mongoose.model('Cart', cartSchema);

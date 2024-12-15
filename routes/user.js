@@ -54,10 +54,12 @@ router.get('/search',userController.loadsearch)
 router.get('/wishlist',wishlistController.loadwishlist)
 router.post('/addToWishlist', wishlistController.addToWishlist);
 router.delete('/removeFromWishlist/:id', wishlistController.removeFromWishlist);
-router.post("/addToCartFromWishlist/:id",wishlistController.addToCartFromWishlist)
+router.post("/addToCart/:productId",wishlistController.addToCartFromWishlist)
 router.post('/apply-coupon/:userId',couponController.applycoupon)
 router.post('/checkout', userController.processCheckout);
 router.get('/wallet',walletController.loadWallet)
 router.post("/initiate-return", orderController.initiateReturn);
+// router.post("/initiate-individual-return/:id", orderController.initiateIndividualReturn);
+// router.put("/handle-return/:productId", orderController.handleReturn);
 router.get('/get-addresses', userController.getAddresses);
 module.exports = router;

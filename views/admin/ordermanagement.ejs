@@ -247,7 +247,7 @@
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody style="color: white;">
               <% orders.forEach(function(order, index) { %>
                 <tr>
                   <td>
@@ -261,24 +261,24 @@
                       year: 'numeric' }) %>
                   </td>
                   <td>
-                    <%= order.totalAmount %>
+                    &#8377; <%= order.totalAmount %>
                   </td>
                   <td>
-                   <%= console.log(order.status)%>
-                   
-                    <%if( order.status === "pending"){%>
-                      <span class="badge badge-danger">Pending</span>
-                      <%}else if(order.status === "Cancelled"){%>
-                        <span class="text-danger">Unpaid</span>
-                        <% }else if(order.status === "completed"){ %>
-                          <span class="badge badge-success">Paid</span>
-                          <%} %>
+                    <%= console.log(order.status)%>
+
+                      <%if( order.status==="Pending" ){%>
+                        <span class="badge badge-danger">Pending</span>
+                        <%}else if(order.status==="Cancelled" ){%>
+                          <span class="text-danger">Unpaid</span>
+                          <% }else if(order.status==="Delivered" ){ %>
+                            <span class="badge badge-success">Paid</span>
+                            <%} %>
                   </td>
                   <td>
                     <%= order.status %>
                   </td>
                   <td>
-                    COD
+                    <%= order.paymentMethod %>
                   </td>
                   <td>
                     <button class="btn btn-primary btn-sm viewbtn"
@@ -288,20 +288,7 @@
 
                   </td>
                 </tr>
-
-                <!-- Display Product Details for each order -->
-                <% order.products.forEach(function(product) { %>
-                  <tr>
-                    <td colspan="8">
-                      <strong>Product:</strong>
-                      <%= product.productId.name %> <br>
-                        <strong>Price:</strong> ₹<%= product.price %> <br>
-                          <strong>Quantity:</strong>
-                          <%= product.quantity %>
-                    </td>
-                  </tr>
-                  <% }); %>
-                    <% }); %>
+                <% }); %>
             </tbody>
           </table>
         </div>

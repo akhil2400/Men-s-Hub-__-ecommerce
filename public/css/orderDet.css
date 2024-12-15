@@ -1,0 +1,120 @@
+.order-details-container {
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.order-header h1 {
+  margin: 0;
+  color: #333;
+}
+
+.order-info {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.order-info-item {
+  flex: 1;
+}
+
+.product-details {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 15px 0;
+}
+
+.product-image {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+}
+
+.shipping-details {
+  margin-top: 20px;
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.status-cancelled {
+  color: red;
+  font-weight: bold;
+}
+.return-order-btn {
+  background-color: rgb(54, 157, 31);
+  color: white;
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+}
+.return-order-btn:hover {
+  background-color: rgb(97, 188, 79);
+}
+.return-order-cancel-btn {
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  background-color: rgb(201, 22, 22);
+  color: white;
+}
+.return-order-cancel-btn:hover {
+  background-color: rgb(218, 34, 34);
+}
+.cancel-inidi-order {
+  background-color: #ffab00;
+  padding: 8px;
+  border-radius: 5px;
+  border: none;
+}
+.cancel-inidi-order:hover {
+  color: white;
+}
+.return-inidi-order {
+  background-color: #aa2c2c;
+  padding: 8px;
+  border-radius: 5px;
+  border: none;
+  color: white;
+  width: 94%;
+}
+.return-inidi-order:hover {
+  background-color: #8a4545;
+}
+.confirm-indi-return-btn{
+  background-color: #3f9b3f;
+  color: white;
+  padding: 6px;
+  border: none;
+  border-radius: 5px;
+}
+.confirm-indi-return-btn:hover{
+  background-color: #559555;
+}
+.cancel-indi-return-btn{
+  background-color: #ce4e4e;
+  color: white;
+  padding: 6px;
+  border: none;
+  border-radius: 5px;
+}
+.cancel-indi-return-btn:hover{
+  background-color: #af5252;
+}
+

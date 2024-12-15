@@ -43,15 +43,7 @@ const couponSchema = new mongoose.Schema({
     type: Boolean, 
     default: true 
   },
-  createdAt: { 
-    type: Date, 
-    default: Date.now 
-  },
-  updatedAt: { 
-    type: Date, 
-    default: Date.now 
-  },
-});
+},{timestamps:true});
 
 // Middleware to update `updatedAt` before saving
 couponSchema.pre('save', function (next) {

@@ -18,6 +18,7 @@ const productSchema = new mongoose.Schema({
   warranty: { type: String },
   returnPolicy: { type: String },
   rating: { type: Number, default: 0 },
+  returnReason: { type: String, default: null },
   reviews: [
     {
       user: { type: mongoose.Schema.Types.ObjectId, ref: "Users" },
@@ -26,9 +27,7 @@ const productSchema = new mongoose.Schema({
     },
   ],
   isDeleted: { type: Boolean, default: false },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-});
+},{timestamps:true});
 const Product = mongoose.model('Product', productSchema);
 
 module.exports = Product;

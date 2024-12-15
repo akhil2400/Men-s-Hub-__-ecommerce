@@ -5,13 +5,14 @@ const orderSchema = new mongoose.Schema({
   products: [
     {
       productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+      // name: { type: String, required: true },
       quantity: { type: Number, required: true },
       price: { type: Number, required: true },
       // offerPrice: { type: Number ,required: true},
       
     },
   ],
-  status: { type: String, default: 'Pending', enum:['Return Requested','Return Approved','Pending','Delivered','Cancelled'] },
+  status: { type: String, default: 'Pending', enum:['Return Requested','Return Approved','Return Rejected','Pending','Delivered','Cancelled'] },
   deliveryAddress: { type: mongoose.Schema.Types.ObjectId, ref: 'Address', required: true },
   totalAmount: { type: Number, required: true },
   paymentMethod: { type: String, enum: ['cod', 'razorpay'], required: true },
@@ -19,7 +20,7 @@ const orderSchema = new mongoose.Schema({
   razorpayOrderId: { type: String },
   razorpayPaymentId: { type: String },
   razorpaySignature: { type: String },
-  createdAt: { type: Date, default: Date.now },
-});
+  returnReason:{type: String,default:null}
+},{timestamps:true});
 
 module.exports = mongoose.model('Order', orderSchema);

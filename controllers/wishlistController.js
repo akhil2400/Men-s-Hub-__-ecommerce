@@ -18,7 +18,7 @@ module.exports = {
       const wishlistItems = await wishlistModel
         .find({ userId })
         .populate("productId");
-      console.log(wishlistItems)
+      // console.log(wishlistItems)
       res.render("wishlist", { wishlistItems });
 
     } catch (error) {
@@ -29,7 +29,7 @@ module.exports = {
   async addToWishlist(req, res) {
     try {
       const { productId, productName, productPrice } = req.body;
-      console.log("product Id : " + productId + "product Name : " + productName + "product price : " + productPrice );
+      console.log("product Id : " + productId + "product Name : " + productName + "product price : " + productPrice);
 
       const productImage = await productModel.findOne({ _id: productId }).select("images");
       const wishlistImage = productImage.images[0];
@@ -49,7 +49,7 @@ module.exports = {
         wishlistImage
       });
       console.log(newWishlistItem);
-      
+
       await newWishlistItem.save();
       res.status(201).json({ message: "Product added to wishlist" });
     } catch (error) {
@@ -73,70 +73,134 @@ module.exports = {
     }
   },
 
+  // async addToCartFromWishlist(req, res) {
+  //   try {
+  //     // Validate productId
+  //     let productId = req.params.id;
+  //     productId=JSON.stringify(productId)
+  //     if (!mongoose.Types.ObjectId.isValid(productId)) {
+  //       return res.status(400).json({ success: false, message: "Invalid product ID" });
+  //     }
+  
+  //     const productIdObj = mongoose.Types.ObjectId(productId); // Convert to ObjectId
+  
+  //     // Fetch the user based on the session email
+  //     const user = await userModel.findOne({ email: req.session.userData.email });
+  //     if (!user) {
+  //       return res.status(404).json({ success: false, message: "User not found" });
+  //     }
+  //     const userId = user._id; // Always use `_id` from Mongoose
+  
+  //     // console.log("User ID:", userId);
+  //     // console.log("Product ID:", productIdObj);
+  
+  //     // Find the specific wishlist entry for the user and product
+  //     const wishlistItem = await wishlistModel.findOne({ userId, productId: productIdObj });
+  //     if (!wishlistItem) {
+  //       return res
+  //         .status(404)
+  //         .json({ success: false, message: "Product not found in wishlist" });
+  //     }
+  
+  //     // Find or create a cart for the user
+  //     let cart = await cartModel.findOne({ userId });
+  //     if (!cart) {
+  //       cart = new cartModel({ userId, items: [], cartTotal: 0 });
+  //     }
+  
+  //     // Check if the product already exists in the cart
+  //     const cartItemIndex = cart.items.findIndex(
+  //       (item) => item.productId.toString() === wishlistItem.productId.toString()
+  //     );
+  
+  //     if (cartItemIndex !== -1) {
+  //       // Increment quantity if product already exists
+  //       cart.items[cartItemIndex].quantity += 1;
+  //     } else {
+  //       // Add new product to the cart
+  //       cart.items.push({
+  //         productId: wishlistItem.productId,
+  //         quantity: 1,
+  //         price: wishlistItem.productPrice,
+  //       });
+  //     }
+  
+  //     // Update the cart's total price
+  //     cart.cartTotal += wishlistItem.productPrice;
+  
+  //     // Save the updated cart
+  //     await cart.save();
+  
+  //     // Remove the product from the wishlist
+  //     await wishlistModel.deleteOne({ userId, productId: productIdObj });
+  
+  //     res.status(200).json({ success: true, message: "Product moved to cart." });
+  //   } catch (error) {
+  //     console.error("Error in addToCartFromWishlist:", error);
+  //     res.status(500).json({ success: false, message: "An error occurred." });
+  //   }
+  // }
   async addToCartFromWishlist(req, res) {
-    try {
-      const user = await userModel.findOne({ email: req.session.userData.email });
-      const userId = user.id;
-      console.log("hkehk"+userId);
-      const productId = req.params.id;
-      console.log("hkehk"+productId);
+    const { productId } = req.params;
+  const { quantity, productSize, color, price, total } = req.body;
+  const userId = req.user._id; // Assuming user is authenticated and user ID is stored in req.user
 
-      // Fetch user's wishlist
-      const wishlist = await wishlistModel.findOne({ userId });
-      if (!wishlist)
-        return res
-          .status(404)
-          .json({ success: false, message: "Wishlist not found" });
+  try {
+    // Find the product in the database
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ success: false, message: "Product not found" });
+    }
 
-      // Find the product in the wishlist
-      const wishlistItem = wishlist.items.find(
-        (item) => item._id.toString() === productId
-      );
-      console.log("wishlistItem", wishlistItem);
-      if (!wishlistItem)
-        return res
-          .status(404)
-          .json({ success: false, message: "Product not found in wishlist" });
+    // Find the user's cart
+    let cart = await Cart.findOne({ userId });
 
-      // Fetch or create user's cart
-      let cart = await cartModel.findOne({ userId });
-      if (!cart) {
-        cart = new cartModel({ userId, items: [], cartTotal: 0 });
-      }
-
-      // Add product to the cart
-      const cartItemIndex = cart.items.findIndex(
-        (item) =>
-          item.productId.toString() === wishlistItem.productId.toString()
-      );
-      if (cartItemIndex !== -1) {
-        // If product already in cart, update quantity
-        cart.items[cartItemIndex].quantity += wishlistItem.quantity || 1;
+    if (!cart) {
+      // If the cart doesn't exist, create a new cart
+      cart = new Cart({
+        userId,
+        items: [{
+          productId,
+          quantity,
+          price,
+          size: productSize,
+          color,
+          total,
+        }],
+        cartTotal: total,
+      });
+    } else {
+      // If the cart exists, check if the product is already in the cart
+      const existingItem = cart.items.find(item => item.productId.toString() === productId);
+      if (existingItem) {
+        // Update the quantity of the existing item in the cart
+        existingItem.quantity += quantity;
+        existingItem.total = existingItem.quantity * price;
       } else {
-        // Else, add as a new item
+        // Add the new product to the cart
         cart.items.push({
-          productId: wishlistItem.productId,
-          quantity: wishlistItem.quantity || 1,
-          price: wishlistItem.price,
+          productId,
+          quantity,
+          price,
+          size: productSize,
+          color,
+          total,
         });
       }
 
-      // Update cart total
-      cart.cartTotal += wishlistItem.price * (wishlistItem.quantity || 1);
-      await cart.save();
-
-      // Remove product from wishlist
-      wishlist.items = wishlist.items.filter(
-        (item) => item._id.toString() !== productId
-      );
-      await wishlist.save();
-
-      res
-        .status(200)
-        .json({ success: true, message: "Product moved to cart." });
-    } catch (error) {
-      console.error("Error in addToCartFromWishlist:", error);
-      res.status(500).json({ success: false, message: "An error occurred." });
+      // Update the cart's total price
+      cart.cartTotal = cart.items.reduce((acc, item) => acc + item.total, 0);
     }
-  },
-};
+
+    // Save the updated cart to the database
+    await cart.save();
+
+    return res.status(200).json({ success: true, message: "Product added to cart successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+
+}
+
+}

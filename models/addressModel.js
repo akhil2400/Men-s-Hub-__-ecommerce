@@ -12,8 +12,6 @@ const addressSchema = new mongoose.Schema({
   pinCode: { type: String, required: true },
   mobileNumber: { type: String, required: true },
   isDeleted: { type: Boolean, default: false },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
-});
+},{timestamps:true});
 
 module.exports = mongoose.model("Address", addressSchema)

@@ -82,6 +82,7 @@
       <div class="custom-table-container mt-5" style="margin: 15%;">
         <h3 class="text-center">Order Details</h3>
 
+
         <!-- Product Details -->
         <div class="order-section">
           <h4>Product Details</h4>
@@ -92,6 +93,8 @@
                 <th>Product Name</th>
                 <th>Price</th>
                 <th>Shipping Charge</th>
+                <th>Return Reason</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -113,19 +116,35 @@
                   <td><span style="color: white;">
                       <%= item.products ? item.products.quantity : '50' %>
                     </span></td>
+                  <td>
+                    <% if (item.returnReason) { %>
+                      <span style="color: white;">
+                        <%= item.returnReason %>
+                      </span>
+                      <% } else { %>
+                        <span style="color: white;">No reason provided</span>
+                        <% } %>
+                  </td>
+                  <td>
+                    <% if (item.status==='Return Requested' ) { %>
+                      <button class="btn btn-success approve-return-btn" data-product-id="<%= item._id %>">Approve
+                        Return</button>
+                      <button class="btn btn-danger reject-return-btn" data-product-id="<%= item._id %>">Reject
+                        Return</button>
+                      <% } %>
+                  </td>
                 </tr>
                 <% }) %>
-
-                  <!-- Assuming order.totalAmount is where you need to access the total order price -->
+                  <!-- Total Amount -->
                   <tr>
-                    <td colspan="3" style="text-align: right; font-weight: bold; color: white;">Total Amount</td>
+                    <td colspan="4" style="text-align: right; font-weight: bold; color: white;">Total Amount</td>
                     <td style="font-weight: bold; color: white;">&#8377;<%= order.totalAmount.toFixed(2) %>
                     </td>
                   </tr>
             </tbody>
-
           </table>
         </div>
+
 
 
         <!-- Shipping Details -->
@@ -372,7 +391,116 @@
         });
       }
     });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const approveReturnBtns = document.querySelectorAll(".approve-return-btn");
+      const rejectReturnBtns = document.querySelectorAll(".reject-return-btn");
 
+      // Approve Return Logic for Individual Products
+      approveReturnBtns.forEach((approveBtn) => {
+        approveBtn.addEventListener("click", async function (e) {
+          e.preventDefault();
+
+          const productId = approveBtn.getAttribute("data-product-id"); // Get the product ID dynamically
+
+          const result = await Swal.fire({
+            title: "Are you sure?",
+            text: "Do you want to approve this return request for the product?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#28a745",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, approve it!",
+            cancelButtonText: "No, keep it pending",
+          });
+
+          if (result.isConfirmed) {
+            try {
+              const response = await fetch(`/handle-return/${productId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action: "approve" }),
+              });
+
+              const responseData = await response.json();
+
+              if (response.ok && responseData.success) {
+                await Swal.fire("Approved!", responseData.message, "success");
+
+                // Update the product status dynamically
+                const statusElement = document.querySelector(`.status-${productId}`);
+                if (statusElement) {
+                  statusElement.textContent = "Return Approved";
+                  statusElement.className = "status-approved"; // Apply a different class for styling
+                }
+
+                // Hide buttons after action
+                approveBtn.style.display = "none";
+                rejectReturnBtns.forEach((btn) => btn.style.display = "none");
+              } else {
+                Swal.fire("Error", responseData.message, "error");
+              }
+            } catch (error) {
+              console.error("Error approving return request:", error);
+              Swal.fire("Error", "Something went wrong while approving the return.", "error");
+            }
+          }
+        });
+      });
+
+      // Reject Return Logic for Individual Products
+      rejectReturnBtns.forEach((rejectBtn) => {
+        rejectBtn.addEventListener("click", async function (e) {
+          e.preventDefault();
+
+          const productId = rejectBtn.getAttribute("data-product-id"); // Get the product ID dynamically
+
+          const result = await Swal.fire({
+            title: "Are you sure?",
+            text: "Do you want to reject this return request for the product?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, reject it!",
+            cancelButtonText: "No, keep it pending",
+          });
+
+          if (result.isConfirmed) {
+            try {
+              const response = await fetch(`/handle-return/${productId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action: "reject" }),
+              });
+
+              const responseData = await response.json();
+
+              if (response.ok && responseData.success) {
+                await Swal.fire("Rejected!", responseData.message, "success");
+
+                // Update the product status dynamically
+                const statusElement = document.querySelector(`.status-${productId}`);
+                if (statusElement) {
+                  statusElement.textContent = "Return Rejected";
+                  statusElement.className = "status-rejected"; // Apply a different class for styling
+                }
+
+                // Hide buttons after action
+                rejectBtn.style.display = "none";
+                approveReturnBtns.forEach((btn) => btn.style.display = "none");
+              } else {
+                Swal.fire("Error", responseData.message, "error");
+              }
+            } catch (error) {
+              console.error("Error rejecting return request:", error);
+              Swal.fire("Error", "Something went wrong while rejecting the return.", "error");
+            }
+          }
+        });
+      });
+    });
 
   </script>
 </body>
