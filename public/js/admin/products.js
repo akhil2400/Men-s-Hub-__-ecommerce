@@ -174,7 +174,7 @@ function validateAndSubmit() {
               window.location.reload();
             }, 1500);
             }
-           
+    
       } catch (err) {
         console.log("Error ::- " + err);
       }

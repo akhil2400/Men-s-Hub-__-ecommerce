@@ -12,19 +12,19 @@ module.exports = {
   async loadWallet(req, res) {
     const { email } = req.session.userData;
   
-    // Find the user
+    
     const user = await userModel.findOne({ email });
     if (!user) {
       return res.status(404).send("User not found");
     }
   
-    // Find the user's wallet
+    
     const wallet = await walletModel.findOne({ userId: user._id });
   
     const walletData = wallet
       ? {
           holderName: user.name || "User",
-          cardLastDigits: "9667", // Static or derive dynamically
+          cardLastDigits: "9667", 
           balance: `Rs. ${wallet.balance.toFixed(2)}`,
           transactions: wallet.transactions.map((transaction, index) => ({
             id: index + 1,

@@ -17,8 +17,7 @@ module.exports = {
       const userId = user.id;
       const wishlistItems = await wishlistModel
         .find({ userId })
-        .populate("productId");
-      // console.log(wishlistItems)
+      console.log(wishlistItems)
       res.render("wishlist", { wishlistItems });
 
     } catch (error) {
@@ -62,7 +61,6 @@ module.exports = {
     try {
       const { id } = req.params; // Match the :id parameter in the route
       const result = await wishlistModel.deleteOne({ _id: id });
-
       if (result.deletedCount > 0) {
         res.json({ success: true });
       } else {
@@ -81,19 +79,19 @@ module.exports = {
   //     if (!mongoose.Types.ObjectId.isValid(productId)) {
   //       return res.status(400).json({ success: false, message: "Invalid product ID" });
   //     }
-  
+
   //     const productIdObj = mongoose.Types.ObjectId(productId); // Convert to ObjectId
-  
+
   //     // Fetch the user based on the session email
   //     const user = await userModel.findOne({ email: req.session.userData.email });
   //     if (!user) {
   //       return res.status(404).json({ success: false, message: "User not found" });
   //     }
   //     const userId = user._id; // Always use `_id` from Mongoose
-  
+
   //     // console.log("User ID:", userId);
   //     // console.log("Product ID:", productIdObj);
-  
+
   //     // Find the specific wishlist entry for the user and product
   //     const wishlistItem = await wishlistModel.findOne({ userId, productId: productIdObj });
   //     if (!wishlistItem) {
@@ -101,18 +99,18 @@ module.exports = {
   //         .status(404)
   //         .json({ success: false, message: "Product not found in wishlist" });
   //     }
-  
+
   //     // Find or create a cart for the user
   //     let cart = await cartModel.findOne({ userId });
   //     if (!cart) {
   //       cart = new cartModel({ userId, items: [], cartTotal: 0 });
   //     }
-  
+
   //     // Check if the product already exists in the cart
   //     const cartItemIndex = cart.items.findIndex(
   //       (item) => item.productId.toString() === wishlistItem.productId.toString()
   //     );
-  
+
   //     if (cartItemIndex !== -1) {
   //       // Increment quantity if product already exists
   //       cart.items[cartItemIndex].quantity += 1;
@@ -124,83 +122,92 @@ module.exports = {
   //         price: wishlistItem.productPrice,
   //       });
   //     }
-  
+
   //     // Update the cart's total price
   //     cart.cartTotal += wishlistItem.productPrice;
-  
+
   //     // Save the updated cart
   //     await cart.save();
-  
+
   //     // Remove the product from the wishlist
   //     await wishlistModel.deleteOne({ userId, productId: productIdObj });
-  
+
   //     res.status(200).json({ success: true, message: "Product moved to cart." });
   //   } catch (error) {
   //     console.error("Error in addToCartFromWishlist:", error);
   //     res.status(500).json({ success: false, message: "An error occurred." });
   //   }
   // }
-  async addToCartFromWishlist(req, res) {
-    const { productId } = req.params;
-  const { quantity, productSize, color, price, total } = req.body;
-  const userId = req.user._id; // Assuming user is authenticated and user ID is stored in req.user
+  // async addToCartFromWishlist(req, res) {
+  //   console.log(1111)
+  //   const {productId} = req.params;
+  //   let { quantity, productSize, color, price, total } = req.body;
+  //   const { email } = req.session.userData; 
 
-  try {
-    // Find the product in the database
-    const product = await Product.findById(productId);
-    if (!product) {
-      return res.status(404).json({ success: false, message: "Product not found" });
-    }
+  //   console.log(`productId : ${productId}`)
 
-    // Find the user's cart
-    let cart = await Cart.findOne({ userId });
+  //   console.log(price)
+  //   console.log(total)
+  //   console.log(productSize)
+  //   console.log(quantity)
 
-    if (!cart) {
-      // If the cart doesn't exist, create a new cart
-      cart = new Cart({
-        userId,
-        items: [{
-          productId,
-          quantity,
-          price,
-          size: productSize,
-          color,
-          total,
-        }],
-        cartTotal: total,
-      });
-    } else {
-      // If the cart exists, check if the product is already in the cart
-      const existingItem = cart.items.find(item => item.productId.toString() === productId);
-      if (existingItem) {
-        // Update the quantity of the existing item in the cart
-        existingItem.quantity += quantity;
-        existingItem.total = existingItem.quantity * price;
-      } else {
-        // Add the new product to the cart
-        cart.items.push({
-          productId,
-          quantity,
-          price,
-          size: productSize,
-          color,
-          total,
-        });
-      }
+  //   try {
+  //     // Find the product in the database
+  //     console.log(11)
+  //     const product = await productModel.findOne({productId});
 
-      // Update the cart's total price
-      cart.cartTotal = cart.items.reduce((acc, item) => acc + item.total, 0);
-    }
+  //     console.log(12)
 
-    // Save the updated cart to the database
-    await cart.save();
+  //     const user = await userModel.findOne({ email });
+  //     // Find the user's cart
+  //     let cart = await cartModel.findOne({ userId: user._id });
 
-    return res.status(200).json({ success: true, message: "Product added to cart successfully" });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ success: false, message: "Server error" });
-  }
+  //     if (!cart) {
+  //       // If the cart doesn't exist, create a new cart
+  //       cart = new cartModel({
+  //         userId,
+  //         items: [{
+  //           productId,
+  //           quantity,
+  //           price,
+  //           size: productSize,
+  //           color,
+  //           total,
+  //         }],
+  //         cartTotal: total,
+  //       });
+  //     } else {
+  //       // If the cart exists, check if the product is already in the cart
+  //       const existingItem = cart.items.find(item => item.productId.toString() === productId);
+  //       if (existingItem) {
+  //         // Update the quantity of the existing item in the cart
+  //         existingItem.quantity += quantity;
+  //         existingItem.total = existingItem.quantity * price;
+  //       } else {
+  //         // Add the new product to the cart
+  //         cart.items.push({
+  //           productId,
+  //           quantity,
+  //           price,
+  //           size: productSize,
+  //           color,
+  //           total,
+  //         });
+  //       }
 
-}
+  //       // Update the cart's total price
+  //       cart.cartTotal = cart.items.reduce((acc, item) => acc + item.total, 0);
+  //     }
+
+  //     // Save the updated cart to the database
+  //     await cart.save();
+
+  //     return res.status(200).json({ success: true, message: "Product added to cart successfully" });
+  //   } catch (error) {
+  //     console.error(error);
+  //     return res.status(500).json({ success: false, message: "Server error" });
+  //   }
+
+  // }
 
 }
