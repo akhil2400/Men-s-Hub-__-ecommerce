@@ -200,9 +200,14 @@
           <br>
           <br>
           <% if (order.status==='Return Requested' ) { %>
-            <input type="text" vslue="" id="returnReason" readonly>
+            <div style="border: 1px solid rgb(255, 255, 255); padding: 10px;  border-radius: 5px;">
+            <div style="border: none; padding: 10px; background-color: #979090; border-radius: 5px;">
+            <h5>Return Reason: <%= order.returnReason %> </h5>
+           </div>
+           <br>
             <button class="btn btn-success approve-return-btn">Approve Return</button>
             <button class="btn btn-danger reject-return-btn">Reject Return</button>
+          </div>
             <% } %>
 
         </div>
@@ -376,7 +381,7 @@
       }
     });
   </script>
-  <script>
+  <!-- <script>
     document.addEventListener("DOMContentLoaded", function () {
       const approveReturnBtns = document.querySelectorAll(".approve-return-btn");
       const rejectReturnBtns = document.querySelectorAll(".reject-return-btn");
@@ -387,6 +392,13 @@
           e.preventDefault();
 
           const productId = approveBtn.getAttribute("data-product-id"); // Get the product ID dynamically
+
+          // Ensure productId is not null or undefined
+          if (!productId || productId === "null") {
+            console.error('Product ID is invalid:', productId);
+            Swal.fire("Error", "Invalid product ID.", "error");
+            return;
+          }
 
           const result = await Swal.fire({
             title: "Are you sure?",
@@ -440,6 +452,13 @@
 
           const productId = rejectBtn.getAttribute("data-product-id"); // Get the product ID dynamically
 
+          // Ensure productId is not null or undefined
+          if (!productId || productId === "null") {
+            console.error('Product ID is invalid:', productId);
+            Swal.fire("Error", "Invalid product ID.", "error");
+            return;
+          }
+
           const result = await Swal.fire({
             title: "Are you sure?",
             text: "Do you want to reject this return request for the product?",
@@ -485,8 +504,8 @@
         });
       });
     });
+</script> -->
 
-  </script>
 </body>
 
 </html>

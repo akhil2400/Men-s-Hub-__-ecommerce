@@ -25,6 +25,7 @@ module.exports = {
       const products = await productModel.find({})
         .skip(skip)
         .limit(limit)
+        .sort({ createdAt: -1 });
         
   
       return res.status(200).render("products", {

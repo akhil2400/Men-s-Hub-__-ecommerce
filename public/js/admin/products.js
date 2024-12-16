@@ -153,6 +153,28 @@ function validateAndSubmit() {
         });
         const data = await response.json();
         console.log(data.msg);
+        if (data.msg === "success") {
+          swal.fire({
+            title: "Product Added Successfully",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1500,
+          })
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+          }else{
+            swal.fire({
+              title: "Product Added Successfully",
+              icon: "success",
+              showConfirmButton: false,
+              timer: 1500,
+            })
+            setTimeout(() => {
+              window.location.reload();
+            }, 1500);
+            }
+           
       } catch (err) {
         console.log("Error ::- " + err);
       }
