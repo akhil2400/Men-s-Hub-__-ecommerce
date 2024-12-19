@@ -1,47 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>My Orders</title>
-   <link rel="stylesheet" href="/css/viewOrder.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .wallet-card {
+            background-color: #1f2937;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .wallet-balance {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
+
+        .transactions-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .transactions-table th,
+        .transactions-table td {
+            padding: 0.75rem;
+            border: 1px solid #eee;
+            text-align: left;
+        }
+
+        .transactions-table th {
+            background-color: #f9fafb;
+            font-weight: 500;
+        }
+    </style>
 </head>
+
 <body>
-    <div class="orders-container">
-        <div class="orders-header">
-            <h1>My Orders</h1>
+    <!-- Wallet Section -->
+    <div class="section" id="wallet">
+        <h2 class="section-title">Wallet</h2>
+        <div class="wallet-card">
+            <div class="wallet-holder">Nihal</div>
+            <div class="wallet-number">**** **** **** 9667</div>
+            <div class="wallet-balance">Rs. 4,322.89</div>
         </div>
+        <div style="margin-bottom: 1.5rem">
+            <input type="text" class="form-control" placeholder="Enter amount" style="margin-bottom: 1rem" />
+            <button class="btn btn-primary">Add Amount</button>
+        </div>
+        <table class="transactions-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Amount</th>
+                    <th>Type</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Rs. 499.90</td>
+                    <td>Debit</td>
+                    <td>12/05/2024</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Rs. 549.90</td>
+                    <td>EMI</td>
+                    <td>06/05/2024</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Rs. 200.00</td>
+                    <td>EMI</td>
+                    <td>05/02/2024</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Rs. 149.90</td>
+                    <td>Debit</td>
+                    <td>20/12/2023</td>
+                </tr>
+            </tbody>
+        </table>
 
-        <div class="order-item">
-            <img src="/api/placeholder/100/100" alt="Product Image">
-            <div class="order-details">
-                <h3>Wireless Bluetooth Headphones</h3>
-                <p>Order #12345 | Placed on November 15, 2024</p>
-                <p>Quantity: 1 | Total: $129.99</p>
-            </div>
-            <div class="order-status">
-                <p class="status-shipped">Shipped</p>
-                <div class="order-actions">
-                    <button class="btn btn-track">Track Package</button>
-                    <button class="btn btn-invoice">Download Invoice</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="order-item">
-            <img src="/api/placeholder/100/100" alt="Product Image">
-            <div class="order-details">
-                <h3>Smart Watch Series 5</h3>
-                <p>Order #12346 | Placed on November 20, 2024</p>
-                <p>Quantity: 1 | Total: $299.99</p>
-            </div>
-            <div class="order-status">
-                <p class="status-processing">Processing</p>
-                <div class="order-actions">
-                    <button class="btn btn-track">Track Package</button>
-                    <button class="btn btn-invoice">Download Invoice</button>
-                </div>
-            </div>
-        </div>
     </div>
+
 </body>
+
 </html>

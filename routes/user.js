@@ -4,6 +4,9 @@ const userController = require('../controllers/userController');
 const noCache = require('../middlewares/noCache');
 const productController = require('../controllers/productController');
 const orderController = require('../controllers/orderController');
+const couponController = require('../controllers/couponController');
+const walletController = require('../controllers/walletController')
+const wishlistController = require("../controllers/wishlistController")
 
 
 router.get('/',noCache,userController.loadstartingpage);
@@ -19,6 +22,7 @@ router.get('/my-address',userController.loadmyaddress)
 router.post('/my-address',userController.myAddAddress)
 router.get('/my-address-edit/:id',userController.preloadAddress)
 router.put('/my-address-edit/:address_id', userController.myAddAddressEdit);
+router.delete('/my-address/:addressId', userController.removeAddress);
 router.get('/forgotpasswordemailverification',userController.loademailverify)
 router.post('/forgotpasswordemailverification',userController.emailverify)
 router.get('/forgotpassword',noCache,userController.loadforgotpassword)
@@ -37,6 +41,12 @@ router.delete('/cart/remove', userController.removeCartItem);
 router.post ('/update-cart', userController.updateCartItemQuantity);
 router.get('/thankyou',userController.loadthankyou)
 router.post('/place-order', userController.placeOrder);
+
+router.post('/place-order-razorpay', userController.placeOrderRazorpay);
+
+// Route for verifying Razorpay payment
+router.post('/verify-razorpay-payment', userController.verifyRazorpayPayment);
+
 router.get('/orders',orderController.loadorders)
 router.get('/order/details/:id', orderController.viewOrderDetails);
 router.post('/cancel-order/:id',orderController.cancelOrder)
@@ -46,6 +56,17 @@ router.delete('/removeFromWishlist', userController.removeFromWishlist);
 
 // router.get('/checkout',userController.loadcheckout)
 
+router.get('/search',userController.loadsearch)
+router.get('/wishlist',wishlistController.loadwishlist)
+router.post('/addToWishlist', wishlistController.addToWishlist);
+router.delete('/removeFromWishlist/:id', wishlistController.removeFromWishlist);
+// router.post("/wishlist/addToCart/:productId",wishlistController.addToCartFromWishlist)
+router.post('/apply-coupon/:userId',couponController.applycoupon)
 router.post('/checkout', userController.processCheckout);
-
+router.get('/wallet',walletController.loadWallet)
+router.post("/initiate-return", orderController.initiateReturn);
+router.post("/save-return-reason", orderController.saveReturnReason);
+// router.post("/initiate-individual-return/:id", orderController.initiateIndividualReturn);
+// router.put("/handle-return/:productId", orderController.handleReturn);
+router.get('/get-addresses', userController.getAddresses);
 module.exports = router;

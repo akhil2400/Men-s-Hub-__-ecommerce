@@ -25,6 +25,7 @@ module.exports = {
       const products = await productModel.find({})
         .skip(skip)
         .limit(limit)
+        .sort({ createdAt: -1 });
         
   
       return res.status(200).render("products", {
@@ -250,37 +251,61 @@ async loadupdateProducts(req, res) {
 
   async shopPageLoad(req, res) {
     try {
-      let filters = {};
-  
-      if (req.query.category) {
-        filters.category = req.query.category;
-      }
-      if (req.query.priceRange) {
-        filters.priceRange = req.query.priceRange;
-      }
-      if (req.query.searchTerm) {
-        filters.searchTerm = req.query.searchTerm;
-      }
-  
-      if (req.query.category) {
-        const cat = await categoryModel.findOne({ name: req.query.category });
-        filters.category = cat._id;
-      }
-  
-      const products = await productModel.find(filters).populate('category').exec();
-      const categories = await categoryModel.find({ isDeleted: false });
-  
-      if (req.xhr) { 
-        return res.status(200).render('partials/product-grid', { products, categories });
-      }
-  
-      
-      return res.status(200).render('shop', { products, categories });
-  
+        let filters = {};
+        let sortOption = {};
+
+        // Get filter parameters from query
+        if (req.query.category) {
+            const cat = await categoryModel.findOne({ name: req.query.category });
+            if (cat) {
+                filters.category = cat._id;
+            }
+        }
+
+        if (req.query.priceRange) {
+            const range = req.query.priceRange.split('-');
+            if (range.length === 2) {
+                filters.offerPrice = { $gte: parseInt(range[0]), $lte: parseInt(range[1]) };
+            } else if (req.query.priceRange === 'lowToHigh') {
+                sortOption.offerPrice = 1;
+            } else if (req.query.priceRange === 'highToLow') {
+                sortOption.offerPrice = -1;
+            } else if (req.query.priceRange === '5000+') {
+                filters.offerPrice = { $gt: 5000 }; // Added handling for "5000+" range
+            }
+        }
+
+        if (req.query.searchTerm) {
+            filters.name = { $regex: req.query.searchTerm, $options: "i" };
+        }
+
+        if (req.query.orderBy === 'A-Z') {
+            sortOption.name = 1;
+        } else if (req.query.orderBy === 'Z-A') {
+            sortOption.name = -1;
+        }
+
+        // Fetch products based on filters and sorting
+        const products = await productModel.find(filters).populate('category').sort(sortOption).exec();
+        const categories = await categoryModel.find({ isDeleted: false });
+
+        // Add offerPercentage for frontend
+        const productsWithOffer = products.map(product => ({
+            ...product.toObject(),
+            offerPercentage: product.offerPercentage || 0,
+        }));
+
+        if (req.xhr) {
+            return res.status(200).render('partials/product-grid', { products: productsWithOffer });
+        }
+
+        return res.status(200).render('shop', { products: productsWithOffer, categories });
     } catch (err) {
-      console.log(err);
+        console.error(err);
+        res.status(500).send("Server error");
     }
-  },
+},
+
   
   
 

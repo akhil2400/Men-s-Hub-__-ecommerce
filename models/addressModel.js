@@ -10,6 +10,8 @@ const addressSchema = new mongoose.Schema({
   state: { type: String, required: true },
   country: { type: String, required: true },
   pinCode: { type: String, required: true },
-});
+  mobileNumber: { type: String, required: true },
+  isDeleted: { type: Boolean, default: false },
+},{timestamps:true});
 
 module.exports = mongoose.model("Address", addressSchema)

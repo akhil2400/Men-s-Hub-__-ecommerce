@@ -66,6 +66,8 @@
           <p id="CountryError" style="color: red; font-size: 14px; margin-top: 5px;" ></p>
           <input type="text" name="" id="pinCode" placeholder="Pin Code">
           <p id="pinCodeError" style="color: red; font-size: 14px; margin-top: 5px;" ></p>
+          <input type="text" name="" id="mobileNumber" placeholder="Mobile Number">
+          <p id="mobileNumberError" style="color: red; font-size: 14px; margin-top: 5px;" ></p>
           <button class="add-address">Create</button>
         </form>
         <% address.forEach(data=>{ %>
@@ -79,6 +81,7 @@
               <p>State: <%= data.state %></p>
               <p>Country: <%= data.country %></p>
               <p>Pin Code: <%= data.pinCode %></p>
+              <p>Mobile Number: <%= data.mobileNumber %></p>
             </div>
             <div>
               <button class="edit-address" data-id="<%= data._id %>" >EDIT</button>
@@ -101,6 +104,8 @@
               <p class="ECountryError" style="color: red; font-size: 14px; margin-top: 5px;" ></p>
               <input type="text" name="" class="EpinCode" value="<%= data.pinCode %>" placeholder="Pin Code">
               <p class="EpinCodeError" style="color: red; font-size: 14px; margin-top: 5px;" ></p>
+              <input type="number" name="" class="EmobileNumber" value="<%= data.mobileNumber %>" placeholder="MobileNumber">
+              <p class="EmobileNumberError" style="color: red; font-size: 14px; margin-top: 5px;" ></p>
               <button type="submit" class="edit-address-btn">Save</button>
             </form>
           </div>
@@ -115,8 +120,6 @@
     <!-- Fix the script path -->
     <script src="js/users/myAddress.js"></script>
 
-    <script>
-      
-    </script>
+  
   </body>
 </html>

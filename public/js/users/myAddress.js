@@ -19,6 +19,7 @@ function addressFormValidation(e) {
   document.getElementById("stateError").innerText = "";
   document.getElementById("CountryError").innerText = "";
   document.getElementById("pinCodeError").innerText = "";
+  document.getElementById("mobileNumberError").innerText = "";
 
   // Get input values
   const houseNumber = document.getElementById("houseNumber").value.trim();
@@ -29,6 +30,7 @@ function addressFormValidation(e) {
   const state = document.getElementById("state").value.trim();
   const country = document.getElementById("Country").value.trim();
   const pinCode = document.getElementById("pinCode").value.trim();
+  const mobileNumber = document.getElementById("mobileNumber").value.trim();
 
   let valid = true;
 
@@ -41,6 +43,7 @@ function addressFormValidation(e) {
   const statePattern = /^[a-zA-Z\s]+$/; // Letters and spaces
   const countryPattern = /^[a-zA-Z\s]+$/; // Letters and spaces
   const pinCodePattern = /^\d{6}$/; // Exactly 6 digits
+  const mobileNumberPattern = /^\d{10}$/; // Exactly 10 digits
 
   // Check for empty fields and display sweetalert for missing fields
   if (!houseNumber || !street || !city || !landmark || !district || !state || !country || !pinCode) {
@@ -117,6 +120,13 @@ function addressFormValidation(e) {
     valid = false;
     setTimeout(() => (error.innerText = ""), 16000);
   }
+  // Phone Number validation
+  if (!mobileNumberPattern.test(mobileNumber)) {
+    const error = document.getElementById("mobileNumberError");
+    error.innerText = "Mobile Number must be exactly 10 digits.";
+    valid = false;
+    setTimeout(() => (error.innerText = ""), 16000);
+  }
 
   // Submit form if valid
   if (valid) {
@@ -138,7 +148,8 @@ function addressFormValidation(e) {
             district: district,
             state: state,
             country: country,
-            pinCode: pinCode
+            pinCode: pinCode,
+            mobileNumber: mobileNumber
           })
         });
         const data = await response.json();
@@ -167,6 +178,10 @@ function addressFormValidation(e) {
           } else if (data.type === "pinCode") {
             document.getElementById('pinCodeError').innerText = data.msg;
             setTimeout(() => (document.getElementById('pinCodeError').innerText = ""), 16000);
+          }
+          else if (data.type === "mobileNumber") {
+            document.getElementById('mobileNumberError').innerText = data.msg;
+            setTimeout(() => (document.getElementById('mobileNumberError').innerText = ""), 16000);
           }
         } else {
           swal.fire("Address Added Successfully");
@@ -214,6 +229,7 @@ editAddressBtns.forEach((btn) => {
       addressBox.querySelector(".Estate").value = data.state;
       addressBox.querySelector(".ECountry").value = data.country;
       addressBox.querySelector(".EpinCode").value = data.pinCode;
+      addressBox.querySelector(".EmobileNumber").value = data.mobileNumber;
     } catch (error) {
       console.error("Error fetching address data:", error);
     }
@@ -234,7 +250,8 @@ document.querySelectorAll('.edit-address-form').forEach(form => {
       district: form.querySelector(".Edistrict").value,
       state: form.querySelector(".Estate").value,
       country: form.querySelector(".ECountry").value,
-      pinCode: form.querySelector(".EpinCode").value
+      pinCode: form.querySelector(".EpinCode").value,
+      mobileNumber: form.querySelector(".EmobileNumber").value
     };
 
     // Validation function
@@ -255,6 +272,7 @@ document.querySelectorAll('.edit-address-form').forEach(form => {
       const Estate = form.querySelector(".Estate").value.trim();
       const Ecountry = form.querySelector(".ECountry").value.trim();
       const EpinCode = form.querySelector(".EpinCode").value.trim();
+      const EmobileNumber = form.querySelector(".EmobileNumber").value.trim();
 
       let valid = true;
 
@@ -267,6 +285,7 @@ document.querySelectorAll('.edit-address-form').forEach(form => {
       const EstatePattern = /^[a-zA-Z\s]+$/; // Letters and spaces
       const EcountryPattern = /^[a-zA-Z\s]+$/; // Letters and spaces
       const EpinCodePattern = /^\d{6}$/; // Exactly 6 digits
+      const EmobileNumberPattern = /^\d{10}$/; // Exactly 10 digits
 
       // Check for empty fields and regex validation
       if (!EhouseNumber || !Estreet || !Ecity || !Elandmark || !Edistrict || !Estate || !Ecountry || !EpinCode) {
@@ -311,6 +330,10 @@ document.querySelectorAll('.edit-address-form').forEach(form => {
         document.querySelector(".EpinCodeError").innerText = "Invalid pin code. Only 6 digits are allowed.";
         valid = false;
       }
+      if (!EmobileNumberPattern.test(EmobileNumber)) {
+        document.querySelector(".EmobileNumberError").innerText = "Invalid mobile number. Only 10 digits are allowed.";
+        valid = false;
+      }
 
       if (valid) {
         // Proceed with updating address if validation passes
@@ -349,5 +372,59 @@ document.querySelectorAll('.edit-address-form').forEach(form => {
 
 
     editaddressFormValidation(e);
+  });
+});
+
+
+// delete
+document.addEventListener('DOMContentLoaded', function () {
+  // Handle Remove Address button click
+  document.querySelectorAll('.remove-address').forEach(button => {
+    button.addEventListener('click', async function () {
+      const addressId = this.closest('.address-box').getAttribute('data-id');
+
+      // Confirmation popup
+      const result = await swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you want to remove this address?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, remove it!',
+      });
+
+      if (result.isConfirmed) {
+        try {
+          // Send request to backend
+          const response = await fetch(`/my-address/${addressId}`, {
+            method: 'DELETE',
+          });
+
+          const data = await response.json();
+          if (data.success) {
+            // Remove the address from the frontend
+            const addressBox = document.querySelector(`.address-box[data-id="${addressId}"]`);
+            addressBox.remove();
+
+            swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Address removed successfully",
+              showConfirmButton: false,
+              timer: 1500
+          })
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+          } else {
+            Swal.fire('Error', data.message, 'error');
+          }
+        } catch (error) {
+          console.error('Error removing address:', error);
+          Swal.fire('Error', 'Failed to remove the address.', 'error');
+        }
+      }
+    });
   });
 });

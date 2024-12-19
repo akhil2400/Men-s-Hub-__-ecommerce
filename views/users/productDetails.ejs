@@ -9,37 +9,23 @@
       <%= product.name %> - Product Details
     </title>
     <% } else { %>
-      <title>Product Not Found</title>
-      <% } %>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-          integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link href="/css/tiny-slider.css" rel="stylesheet" />
-        <link rel="stylesheet" href="/css/pdtDetails.css" />
-        <link rel="stylesheet" href="/css/style.css" />
-        <link href="/css/bootstrap.min.css" rel="stylesheet" />
-        <style>
-          .wishlist-icon {
-            font-size: 24px;
-            color: gray;
-            cursor: pointer;
-            transition: color 0.3s;
-          }
+    <title>Product Not Found</title>
+    <% } %>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link href="/css/tiny-slider.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/pdtDetails.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+  </head>
 
-          .wishlist-icon.fa-solid {
-            color: red;
-            /* Highlight filled heart as red */
-          }
-
-          .wishlist-icon:hover {
-            color: #d9534f;
-            /* Slightly brighter red on hover */
-          }
-        </style>
-</head>
-
-<body>
-  <%- include("./layouts/header.ejs") %>
+  <body>
+    <%- include("./layouts/header.ejs") %>
     <nav aria-label="breadcrumb" class="mb-4">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -53,20 +39,29 @@
 
     <div class="container mt-5 product-detail-container">
       <% if (product) { %>
-        <div class="row">
-          <!-- Left: Main Product Image and Thumbnails -->
-          <div class="col-md-6 product-images">
-            <div class="main-image mb-3" id="mainImageContainer">
-              <img id="mainImage" src="/<%= product?.images[0] %>" class="img-fluid" alt="<%= product.name %>" />
-              <div class="zoom-circle" id="zoomCircle"></div>
-              <!-- Zoom circle -->
-            </div>
-            <div class="thumbnail-images d-flex">
-              <% product.images.forEach((image, index)=> { %>
-                <img src="/<%= image %>" class="thumbnail img-thumbnail" alt="<%= product.name %>" />
-                <% }) %>
-            </div>
+      <div class="row">
+        <!-- Left: Main Product Image and Thumbnails -->
+        <div class="col-md-6 product-images">
+          <div class="main-image mb-3" id="mainImageContainer">
+            <img
+              id="mainImage"
+              src="/<%= product?.images[0] %>"
+              class="img-fluid"
+              alt="<%= product.name %>"
+            />
+            <div class="zoom-circle" id="zoomCircle"></div>
+            <!-- Zoom circle -->
           </div>
+          <div class="thumbnail-images d-flex">
+            <% product.images.forEach((image, index)=> { %>
+            <img
+              src="/<%= image %>"
+              class="thumbnail img-thumbnail"
+              alt="<%= product.name %>"
+            />
+            <% }) %>
+          </div>
+        </div>
 
           <!-- Right: Product Details -->
           <div class="col-md-6 product-info">
@@ -86,44 +81,40 @@
               <%= product.description %>
             </p>
 
-            <ul class="features">
-              <li>
-                <%= product.warranty%>
-              </li>
-              <li>
-                <%= product. returnPolicy%>
-              </li>
-              <li>
-                Cash On Delivery: <% if (product.cashOnDelivery===true) { %>Available<% } else { %>Not Available<% } %>
-              </li>
-            </ul>
+          <ul class="features">
+            <li><%= product.warranty%></li>
+            <li><%= product. returnPolicy%></li>
+            <li>
+              Cash On Delivery: <% if (product.cashOnDelivery===true) {
+              %>Available<% } else { %>Not Available<% } %>
+            </li>
+          </ul>
 
-            <!-- Color and Size Options -->
-            <div class="options mt-4">
-              <div class="color-options mb-3">
-                <label>Color:</label>
-                <% product.colors.forEach(color=> { %>
-                  <button class="color-option" style="background-color: '<%= color %>'"></button>
-                  <% }) %>
-              </div>
-              <div class="size-options mb-3">
-                <label>Size:</label>
-                <% product.sizes.forEach(size=> { %>
-                  <label class="size-option"><input class="size-selection" type="radio" name="size"
-                      value="<%= size %>" />
-                    <%= size %>
-                  </label>
-                  <% }) %>
-              </div>
+          <!-- Color and Size Options -->
+          <div class="options mt-4">
+            
+            <div class="size-options mb-3">
+              <label>Size:</label>
+              <% product.sizes.forEach(size=> { %>
+              <label class="size-option"
+                ><input
+                  class="size-selection"
+                  type="radio"
+                  name="size"
+                  value="<%= size %>"
+                />
+                <%= size %>
+              </label>
+              <% }) %>
             </div>
-            <div>
-              <% if(product.stock> 0) { %>
-                <p style="color: green">In Stock: <%= product.stock %>
-                </p>
-                <% } else { %>
-                  <p style="color: red">Out of Stock</p>
-                  <% } %>
-            </div>
+          </div>
+          <div>
+            <% if(product.stock> 0) { %>
+            <p style="color: green">In Stock: <%= product.stock %></p>
+            <% } else { %>
+            <p style="color: red">Out of Stock</p>
+            <% } %>
+          </div>
 
             <div class="wrap-num-product flex-w m-r-20 m-tb-10">
               <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m" onclick="decreaseQuantity()">
@@ -150,16 +141,20 @@
                 Add to Cart
               </button>
 
-              <button class="btn btn-warning">Buy Now</button>
-              <!-- Wishlist Icon -->
-              <i class="wishlist-icon fa-regular fa-heart" data-id="<%= product._id %>" data-name="<%= product.name %>"
-                data-price="<%= product.offerPrice || product.price %>" data-image="/<%= product.images[0] %>"></i>
-
-
-
-            </div>
+            <button class="btn btn-warning">Buy Now</button>
+            
+              <img
+                class="heart-icon"
+                src="/images/img/wishicon/icons8-heart-64.png"
+                alt=""
+                data-id="<%= product._id %>"
+                data-name="<%= product.name %>"
+                data-price="<%= product.offerPrice %>"
+                onclick="toggleWishlist(this)"
+            />
           </div>
         </div>
+      </div>
 
         <!-- Reviews and Related Products -->
         <div class="row mt-5">
@@ -189,6 +184,66 @@
           <% } %>
     </div>
     <%- include("./layouts/footer.ejs") %>
+
+    <script>
+      async function toggleWishlist(icon) {
+        try {
+          const productId = icon.getAttribute("data-id");
+          const productName = icon.getAttribute("data-name");
+          const productPrice = icon.getAttribute("data-price");
+
+          const response = await fetch("/addToWishlist", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              productId: productId,
+              productName: productName,
+              productPrice: productPrice,
+            }),
+          });
+
+          const data = await response.json();
+
+          if (response.status === 400 || response.status === 500) {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: data.message || "Something went wrong!",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          } else if (response.status === 201) {
+            Swal.fire({
+              icon: "success",
+              title: "Product added to wishlist!",
+              text: "Your item has been added successfully.",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Unexpected Error",
+              text: "An unexpected error occurred. Please try again.",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          }
+        } catch (error) {
+          console.error("Error adding product to wishlist:", error);
+
+          Swal.fire({
+            icon: "error",
+            title: "Something went wrong!",
+            text: "Please try again later.",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+      }
+    </script>
 
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
       <script src="/js/jquery.min.js"></script>

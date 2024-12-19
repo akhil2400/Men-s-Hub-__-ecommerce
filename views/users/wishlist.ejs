@@ -1,155 +1,303 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="author" content="Untree.co">
-  <link rel="shortcut icon" href="favicon.png">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="author" content="Untree.co" />
+  <link rel="shortcut icon" href="favicon.png" />
   <meta name="description" content="" />
   <meta name="keywords" content="bootstrap, bootstrap4" />
 
   <!-- Bootstrap CSS -->
-  <link href="css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link href="css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
   <link href="/css/tiny-slider.css" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/wishlist.css">
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/wishlist.css" />
   <title>Your Wishlist</title>
 </head>
+<style>
+  .add-to-cart-btn {
+    background-color: #3b9638;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+  }
+
+  .add-to-cart-btn:hover {
+    background-color: #58c454;
+  }
+</style>
 
 <body>
-
   <%- include("./layouts/header.ejs") %>
 
-  <nav aria-label="breadcrumb" class="mb-4">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="/home" class="d-flex align-items-center"><span
-            style="color: rgb(27, 94, 27);">Home</span></a></li>
-      <li class="breadcrumb-item active" aria-current="page">Wishlist</li>
-    </ol>
-  </nav>
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="/home" class="d-flex align-items-center"><span style="color: rgb(27, 94, 27)">Home</span></a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Wishlist</li>
+      </ol>
+    </nav>
 
-  <!-- Start Hero Section -->
-  <div class="hero">
-    <div class="container">
-      <div class="row justify-content-between">
-        <div class="col-lg-5">
-          <div class="intro-excerpt">
-            <h1>Your Wishlist</h1>
+    <!-- Start Hero Section -->
+    <div class="hero">
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col-lg-5">
+            <div class="intro-excerpt">
+              <h1>Your Wishlist</h1>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- End Hero Section -->
+    <!-- End Hero Section -->
 
-  <div class="untree_co-section before-footer-section">
-    <div class="container">
-      <div class="row mb-5">
-        <div class="col-md-12">
-          <div class="site-blocks-table">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th class="product-thumbnail">Image</th>
-                  <th class="product-name">Product</th>
-                  <th class="product-price">Price</th>
-                  <th class="product-action">Action</th>
-                  <th class="product-remove">Remove</th>
-                </tr>
-              </thead>
-              <tbody id="wishlistItems">
-                <% if (wishlistItems.length === 0) { %>
+    <div class="untree_co-section before-footer-section">
+      <div class="container">
+        <div class="row mb-5">
+          <div class="col-md-12">
+            <div class="site-blocks-table">
+              <table class="table">
+                <thead>
                   <tr>
-                    <td colspan="4" class="text-center">Your wishlist is empty. Start adding products!</td>
+                    <th class="product-thumbnail">Image</th>
+                    <th class="product-name">Product</th>
+                    <th class="product-price">Price</th>
+                    <th class="product-action">Action</th>
+                    <th class="product-remove">Remove</th>
                   </tr>
-                <% } else { %>
-                  <% wishlistItems.forEach(item => { %>
+                </thead>
+                <tbody id="wishlistItems">
+                  <% if (wishlistItems.length===0) { %>
                     <tr>
-                      <td class="product-thumbnail">
-                        <img src="<%= item.image %>" alt="<%= item.name %>" class="img-fluid" />
-                      </td>
-                      <td class="product-name">
-                        <h2 class="h5 text-black"><%= item.name %></h2>
-                      </td>
-                      <td class="product-price">
-                        ₹<%= item.price %>
-                      </td>
-                      <td class="product-action">
-                        <a href="/productDetails/<%= item.productId %>" class="addcartbtn">Add to cart</a>
-                      </td>
-                      <td>
-                        <button class="btn btn-danger remove-wishlist-btn" data-id="<%= item._id %>">
-                          <i class="fa-solid fa-trash"></i> Remove
-                        </button>
+                      <td colspan="4" class="text-center">
+                        Your wishlist is empty. Start adding products!
                       </td>
                     </tr>
-                  <% }); %>
-                <% } %>
-              </tbody>
-            </table>
+                    <% } else { %>
+                      <% wishlistItems.forEach(item=> { %>
+                        <tr>
+                          <td class="product-thumbnail">
+                            <img src="<%= item.wishlistImage  %>" alt="Product image" class="img-fluid" />
+                          </td>
+                          <td class="product-name">
+                            <h2 class="h5 text-black">
+                              <%= item.productName %>
+                            </h2>
+                          </td>
+                          <td class="product-price">₹<%= item.productPrice %>
+                          </td>
+                          <p>HIII <%= item.productPrice %></p>
+                          <td class="product-action">
+                            <button class="add-to-cart-btn" data-price="<%= item.productPrice %>" data-id="<%= item.productId %>">
+                              Add to Cart
+                            </button>
+                          </td>
+                          <td>
+                            <button class="btn btn-danger remove-wishlist-btn" data-id="<%= item._id %>">
+                              <i class="fa-solid fa-trash"></i> Remove
+                            </button>
+                          </td>
+                        </tr>
+                        <% }); %>
+                          <% } %>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-    
-    
+
     <%- include("./layouts/footer.ejs") %>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const removeButtons = document.querySelectorAll(".remove-wishlist-btn");
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <!-- remove from wishlist -->
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          const removeButtons = document.querySelectorAll(".remove-wishlist-btn");
 
-      removeButtons.forEach(button => {
-        button.addEventListener("click", async (e) => {
-          const productId = e.target.dataset.id;
+          removeButtons.forEach((button) => {
+            button.addEventListener("click", async (e) => {
+              const productId = e.target.dataset.id;
 
-          // SweetAlert confirmation
-          const result = await Swal.fire({
-            title: "Are you sure?",
-            text: "This will remove the product from your wishlist.",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#d33",
-            cancelButtonColor: "#3085d6",
-            confirmButtonText: "Yes, remove it!"
-          });
-
-          // If the user confirms, remove the item
-          if (result.isConfirmed) {
-            try {
-              // Fetch the endpoint to remove the product from wishlist
-              const response = await fetch(`/removeFromWishlist/${productId}`, {
-                method: "DELETE"
+              // SweetAlert confirmation
+              const result = await Swal.fire({
+                title: "Are you sure?",
+                text: "This will remove the product from your wishlist.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Yes, remove it!",
               });
 
-              // Parse the response
-              const data = await response.json();
+              // If the user confirms, remove the item
+              if (result.isConfirmed) {
+                try {
+                  // Fetch the endpoint to remove the product from wishlist
+                  const response = await fetch(
+                    `/removeFromWishlist/${productId}`,
+                    {
+                      method: "DELETE",
+                    }
+                  );
 
-              if (data.success) {
-                // Show success message and reload the page
-                await Swal.fire("Removed!", "The product has been removed from your wishlist.", "success");
-                location.reload();
-              } else {
-                // Show error message if the operation failed
-                await Swal.fire("Error!", "Something went wrong. Please try again.", "error");
+                  // Parse the response
+                  const data = await response.json();
+
+                  if (data.success) {
+                    // Show success message and reload the page
+                    await Swal.fire(
+                      "Removed!",
+                      "The product has been removed from your wishlist.",
+                      "success"
+                    );
+                    location.reload();
+                  } else {
+                    // Show error message if the operation failed
+                    await Swal.fire({
+                      text:result.message
+                  });
+                  }
+                } catch (error) {
+                  // Handle any errors that occur during the fetch operation
+                  await Swal.fire(
+                    "Error!",
+                    "An error occurred while removing the item. Please try again.",
+                    "error"
+                  );
+                }
               }
-            } catch (error) {
-              // Handle any errors that occur during the fetch operation
-              await Swal.fire("Error!", "An error occurred while removing the item. Please try again.", "error");
-            }
-          }
+            });
+          });
         });
+      </script>
+
+      <!-- add- to cart button -->
+      <!-- <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          const addToCartButtons = document.querySelectorAll(".add-to-cart-btn");
+
+          addToCartButtons.forEach((button) => {
+            button.addEventListener("click", async (e) => {
+              const productId = JSON.parse(e.target.dataset.id);
+              const proid=productId._id
+              console.log(productId)
+              console.log(proid)
+              if (!productId) {
+                Swal.fire("Error!", "Product ID is missing.", "error");
+                return;
+              }
+              try {
+                // Make the POST request
+                const response = await fetch(`/addToCartFromWishlist/${productId}`, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                });
+
+                // Check if response status is OK (200-299)
+                const data = await response.json();
+
+                console.log("Response Data:", data); // Log the response data for debugging
+
+                if (response.ok) {
+                  // Success case
+                  if (data.success) {
+                    Swal.fire(
+                      "Success!",
+                      "Product added to cart and removed from wishlist.",
+                      "success"
+                    );
+                    location.reload(); // Reload page to update wishlist
+                  } else {
+                    // Error case with the message from the backend
+                    Swal.fire(
+                      "Error!",
+                      data.message || "Unable to add product to cart.",
+                      "error"
+                    );
+                  }
+                } else {
+                  // In case of a non-200 response (like 500, 404, etc.)
+                  console.error("Server Error:", data); // Log the error data for more insight
+                  Swal.fire("Error!", "An error occurred. Please try again.", "error");
+                }
+              } catch (error) {
+                console.error("Error:", error); 
+                // Swal.fire("Error!", "An error occurred. Please try again.", "error");
+              }
+
+
+            });
+          });
+        });
+      </script> -->
+       <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const addToCartButtons = document.querySelectorAll(".add-to-cart-btn");
+
+    addToCartButtons.forEach((button) => {
+      button.addEventListener("click", async (e) => {
+        const productId = e.target.getAttribute("data-id");
+        console.log(productId)
+        const productSize = "M"; // You can modify this as per your UI for size
+        const color = "blue"; // Modify based on the selected color
+        const quantity = 1; // Set default quantity to 1
+        const productPrice = parseFloat(e.target.getAttribute("data-price")); // Get price from dataset
+        const total = productPrice * quantity; // Calculate the total price
+
+        try {
+          // Send data to the server to add to cart
+          const response = await fetch(`/wishlist/addToCart/${productId}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              productId,
+              quantity,
+              productSize,
+              color,
+              price: productPrice,
+              total,
+            }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Product added to cart!",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            location.reload(); // Reload the page to update the cart
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: data.message || "Something went wrong.",
+            });
+          }
+        } catch (err) {
+          console.error(err);
+          Swal.fire("Error!", "An error occurred. Please try again.", "error");
+        }
       });
     });
-  </script>
+  });
+</script>
 
-  <script src="js/bootstrap.bundle.min.js"></script>
-  <script src="js/tiny-slider.js"></script>
-  <script src="js/custom.js"></script>
-
+      <script src="js/bootstrap.bundle.min.js"></script>
+      <script src="js/tiny-slider.js"></script>
+      <script src="js/custom.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Admin Panel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+  <!-- Layout styles -->
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+
+<body>
+  <div class="container-scroller">
+    <!-- partial:partials/_sidebar.html -->
+    <nav class="sidebar sidebar-offcanvas" id="sidebar">
+      <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
+        <a class="sidebar-brand brand-logo" href="index.html">MEN'S HUB </a>
+        <a class="sidebar-brand brand-logo-mini" href="index.html"><img src="/images/logo-mini.svg" alt="logo" /></a>
+        <a href="/home"><img style="width: 30px;height: 30px;" src="/images/img/home-logo/home2.png" alt="To home"></a>
+
+      </div>
+      <ul class="nav">
+        <li class="nav-item menu-items forme">
+          <a class="nav-link" href="/admin/dashboard">
+            <span class="menu-title">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items">
+          <a class="nav-link" href="/admin/usermanagement">
+            <span class="menu-title">User Management</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items">
+          <a class="nav-link" href="/admin/products">
+            <span class="menu-title">Products Management</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items">
+          <a class="nav-link" href="/admin/ordermanagement">
+            <span class="menu-title">Order Management</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items ">
+          <a class="nav-link" href="/admin/categorymanagement">
+            <span class="menu-title">Category Management</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items">
+          <a class="nav-link" href="/admin/couponmanagement">
+            <span class="menu-title">Coupen Management</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items">
+          <a class="nav-link" href="/admin/offermanagement">
+            <span class="menu-title">Offer Management</span>
+          </a>
+        </li>
+        <li class="nav-item menu-items ">
+          <a class="nav-link" href="/admin/salesReport">
+            <span class="menu-title">sales Report</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_navbar.html -->
+      <nav class="navbar p-0 fixed-top d-flex flex-row">
+        <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
+          <a class="navbar-brand brand-logo-mini" href="index.html"><img src="assets/images/logo-mini.svg"
+              alt="logo" /></a>
+        </div>
+        <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
+          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="mdi mdi-menu"></span>
+          </button>
+          <ul class="navbar-nav w-100">
+            <li class="nav-item w-100"></li>
+          </ul>
+          <ul class="navbar-nav navbar-nav-right">
+            <li class="nav-item nav-settings d-none d-lg-block">
+              <a class="nav-link" href="#">
+                <i class="mdi mdi-view-grid"></i>
+              </a>
+            </li>
+            <li class="nav-item dropdown border-left">
+              <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#" data-toggle="dropdown"
+                aria-expanded="false">
+                <i class="mdi mdi-email"></i>
+                <span class="count bg-success"></span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                aria-labelledby="messageDropdown">
+                <h6 class="p-3 mb-0">Messages</h6>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <img src="assets/images/faces/face4.jpg" alt="image" class="rounded-circle profile-pic" />
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject ellipsis mb-1">
+                      Mark send you a message
+                    </p>
+                    <p class="text-muted mb-0">1 Minutes ago</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <img src="assets/images/faces/face2.jpg" alt="image" class="rounded-circle profile-pic" />
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject ellipsis mb-1">
+                      Cregh send you a message
+                    </p>
+                    <p class="text-muted mb-0">15 Minutes ago</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <img src="assets/images/faces/face3.jpg" alt="image" class="rounded-circle profile-pic" />
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject ellipsis mb-1">
+                      Profile picture updated
+                    </p>
+                    <p class="text-muted mb-0">18 Minutes ago</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <p class="p-3 mb-0 text-center">4 new messages</p>
+              </div>
+            </li>
+            <li class="nav-item dropdown border-left">
+              <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
+                data-toggle="dropdown">
+                <i class="mdi mdi-bell"></i>
+                <span class="count bg-danger"></span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                aria-labelledby="notificationDropdown">
+                <h6 class="p-3 mb-0">Notifications</h6>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-dark rounded-circle">
+                      <i class="mdi mdi-calendar text-success"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject mb-1">Event today</p>
+                    <p class="text-muted ellipsis mb-0">
+                      Just a reminder that you have an event today
+                    </p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-dark rounded-circle">
+                      <i class="mdi mdi-settings text-danger"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject mb-1">Settings</p>
+                    <p class="text-muted ellipsis mb-0">Update dashboard</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-dark rounded-circle">
+                      <i class="mdi mdi-link-variant text-warning"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject mb-1">Launch Admin</p>
+                    <p class="text-muted ellipsis mb-0">New admin wow!</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <p class="p-3 mb-0 text-center">See all notifications</p>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                aria-labelledby="profileDropdown">
+                <h6 class="p-3 mb-0">Profile</h6>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-dark rounded-circle">
+                      <i class="mdi mdi-settings text-success"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject mb-1">Settings</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-dark rounded-circle">
+                      <i class="mdi mdi-logout text-danger"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject mb-1">Log out</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <p class="p-3 mb-0 text-center">Advanced settings</p>
+              </div>
+            </li>
+          </ul>
+          <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+            data-toggle="offcanvas">
+            <span class="mdi mdi-format-line-spacing"></span>
+          </button>
+        </div>
+      </nav>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+              <div class="card corona-gradient-card"></div>
+            </div>
+          </div>
+          <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h1 class="card-title text-center mb-4">WELCOME TO DASHBOARD</h1>
+                  <div class="text-center">
+                    <a href="/admin/salesReport"><button class="btn btn-primary">View Sales Report</button></a>
+                  </div>
+                </div>
+                <div id="error-msg" class="error text-danger text-center mt-3"></div>
+              </div>
+            </div>
+          </div>
+          <div class="dashboardData">
+            <div class="row">
+              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0">3002</h3>
+                        </div>
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">Totel Users</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0">266</h3>
+                        </div>
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">
+                      Totel Products
+                    </h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0">66</h3>
+                        </div>
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">
+                      Totel Orders
+                    </h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0">277</h3>
+                        </div>
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">
+                      Weekly Sales
+                    </h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card">
+                  <div class="card-body">
+                    <div>
+                      <h3>Top-Selling Products</h3>
+                      <canvas id="topSellingChart"></canvas>
+                    </div>
+                    <div>
+                      <h3>Top-Selling Categories</h3>
+                      <canvas id="topSellingCategoriesChart"></canvas>
+                    </div>
+                    <div>
+                      <h3>Top-Selling Brands</h3>
+                      <canvas id="topSellingBrandsChart"></canvas>
+                    </div>
+                    <div>
+                      <h3>Site visitors</h3>
+                      <canvas id="lineChartWithDots"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+  // Event listeners for the filter buttons
+  const filterButtons = document.querySelectorAll('.btnDateRange');
+  const reportTable = document.getElementById('salesReportTable');
+  const errorMsg = document.getElementById('error-msg');
+  const customDateInputs = document.getElementById('customDateInputs');
+  const startDateInput = document.getElementById('start-date');
+  const endDateInput = document.getElementById('end-date');
+  
+  // Sample data for testing
+  const sampleData = {
+    daily: [
+      { product: 'Product 1', quantitySold: 10, totalSales: '$100', date: '2024-12-15' },
+      { product: 'Product 2', quantitySold: 5, totalSales: '$50', date: '2024-12-15' }
+    ],
+    weekly: [
+      { product: 'Product 1', quantitySold: 50, totalSales: '$500', date: '2024-12-10' },
+      { product: 'Product 2', quantitySold: 30, totalSales: '$300', date: '2024-12-12' }
+    ],
+    monthly: [
+      { product: 'Product 1', quantitySold: 200, totalSales: '$2000', date: '2024-12-01' },
+      { product: 'Product 2', quantitySold: 150, totalSales: '$1500', date: '2024-12-05' }
+    ]
+  };
+
+  // Function to show/hide the table
+  function showReportTable(data) {
+    if (data.length === 0) {
+      errorMsg.textContent = 'No data available for this period.';
+      reportTable.style.display = 'none';
+    } else {
+      errorMsg.textContent = '';
+      reportTable.style.display = 'block';
+      const tbody = reportTable.querySelector('tbody');
+      tbody.innerHTML = ''; // Clear previous rows
+
+      // Populate table rows dynamically
+      data.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.product}</td>
+          <td>${item.quantitySold}</td>
+          <td>${item.totalSales}</td>
+          <td>${item.date}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+  }
+
+  // Event listener for filter buttons
+  filterButtons.forEach(button => {
+    button.addEventListener('click', function () {
+      const range = this.getAttribute('data-range');
+      
+      if (range === 'custom') {
+        customDateInputs.style.display = 'block';
+      } else {
+        customDateInputs.style.display = 'none';
+        let data = [];
+
+        // Select the appropriate data based on range
+        if (range === 'daily') {
+          data = sampleData.daily;
+        } else if (range === 'weekly') {
+          data = sampleData.weekly;
+        } else if (range === 'monthly') {
+          data = sampleData.monthly;
+        }
+
+        // Display the report table
+        showReportTable(data);
+      }
+    });
+  });
+
+  // Handle custom date range selection
+  document.getElementById('viewReportBtn').addEventListener('click', function () {
+    const startDate = startDateInput.value;
+    const endDate = endDateInput.value;
+
+    // Validate custom date inputs
+    if (!startDate || !endDate) {
+      errorMsg.textContent = 'Please select both start and end dates.';
+      reportTable.style.display = 'none';
+      return;
+    }
+
+    // Filter data for custom date range
+    const customData = sampleData.monthly.filter(item => {
+      const itemDate = new Date(item.date);
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      return itemDate >= start && itemDate <= end;
+    });
+
+    // Display the report table
+    showReportTable(customData);
+  });
+});
+
+    </script>
+  
+
+    <script src="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom js for this page -->
+    <script src="/js/admin/dashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-map"></script>
+    <!-- End custom js for this page -->
+
+    
+
+
+  </body>
+
+</html>

@@ -11,9 +11,7 @@ const userSchema = new mongoose.Schema({
   isDeleted: { type: Boolean, default: false },
   isGoogleLogin: { type: Boolean, default: false },
   googleId: { type: String },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default:Date.now},
-});
+},{timestamps:true});
 
 
 module.exports = mongoose.model('User', userSchema);

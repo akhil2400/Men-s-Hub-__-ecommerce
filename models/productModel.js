@@ -5,17 +5,20 @@ const productSchema = new mongoose.Schema({
   description: { type: String, required: true },
   price: { type: Number, required: true },
   offerPrice: { type: Number },
+  previousOfferPrice: { type: Number }, // New field to store old offer price
+  offerPercentage: { type: Number },   // New field to store discount percentage
   stock: { type: Number, default: 0 },
   images: [{ type: String }],
   tags: [{ type: String }],
   sizes: [{ type: String }],
   colors: [{ type: String }],
-  category:{type:mongoose.Schema.ObjectId,ref:'Category'},
+  category: { type: mongoose.Schema.ObjectId, ref: 'Category' },
   brand: { type: String },
-  cashOnDelivery: { type:Boolean },
-  warranty: { type:String },
-  returnPolicy: { type:String },
+  cashOnDelivery: { type: Boolean },
+  warranty: { type: String },
+  returnPolicy: { type: String },
   rating: { type: Number, default: 0 },
+  returnReason: { type: String, default: null },
   reviews: [
     {
       user: { type: mongoose.Schema.Types.ObjectId, ref: "Users" },
@@ -24,8 +27,7 @@ const productSchema = new mongoose.Schema({
     },
   ],
   isDeleted: { type: Boolean, default: false },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-});
+},{timestamps:true});
+const Product = mongoose.model('Product', productSchema);
 
-module.exports = mongoose.model('Products',productSchema);
+module.exports = Product;

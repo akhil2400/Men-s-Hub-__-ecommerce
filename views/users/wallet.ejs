@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="author" content="Untree.co" />
+    <link rel="shortcut icon" href="favicon.png" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="bootstrap, bootstrap4" />
+
+    <!-- Bootstrap CSS and Font Awesome -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Marmelad&display=swap" rel="stylesheet">
+    <link href="/css/tiny-slider.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/dash.css">
+    <link rel="stylesheet" href="/css/wallet.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+      .errormessagedash {
+        color: red;
+        font-size: 14px;
+        margin-top: 5px;
+      }
+    </style>
+
+  </head>
+  <body>
+    <%- include("./layouts/header.ejs") %>
+    <div class="containerdac">
+      <div class="sidebar">
+        <ul>
+          <li><a href="/dashboard"><i class="fa-solid fa-user" style="color: #000000;"></i><span style="margin-left: 3px;">Dashboard</span></a></li>
+          <li><a href="/orders"><i class="fa-solid fa-briefcase" style="color: #000000;"></i><span style="margin-left: 3px;">Orders</span></a></li>
+          <li><a href="/my-address"><i class="fa-solid fa-location-dot" style="color: #000000;"></i><span style="margin-left: 3px;">My Address</span></a></li>
+          <% if(user.isGoogleLogin === false) { %>
+          <li><a href="/change-password"><i class="fa-solid fa-key" style="color: #000000;"></i><span style="margin-left: 3px;">Change Password</span></a></li>
+          <% } %>
+          <li><a class="sdashbord" href="/wallet"><i class="fa-solid fa-wallet" style="color: #ffffff;"></i><span style="margin-left: 3px;color: #ffffff;">Wallet</span></a></li>
+          <li><a href="/logout"><i class="fa-solid fa-arrow-right-from-bracket" style="color: #000000;"></i><span style="margin-left: 3px;">Logout</span></a></li>
+        </ul>
+      </div>
+      <div class="content">
+        <div class="dash-box">
+          <p style="color: #000000; font-weight: bold;">Wallet</p>
+        </div>
+        <!-- Wallet Section -->
+        <br>
+        <div class="section" id="wallet">
+          <div class="wallet-card">
+            <div class="wallet-holder"><%= walletData.holderName %></div>
+            <div class="wallet-number">**** **** **** <%= walletData.cardLastDigits %></div>
+            <div class="wallet-balance"> <%= walletData.balance %></div>
+          </div>
+          <table class="transactions-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Amount</th>
+                <th>Type</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% walletData.transactions.forEach((transaction, index) => { %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td>Rs. <%= transaction.amount %></td>
+                <td><%= transaction.type %></td>
+                <td><%= new Date(transaction.date).toLocaleDateString() %></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <%- include("./layouts/footer.ejs") %>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Fix the script path -->
+    <script src="js/users/myAddress.js"></script>
+
+  </body>
+</html>
