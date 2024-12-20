@@ -950,7 +950,7 @@ module.exports = {
       }
       const userId = user.id;
       req.session.userId = userId;
-
+  
       const { selectedAddress, items } = req.body;
       console.log("items:", items);
       if (!selectedAddress || !items || items.length === 0) {
@@ -958,14 +958,14 @@ module.exports = {
           .status(400)
           .json({ val: false, msg: "Address and items are required" });
       }
-
+  
       // Ensure user is logged in
       if (!req.session.userId) {
         return res
           .status(401)
           .json({ val: false, msg: "User is not logged in" });
       }
-
+  
       // Validate products and stock
       for (const item of items) {
         const product = await productModel.findById(item.productId);
@@ -980,17 +980,29 @@ module.exports = {
             msg: `Insufficient stock for product: ${product.name}`,
           });
         }
-        product.stock -= item.quantity;
-        await product.save();
       }
-
+  
       // Calculate total price based on product price and quantity
       const totalOrderPrice = items.reduce(
         (sum, item) => sum + item.offerPrice * item.quantity,
         50
       );
-
-
+  
+      // Check if total order price exceeds the limit for COD payment
+      if (totalOrderPrice > 1000) {
+        return res.status(400).json({
+          val: false,
+          msg: "Cash on Delivery is not available for orders exceeding ₹1000.",
+        });
+      }
+  
+      // Deduct stock after price check
+      for (const item of items) {
+        const product = await productModel.findById(item.productId);
+        product.stock -= item.quantity;
+        await product.save();
+      }
+  
       // Create the order with COD payment method
       const order = new orderModel({
         userId: req.session.userId,
@@ -1000,15 +1012,15 @@ module.exports = {
         paymentMethod: "cod",
         paymentStatus: "pending", // Payment will be marked as pending for COD
       });
-
+  
       await order.save();
-
+  
       // Empty the cart
       await cartModel.findOneAndUpdate(
         { userId: req.session.userId },
         { $set: { items: [], cartTotal: 0 } }
       );
-
+  
       res.status(200).json({
         val: true,
         msg: "Order placed successfully with Cash on Delivery.",
@@ -1019,7 +1031,8 @@ module.exports = {
         .status(500)
         .json({ val: false, msg: "An error occurred while placing the order" });
     }
-  },
+  }
+,  
 
   async placeOrderRazorpay(req, res) {
     try {
