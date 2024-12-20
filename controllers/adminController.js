@@ -127,13 +127,12 @@ module.exports = {
     res.render("dashboard");
   },
   async dashboardData(req, res) {
+    console.log('!@@#*#&$&$*&*&&&&*&&&$$&$$$$$&&&&&&&&&&&&&&&&&&&&777777777777787w66ww5w5e5ew5w5ee5we')
     const { range, startDate, endDate } = req.query;
-
+  
     try {
-      console.log(range, startDate, endDate);
-
       let start, end;
-
+  
       if (range === "daily") {
         start = moment().startOf("day").toDate();
         end = moment().endOf("day").toDate();
@@ -149,15 +148,15 @@ module.exports = {
       } else {
         return res.status(400).json({ val: false, msg: "Invalid range." });
       }
-
-      console.log(start);
+  
 
       const dateFilter = { createdAt: { $gte: start, $lt: end } };
-
+       console.log("11111=========================================================================================");
       const [users, products, orders, sales, pendingMoney, categoryData] =
         await Promise.all([
           userModel.find({}),
           productModel.find({}, "_id"),
+          
           orderModel.find(
             {
               ...dateFilter,
@@ -191,6 +190,7 @@ module.exports = {
               },
             },
           ]),
+          
           categoryModel.aggregate([
             {
               $lookup: {
@@ -215,10 +215,12 @@ module.exports = {
             },
           ]),
         ]);
-
+        
+      console.log("2222=========================================================================================")
       const totalSales = sales[0]?.count || 0;
       const totalRevenue = sales[0]?.totalRevenue || 0;
       const totalPendingMoney = pendingMoney[0]?.totalPendingMoney || 0;
+  
       const topSellingProducts = await orderModel.aggregate([
         { $match: { ...dateFilter, orderStatus: "delivered" } },
         { $unwind: "$items" },
@@ -245,7 +247,11 @@ module.exports = {
           },
         },
       ]);
+      
+      console.log("33333=========================================================================================");
 
+      console.log(topSellingProducts);
+  
       const topSellingCategories = await orderModel.aggregate([
         { $match: { ...dateFilter, orderStatus: "delivered" } },
         { $unwind: "$items" },
@@ -282,6 +288,8 @@ module.exports = {
           },
         },
       ]);
+      
+      console.log("44444=========================================================================================");
 
       const topSellingBrands = await orderModel.aggregate([
         { $match: { ...dateFilter, orderStatus: "delivered" } },
@@ -310,7 +318,7 @@ module.exports = {
           },
         },
       ]);
-
+  
       const totalDiscounts = await orderModel.aggregate([
         { $match: { ...dateFilter, "coupon.code": { $exists: true } } },
         {
@@ -321,6 +329,7 @@ module.exports = {
         },
       ]);
 
+      console.log("555555========================================================================================");
 
       const dashboard = {
         usersCount: users.length,
@@ -335,6 +344,7 @@ module.exports = {
         topSellingCategories,
         topSellingBrands,
       };
+  
       res.status(200).json({ val: true, dashboard });
     } catch (err) {
       console.error("Error loading dashboard:", err);

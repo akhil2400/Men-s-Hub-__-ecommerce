@@ -10,9 +10,10 @@ const cartModel = require('../models/cartModel');
 const addressModel = require('../models/addressModel')
 const orderModel = require('../models/orderModel');
 const walletModel = require('../models/walletModel');
-
-const mongoose = require('mongoose');
+const PDFDocument = require("pdfkit");
+const fs = require("fs");
 const path = require('path');
+const mongoose = require('mongoose');
 
 module.exports = {
   //Admin side
@@ -315,8 +316,88 @@ module.exports = {
       console.error(error);
       res.status(500).json({ success: false, message: 'Server error' });
     }
-  
-},
+
+  },
+  async downloadInvoice(req, res) {
+    try {
+      const { orderId } = req.params;
+
+      // Fetch order details from the database with populated references
+      const order = await orderModel.findById(orderId)
+        .populate("userId", "userName email") // Populate user details
+        .populate("products.productId", "name") // Populate product details
+        .populate("deliveryAddress", "houseNumber street city landmark district state country pinCode") // Populate delivery address
+        .lean();
+
+      if (!order) {
+        return res.status(404).send("Order not found");
+      }
+
+      // Create a new PDF document
+      const pdfDoc = new PDFDocument({ margin: 50 });
+
+      // Register and set custom font (NotoSans)
+      const rupeeFontPath = path.join(__dirname, '..', 'public', 'fonts', 'NotoSans-Regular.ttf');
+      pdfDoc.registerFont('NotoSans', rupeeFontPath);
+      pdfDoc.font('NotoSans');
+
+      // Set headers to prompt the download
+      const fileName = `invoice-${orderId}.pdf`;
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename=${fileName}`
+      );
+
+      // Pipe the PDF stream directly to the response
+      pdfDoc.pipe(res);
+
+      // Generate the Invoice
+      pdfDoc.fontSize(20).text("INVOICE", { align: "center" });
+      pdfDoc.moveDown();
+
+      // Order and User Details
+      pdfDoc.fontSize(12).text(`Order ID: ${order._id}`);
+      pdfDoc.moveDown();
+      pdfDoc.text(`Date: ${new Date(order.createdAt).toLocaleDateString()}`);
+      pdfDoc.moveDown();
+      pdfDoc.text(`Customer Name: ${order.userId.userName}`);
+      pdfDoc.moveDown();
+      pdfDoc.text(`Customer Email: ${order.userId.email}`);
+      pdfDoc.moveDown();
+      pdfDoc.text(`Address: ${order.deliveryAddress.houseNumber}, ${order.deliveryAddress.street}, ${order.deliveryAddress.landmark}, ${order.deliveryAddress.city}, ${order.deliveryAddress.district}, ${order.deliveryAddress.state}, ${order.deliveryAddress.country} - ${order.deliveryAddress.pinCode}`);
+      pdfDoc.moveDown();
+      // Product Details
+      pdfDoc.text("Products:", { underline: true, bold: true });
+      pdfDoc.moveDown();
+
+      order.products.forEach((item, index) => {
+        pdfDoc.text(
+          `${index + 1}. Product Name: ${item.productId.name} (x${item.quantity}) - ₹${item.price}`
+        );
+      });
+
+      pdfDoc.moveDown();
+      pdfDoc.text(`Subtotal: ₹${order.totalAmount - (order.deliveryCharges || 0)}`);
+      pdfDoc.moveDown();
+      pdfDoc.text(`Delivery Charges: ₹${order.deliveryCharges || 0}`);
+      pdfDoc.moveDown();
+      pdfDoc.text(`Total Amount: ₹${order.totalAmount}`, { bold: true });
+      pdfDoc.moveDown();
+      pdfDoc.text(`Payment Method: ${order.paymentMethod}`);
+      pdfDoc.moveDown();
+      pdfDoc. fontSize(16).text("Thank you for your order!", { align: "center" });
+      // End the PDF document
+      pdfDoc.end();
+    } catch (error) {
+      console.error("Error generating invoice:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+
+
+
 
   // async initiateIndividualReturn(req, res) {
   //   const orderId = req.params.id;

@@ -63,4 +63,5 @@ router.post("/save-return-reason", orderController.saveReturnReason);
 // router.post("/initiate-individual-return/:id", orderController.initiateIndividualReturn);
 // router.put("/handle-return/:productId", orderController.handleReturn);
 router.get('/get-addresses', userController.getAddresses);
+router.get('/invoice/:orderId',orderController.downloadInvoice)
 module.exports = router;
