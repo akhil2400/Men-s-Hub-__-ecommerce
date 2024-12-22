@@ -336,62 +336,7 @@
       <!-- content-wrapper ends -->
     </div>
     <!-- main-panel ends -->
-  </div>
-
-  <!-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // Event listeners for the filter buttons
-      const filterButtons = document.querySelectorAll('.btnDateRange');
-      const reportTable = document.getElementById('salesReportTable');
-      const errorMsg = document.getElementById('error-msg');
-      const customDateInputs = document.getElementById('customDateInputs');
-      const startDateInput = document.getElementById('start-date');
-      const endDateInput = document.getElementById('end-date');
-
-      // Sample data for testing
-      const sampleData = {
-        daily: [
-          { product: 'Product 1', quantitySold: 10, totalSales: '$100', date: '2024-12-15' },
-          { product: 'Product 2', quantitySold: 5, totalSales: '$50', date: '2024-12-15' }
-        ],
-        weekly: [
-          { product: 'Product 1', quantitySold: 50, totalSales: '$500', date: '2024-12-10' },
-          { product: 'Product 2', quantitySold: 30, totalSales: '$300', date: '2024-12-12' }
-        ],
-        monthly: [
-          { product: 'Product 1', quantitySold: 200, totalSales: '$2000', date: '2024-12-01' },
-          { product: 'Product 2', quantitySold: 150, totalSales: '$1500', date: '2024-12-05' }
-        ]
-      };
-
-
-
-      if (data.length === 0) {
-        errorMsg.textContent = 'No data available for this period.';
-        reportTable.style.display = 'none';
-      } else {
-        errorMsg.textContent = '';
-        reportTable.style.display = 'block';
-        const tbody = reportTable.querySelector('tbody');
-        tbody.innerHTML = ''; // Clear previous rows
-
-        // Populate table rows dynamically
-        data.forEach(item => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-          <td>${item.product}</td>
-          <td>${item.quantitySold}</td>
-          <td>${item.totalSales}</td>
-          <td>${item.date}</td>
-        `;
-          tbody.appendChild(row);
-        });
-      }
-    });
-
-
-  </script> -->
-  
+  </div>  
   <script>
     const ctx = document.getElementById("myChart2").getContext("2d");
     let myChart = null;
@@ -418,67 +363,7 @@
     }
   
     // Initialize or update the chart
-    function initializeChart(data, labels, chartLabel) {
-      if (myChart) {
-        myChart.destroy(); // Destroy existing chart to avoid overlapping
-      }
-  
-      myChart = new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: chartLabel,
-              backgroundColor: ["#5897fb", "#7bcf86", "#ff9076", "#d595e5", "#ffc107"],
-              barThickness: 15,
-              data: data,
-            },
-          ],
-        },
-        options: {
-          plugins: {
-            legend: {
-              labels: {
-                usePointStyle: true,
-                font: {
-                  size: 14,
-                },
-              },
-            },
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              title: {
-                display: true,
-                text: "Quantity",
-                font: {
-                  size: 16,
-                },
-              },
-            },
-            x: {
-              title: {
-                display: true,
-                text: "Items",
-                font: {
-                  size: 16,
-                },
-              },
-            },
-          },
-          responsive: true,
-          maintainAspectRatio: true, // Enable better scaling for various screen sizes
-          layout: {
-            padding: {
-              top: 10,
-              bottom: 10,
-            },
-          },
-        },
-      });
-    }
+    
   
     // Update chart when dropdown value changes
     function updateChart() {

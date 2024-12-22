@@ -259,17 +259,17 @@ module.exports = {
         {
           $group: {
             _id: "$products.productId", // Group by productId
-            totalQuantity: { $sum: "$products.productId.quantity" }, // Sum quantities for each product
-            totalSales: { $sum: { $multiply: ["$products.productId.quantity", "$products.productId.price"] } }, // Calculate total sales
+            totalQuantity: { $sum: "$products.quantity" }, // Sum quantities for each product
+            totalSales: { $sum: { $multiply: ["$products.quantity", "$products.price"] } }, // Calculate total sales
           },
         },
         { $sort: { totalQuantity: -1 } }, // Sort by quantity sold, descending
         { $limit: 10 }, // Limit to top 10 products
       ]);
   
-      // Populate the product data
+      // Populate product details
       const populatedProducts = await productModel.populate(topProducts, {
-        path: "_id", // Populate the product ID
+        path: "_id", // Populate product ID
         select: "name price", // Include product name and price
       });
   

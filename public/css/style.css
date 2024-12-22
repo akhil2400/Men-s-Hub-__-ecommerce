@@ -1158,8 +1158,15 @@ textarea {
 .login-container h2 {
   margin-bottom: 20px;
   font-weight: bold;
- font-family: "Marmelad", serif;;
+ font-family: "Marmelad", serif;
 }
+.register-form{
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: "Marmelad", serif;
+  font-weight:bold;
+  font-style: normal;
+  }
 
 /* Style for input fields */
 .login-container input[type="email"],
