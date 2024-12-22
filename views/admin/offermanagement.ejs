@@ -181,52 +181,58 @@
           <button style="display: flex; justify-content: center; align-items: center;" type="button"
             class="btn-close badge-outline-warning" data-bs-dismiss="modal" aria-label="Close"><span
               style="color: white;font-weight: bold; margin-bottom: 2px; ">x</span></button>
-          </button>
         </div>
-        <form id="addOfferForm" action="/admin/offer/create" method="POST">
+        <form id="addOfferForm" action="/admin/offer/create" method="POST" onsubmit="return validateForm(event)">
           <div style="color: white;" class="modal-body">
             <div class="form-group">
               <label for="offerName">Offer Name</label>
-              <input style="color: white;" type="text" class="form-control" id="offerName" name="name" required />
+              <input style="color: white;" type="text" class="form-control" id="offerName" name="name" />
+              <small class="text-danger" id="errorOfferName"></small>
             </div>
             <div class="form-group">
               <label for="offerType">Offer Type</label>
-              <select style="color: white;" class="form-control" id="offerType" name="type" required
-                onchange="loadOptions()">
+              <select style="color: white;" class="form-control" id="offerType" name="type" onchange="loadOptions()">
+                <option value="">Select Type</option>
                 <option value="Category">Category</option>
                 <option value="Product">Product</option>
               </select>
+              <small class="text-danger" id="errorOfferType"></small>
             </div>
             <div class="form-group">
               <label for="offerCategoryOrProduct">Category/Product</label>
-              <select style="color: white;" class="form-control" id="offerCategoryOrProduct" name="categoryOrProduct"
-                required>
+              <select style="color: white;" class="form-control" id="offerCategoryOrProduct" name="categoryOrProduct">
                 <!-- Dynamically populate options -->
               </select>
+              <small class="text-danger" id="errorCategoryOrProduct"></small>
             </div>
             <div class="form-group">
               <label for="discountType">Discount Type</label>
-              <select style="color: white;" class="form-control" id="discountType" name="discountType" required>
+              <select style="color: white;" class="form-control" id="discountType" name="discountType">
+                <option value="">Select Discount Type</option>
                 <option value="Percentage">Percentage</option>
                 <option value="Fixed Amount">Fixed Amount</option>
               </select>
+              <small class="text-danger" id="errorDiscountType"></small>
             </div>
             <div class="form-group">
               <label for="discountValue">Discount Value</label>
-              <input style="color: white;" type="number" class="form-control" id="discountValue" name="discountValue"
-                required />
+              <input style="color: white;" type="number" class="form-control" id="discountValue" name="discountValue" />
+              <small class="text-danger" id="errorDiscountValue"></small>
             </div>
             <div class="form-group">
               <label for="startDate">Start Date</label>
-              <input style="color: white;" type="date" class="form-control" id="startDate" name="startDate" required />
+              <input style="color: white;" type="date" class="form-control" id="startDate" name="startDate" />
+              <small class="text-danger" id="errorStartDate"></small>
             </div>
             <div class="form-group">
               <label for="endDate">End Date</label>
-              <input style="color: white;" type="date" class="form-control" id="endDate" name="endDate" required />
+              <input style="color: white;" type="date" class="form-control" id="endDate" name="endDate" />
+              <small class="text-danger" id="errorEndDate"></small>
             </div>
             <div class="form-group">
               <label for="description">Description</label>
               <textarea style="color: white;" class="form-control" id="description" name="description"></textarea>
+              <small class="text-danger" id="errorDescription"></small>
             </div>
           </div>
           <div class="modal-footer">
@@ -504,7 +510,7 @@
             });
             setTimeout(() => {
               window.location.reload()
-            },1000);
+            }, 1000);
 
             // Update the row dynamically
             const updatedRow = document.querySelector(`.update-offer-btn[data-id='${offerId}']`).closest("tr");
@@ -604,6 +610,118 @@
       });
     });
   </script>
+
+  <script>
+
+    // Client-side validation
+    function validateForm(event) {
+      event.preventDefault();
+      let isValid = true;
+
+      // Regex patterns
+      const nameRegex = /^[a-zA-Z0-9 ]{3,50}$/;
+      const discountValueRegex = /^\d+$/;
+
+      // Clear previous errors
+      document.querySelectorAll('.text-danger').forEach(el => el.textContent = '');
+
+      // Validate Offer Name
+      const offerName = document.getElementById('offerName').value;
+      if (!nameRegex.test(offerName)) {
+        document.getElementById('errorOfferName').textContent = 'Offer Name must be 3-50 alphanumeric characters.';
+        isValid = false;
+      }
+
+      // Validate Offer Type
+      const offerType = document.getElementById('offerType').value;
+      if (!offerType) {
+        document.getElementById('errorOfferType').textContent = 'Please select an Offer Type.';
+        isValid = false;
+      }
+
+      // Validate Category/Product
+      const offerCategoryOrProduct = document.getElementById('offerCategoryOrProduct').value;
+      if (!offerCategoryOrProduct) {
+        document.getElementById('errorCategoryOrProduct').textContent = 'Please select a Category or Product.';
+        isValid = false;
+      }
+
+      // Validate Discount Type
+      const discountType = document.getElementById('discountType').value;
+      if (!discountType) {
+        document.getElementById('errorDiscountType').textContent = 'Please select a Discount Type.';
+        isValid = false;
+      }
+
+      // Validate Discount Value
+      const discountValue = document.getElementById('discountValue').value;
+      if (!discountValueRegex.test(discountValue) || parseFloat(discountValue) <= 0) {
+        document.getElementById('errorDiscountValue').textContent = 'Discount Value must be a positive number.';
+        isValid = false;
+      }
+
+      // Validate Start Date
+      const startDate = document.getElementById('startDate').value;
+      if (!startDate) {
+        document.getElementById('errorStartDate').textContent = 'Start Date is required.';
+        isValid = false;
+      }
+
+      // Validate End Date
+      const endDate = document.getElementById('endDate').value;
+      if (!endDate) {
+        document.getElementById('errorEndDate').textContent = 'End Date is required.';
+        isValid = false;
+      } else if (new Date(startDate) > new Date(endDate)) {
+        document.getElementById('errorEndDate').textContent = 'End Date must be after Start Date.';
+        isValid = false;
+      }
+
+      // Validate Description
+      const description = document.getElementById('description').value.trim();
+      if (description.length > 500) {
+        document.getElementById('errorDescription').textContent = 'Description cannot exceed 500 characters.';
+        isValid = false;
+      }
+
+      // Log all data before form submission
+      console.log({
+        offerName,
+        offerType,
+        offerCategoryOrProduct,
+        discountType,
+        discountValue,
+        startDate,
+        endDate,
+        description
+      });
+
+      // SweetAlert for invalid inputs
+      if (!isValid) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Validation Failed',
+          text: 'Please correct the errors in the form before submitting.',
+        });
+        return false;
+      }
+
+      // SweetAlert for successful submission
+      Swal.fire({
+        icon: 'success',
+        title: 'Validation Passed',
+        text: 'All fields are valid. Submitting the form.',
+        showConfirmButton: false,
+        timer: 1500
+      }).then(() => {
+        document.getElementById('addOfferForm').submit();
+      });
+
+      return true;
+    }
+
+  </script>
+
 </body>
 
 </html>
