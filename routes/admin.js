@@ -38,6 +38,7 @@ router.put('/admin/products/update/:productId', upload.fields([
   // { name: 'image5', maxCount: 1 }
 ]), productController.updateProduct);
 router.post('/update-product-image/:productId',upload.single('productImage'),productController.productImageUpdate);
+router.put('/admin/updatesizestocks/:id',productController.updateAddStock)
 router.get('/admin/ordermanagement', orderController.loadordermanagement);
 router.post('/admin/order/:id/updatestatus',orderController.updateOrderStatus)
 router.get('/admin/vieworder/:orderid',orderController.loadorderdetails);
