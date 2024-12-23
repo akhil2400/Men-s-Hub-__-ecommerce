@@ -376,72 +376,182 @@
 
 
     document.addEventListener("DOMContentLoaded", function () {
-      const addOfferForm = document.getElementById("addOfferForm");
+        const addOfferForm = document.getElementById("addOfferForm");
 
-      addOfferForm.addEventListener("submit", async function (e) {
-        e.preventDefault();
+        addOfferForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
 
-        const formData = new FormData(addOfferForm);
-        const offerData = {
-          name: formData.get("name"),
-          type: formData.get("type"),
-          categoryOrProduct: formData.get("categoryOrProduct"),
-          discountType: formData.get("discountType"),
-          discountValue: parseFloat(formData.get("discountValue")),
-          startDate: formData.get("startDate"),
-          endDate: formData.get("endDate"),
-          description: formData.get("description"),
-        };
+            // Run validation first
+            if (!validateForm(e)) {
+                return; // Stop execution if validation fails
+            }
 
-        try {
-          const response = await fetch("/admin/offer/create", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(offerData),
-          });
+            const formData = new FormData(addOfferForm);
+            const offerData = {
+                name: formData.get("name"),
+                type: formData.get("type"),
+                categoryOrProduct: formData.get("categoryOrProduct"),
+                discountType: formData.get("discountType"),
+                discountValue: parseFloat(formData.get("discountValue")),
+                startDate: formData.get("startDate"),
+                endDate: formData.get("endDate"),
+                description: formData.get("description"),
+            };
 
-          const result = await response.json();
+            try {
+                const response = await fetch("/admin/offer/create", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(offerData),
+                });
 
-          if (response.ok && result.success) {
-            Swal.fire({
-              title: "Offer Created!",
-              text: "The new offer was successfully created.",
-              icon: "success",
-              showConfirmButton: false, // Correct property name
-              timer: 1500, // Auto-close after 1.5 seconds
-            });
+                const result = await response.json();
 
-            setTimeout(() => {
-              window.location.reload()
-            }, 1500)
+                if (response.ok && result.success) {
+                    Swal.fire({
+                        title: "Offer Created!",
+                        text: "The new offer was successfully created.",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
 
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
 
-            // Optionally, reset the form and close modal
-            addOfferForm.reset();
-            const offerUploadModal = document.getElementById("offerUploadModal");
-            const modal = bootstrap.Modal.getInstance(offerUploadModal);
-            modal.hide();
-          } else {
-            Swal.fire({
-              title: "Error!",
-              text: result.message || "Could not create offer.",
-              icon: "error",
-              confirmButtonText: "Retry",
-            });
-          }
-        } catch (error) {
-          console.error("Unexpected error:", error);
-          Swal.fire({
-            title: "Unexpected Error",
-            text: "An error occurred while processing your request.",
-            icon: "error",
-            confirmButtonText: "Retry",
-          });
-        }
-      });
+                    // Optionally, reset the form and close modal
+                    addOfferForm.reset();
+                    const offerUploadModal = document.getElementById("offerUploadModal");
+                    const modal = bootstrap.Modal.getInstance(offerUploadModal);
+                    modal.hide();
+                } else {
+                    Swal.fire({
+                        title: "Error!",
+                        text: result.message || "Could not create offer.",
+                        icon: "error",
+                        confirmButtonText: "Retry",
+                    });
+                }
+            } catch (error) {
+                console.error("Unexpected error:", error);
+                Swal.fire({
+                    title: "Unexpected Error",
+                    text: "An error occurred while processing your request.",
+                    icon: "error",
+                    confirmButtonText: "Retry",
+                });
+            }
+        });
     });
+
+    function validateForm(event) {
+        event.preventDefault();
+        let isValid = true;
+
+        // Regex patterns
+        const nameRegex = /^[a-zA-Z0-9 ]{3,50}$/;
+        const discountValueRegex = /^\d+$/;
+
+        // Clear previous errors
+        document.querySelectorAll('.text-danger').forEach(el => el.textContent = '');
+
+        // Validate Offer Name
+        const offerName = document.getElementById('offerName').value;
+        if (!nameRegex.test(offerName)) {
+            document.getElementById('errorOfferName').textContent = 'Offer Name must be 3-50 alphanumeric characters.';
+            isValid = false;
+        }
+
+        // Validate Offer Type
+        const offerType = document.getElementById('offerType').value;
+        if (!offerType) {
+            document.getElementById('errorOfferType').textContent = 'Please select an Offer Type.';
+            isValid = false;
+        }
+
+        // Validate Category/Product
+        const offerCategoryOrProduct = document.getElementById('offerCategoryOrProduct').value;
+        if (!offerCategoryOrProduct) {
+            document.getElementById('errorCategoryOrProduct').textContent = 'Please select a Category or Product.';
+            isValid = false;
+        }
+
+        // Validate Discount Type
+        const discountType = document.getElementById('discountType').value;
+        if (!discountType) {
+            document.getElementById('errorDiscountType').textContent = 'Please select a Discount Type.';
+            isValid = false;
+        }
+
+        // Validate Discount Value
+        const discountValue = document.getElementById('discountValue').value;
+        if (!discountValueRegex.test(discountValue) || parseFloat(discountValue) <= 0) {
+            document.getElementById('errorDiscountValue').textContent = 'Discount Value must be a positive number.';
+            isValid = false;
+        }
+
+        // Validate Start Date
+        const startDate = document.getElementById('startDate').value;
+        if (!startDate) {
+            document.getElementById('errorStartDate').textContent = 'Start Date is required.';
+            isValid = false;
+        }
+
+        // Validate End Date
+        const endDate = document.getElementById('endDate').value;
+        if (!endDate) {
+            document.getElementById('errorEndDate').textContent = 'End Date is required.';
+            isValid = false;
+        } else if (new Date(startDate) > new Date(endDate)) {
+            document.getElementById('errorEndDate').textContent = 'End Date must be after Start Date.';
+            isValid = false;
+        }
+
+        // Validate Description
+        const description = document.getElementById('description').value.trim();
+        if (description.length > 500) {
+            document.getElementById('errorDescription').textContent = 'Description cannot exceed 500 characters.';
+            isValid = false;
+        }
+
+        // Log all data before form submission
+        console.log({
+            offerName,
+            offerType,
+            offerCategoryOrProduct,
+            discountType,
+            discountValue,
+            startDate,
+            endDate,
+            description
+        });
+
+        // SweetAlert for invalid inputs
+        if (!isValid) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Failed',
+                text: 'Please correct the errors in the form before submitting.',
+            });
+            return false;
+        }
+
+        // SweetAlert for successful submission
+        Swal.fire({
+            icon: 'success',
+            title: 'Validation Passed',
+            text: 'All fields are valid. Submitting the form.',
+            showConfirmButton: false,
+            timer: 1500
+        }).then(() => {
+            document.getElementById('addOfferForm').submit();
+        });
+
+        return true;
+    }
   </script>
 
   <script>
@@ -611,116 +721,7 @@
     });
   </script>
 
-  <script>
 
-    // Client-side validation
-    function validateForm(event) {
-      event.preventDefault();
-      let isValid = true;
-
-      // Regex patterns
-      const nameRegex = /^[a-zA-Z0-9 ]{3,50}$/;
-      const discountValueRegex = /^\d+$/;
-
-      // Clear previous errors
-      document.querySelectorAll('.text-danger').forEach(el => el.textContent = '');
-
-      // Validate Offer Name
-      const offerName = document.getElementById('offerName').value;
-      if (!nameRegex.test(offerName)) {
-        document.getElementById('errorOfferName').textContent = 'Offer Name must be 3-50 alphanumeric characters.';
-        isValid = false;
-      }
-
-      // Validate Offer Type
-      const offerType = document.getElementById('offerType').value;
-      if (!offerType) {
-        document.getElementById('errorOfferType').textContent = 'Please select an Offer Type.';
-        isValid = false;
-      }
-
-      // Validate Category/Product
-      const offerCategoryOrProduct = document.getElementById('offerCategoryOrProduct').value;
-      if (!offerCategoryOrProduct) {
-        document.getElementById('errorCategoryOrProduct').textContent = 'Please select a Category or Product.';
-        isValid = false;
-      }
-
-      // Validate Discount Type
-      const discountType = document.getElementById('discountType').value;
-      if (!discountType) {
-        document.getElementById('errorDiscountType').textContent = 'Please select a Discount Type.';
-        isValid = false;
-      }
-
-      // Validate Discount Value
-      const discountValue = document.getElementById('discountValue').value;
-      if (!discountValueRegex.test(discountValue) || parseFloat(discountValue) <= 0) {
-        document.getElementById('errorDiscountValue').textContent = 'Discount Value must be a positive number.';
-        isValid = false;
-      }
-
-      // Validate Start Date
-      const startDate = document.getElementById('startDate').value;
-      if (!startDate) {
-        document.getElementById('errorStartDate').textContent = 'Start Date is required.';
-        isValid = false;
-      }
-
-      // Validate End Date
-      const endDate = document.getElementById('endDate').value;
-      if (!endDate) {
-        document.getElementById('errorEndDate').textContent = 'End Date is required.';
-        isValid = false;
-      } else if (new Date(startDate) > new Date(endDate)) {
-        document.getElementById('errorEndDate').textContent = 'End Date must be after Start Date.';
-        isValid = false;
-      }
-
-      // Validate Description
-      const description = document.getElementById('description').value.trim();
-      if (description.length > 500) {
-        document.getElementById('errorDescription').textContent = 'Description cannot exceed 500 characters.';
-        isValid = false;
-      }
-
-      // Log all data before form submission
-      console.log({
-        offerName,
-        offerType,
-        offerCategoryOrProduct,
-        discountType,
-        discountValue,
-        startDate,
-        endDate,
-        description
-      });
-
-      // SweetAlert for invalid inputs
-      if (!isValid) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Validation Failed',
-          text: 'Please correct the errors in the form before submitting.',
-        });
-        return false;
-      }
-
-      // SweetAlert for successful submission
-      Swal.fire({
-        icon: 'success',
-        title: 'Validation Passed',
-        text: 'All fields are valid. Submitting the form.',
-        showConfirmButton: false,
-        timer: 1500
-      }).then(() => {
-        document.getElementById('addOfferForm').submit();
-      });
-
-      return true;
-    }
-
-  </script>
 
 </body>
 
