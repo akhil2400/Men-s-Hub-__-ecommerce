@@ -47,70 +47,108 @@ module.exports = {
     }
   },
   
-async productsAdd(req, res) {
-  let {
-    name,
-    description,
-    category,
-    tags,
-    brand,
-    price,
-    colors,
-    sizes,
-    cashOnDelivery,
-    offerPrice,
-    stock,
-    warranty,
-    returnPolicy,
-  } = req.body;
-
-  price = Number(price);
-  offerPrice = Number(offerPrice);
-  stock = Number(stock);
-  cashOnDelivery = cashOnDelivery === "true";
-  offerPrice = offerPrice === NaN ? 0 : offerPrice;
-
-  try {
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ val: false, msg: "No files were uploaded" });
-    }
-    const categoryObject = await categoryModel.findOne({ name: category });
-    if (!categoryObject) {
-      return res.status(400).json({ val: false, msg: "Category not found" });
-    }
-    const imagePaths = [];
-    for (const key in req.files) {
-      req.files[key].forEach((file) => {
-        imagePaths.push(
-          path.relative(path.join(__dirname, "..", "public"), file.path)
-        );
-      });
-    }
-
-    console.log(imagePaths);
-    console.log(warranty);
-    await productModel.create({
+  async productsAdd(req, res) {
+    let {
       name,
       description,
-      price,
-      offerPrice: offerPrice,
-      stock,
-      category: categoryObject._id,
-      images: imagePaths,
-      colors: colors.split(",").filter(Boolean),
-      sizes: sizes.split(","),
+      category,
+      tags,
       brand,
-      tags: tags.split("#").filter(Boolean),
+      price,
+      sizes,
       cashOnDelivery,
+      offerPrice,
+      stockQuantities,
       warranty,
       returnPolicy,
-    });
-    res.status(200).json({ val: true, msg: "Upload successful" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ val: false, msg: "Internal server error" });
-  }
-},
+      colors,
+    } = req.body;
+
+    console.log(req.body);
+  
+    price = Number(price);
+    offerPrice = Number(offerPrice);
+    cashOnDelivery = cashOnDelivery === "true";
+    offerPrice = isNaN(offerPrice) ? 0 : offerPrice;
+  
+    try {
+      if (!req.files || req.files.length === 0) {
+        return res.status(400).json({ val: false, msg: "No files were uploaded" });
+      }
+
+      console.log(JSON.parse(stockQuantities));
+  
+      // Ensure sizes and stock quantities are arrays
+      const sizesArray = typeof sizes === "string" && sizes.startsWith("[")
+      ? JSON.parse(sizes)
+      : sizes.split(",").map(size => size.trim());
+
+      const stockQuantitiesArray = typeof stockQuantities === "string"
+  ? JSON.parse(stockQuantities)
+  : stockQuantities;
+
+  
+      if (sizesArray.length !== stockQuantitiesArray.length) {
+        return res.status(400).json({ val: false, msg: "Sizes and stock quantities mismatch" });
+      }
+      const variants = sizesArray.map((size, index) => ({
+  size: size.trim().toUpperCase(), // Use consistent format for sizes like XS, S
+  stock: stockQuantitiesArray[index]?.stock || 0, // Safely access stock
+}));
+      console.log(variants);
+      let totalStock = stockQuantitiesArray.reduce((total, stock) => total + stock, 0);
+      totalStock=Number(totalStock);
+
+      if (isNaN(totalStock)) {
+        totalStock = 0; // Default to 0 if totalStock is not a valid number
+      }
+  
+      // Calculate offer percentage
+      const offerPercentage = offerPrice && price > 0 
+        ? Math.round(((price - offerPrice) / price) * 100)
+        : 0;
+  
+      const categoryObject = await categoryModel.findOne({ name: category });
+      if (!categoryObject) {
+        return res.status(400).json({ val: false, msg: "Category not found" });
+      }
+  
+      // Process images
+      const imagePaths = [];
+      for (const key in req.files) {
+        req.files[key].forEach((file) => {
+          imagePaths.push(
+            path.relative(path.join(__dirname, "..", "public"), file.path)
+          );
+        });
+      }
+  
+      // Create the product
+      await productModel.create({
+        name,
+        description,
+        price,
+        offerPrice,
+        previousOfferPrice: null, // Initialize as null
+        offerPercentage,
+        category: categoryObject._id,
+        images: imagePaths,
+        variants:variants,
+        totalStock,
+        colors: Array.isArray(colors) ? colors : colors.split(","),
+        brand,
+        tags: tags.split("#").filter(Boolean),
+        cashOnDelivery,
+        warranty,
+        returnPolicy,
+      });
+  
+      res.status(200).json({ val: true, msg: "Upload successful" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ val: false, msg: "Internal server error" });
+    }
+  },
 async productUnlist(req, res) {
   const { id, val } = req.query;
   try {
@@ -220,6 +258,41 @@ async loadupdateProducts(req, res) {
       res.status(500).json({ val: false, msg: 'Internal server error' });
     }
   },
+
+  async updateAddStock(req, res){
+    const { id } = req.params;
+  let { sizes, stockQuantities } = req.body;
+
+  try {
+    const products = await productModel.findById(id);
+
+    if (!products) {
+      return res.status(404).json({success:false, message: "Product not found" });
+    }
+
+    sizes.forEach((size, index) => {
+      let stock = stockQuantities[index];
+      stock=parseInt(stock)
+      const variantIndex = products.variants.findIndex((variant) => variant.size == size);
+      
+      if (variantIndex !== -1) {
+        products.variants[variantIndex].stock += stock;
+      } else {
+        products.variants.push({ size, stock });
+      }
+
+    });
+    
+    products.totalStock = products.variants.reduce((total, variant) => total + variant.stock, 0);
+    await products.save();
+
+    res.status(200).json({success:true, message: "Product stock updated successfully", products });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({success:false, message: "Server error" });
+  }
+  },
+
 
   async productImageUpdate(req, res) {
     console.log("GAdyjuu");
