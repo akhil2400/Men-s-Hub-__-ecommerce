@@ -14,7 +14,6 @@ const productSchema = new mongoose.Schema({
     stock: { type: Number },
   }],
   totalStock: { type: Number, default: 0 },
-  colors: [{ type: String }],
   category: { type: mongoose.Schema.ObjectId, ref: 'Category' },
   brand: { type: String },
   cashOnDelivery: { type: Boolean },

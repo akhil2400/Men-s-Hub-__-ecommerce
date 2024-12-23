@@ -175,6 +175,15 @@ function validateAndSubmit() {
           body: formData,
         });
         const data = await response.json();
+        swal.fire({
+          title: "Product Added Successfully",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500
+        })
+        setTimeout(() => {
+          window.location.reload(); 
+        },1500)
         console.log(data.msg);
       } catch (err) {
         console.log("Error ::- " + err);

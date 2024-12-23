@@ -5,7 +5,6 @@ const categorySelect = document.getElementById("productCategory");
 const brand = document.getElementById("productBrand");
 const ogPrice = document.getElementById("productOgPrice");
 const offerPrice = document.getElementById("productOfferPrice");
-const stock = document.getElementById("productStock");
 const tags = document.getElementById("productTags");
 const warranty = document.getElementById("productWarranty");
 const returnPolicy = document.getElementById("productReturnPolicy");
@@ -131,7 +130,6 @@ updateButton.addEventListener("click", async (event) => {
   formData.append("brand", brand.value);
   formData.append("price", ogPrice.value);
   formData.append("offerPrice", offerPrice.value);
-  formData.append("stock", stock.value);
   formData.append("tags", tags.value);
   formData.append("warranty", warranty.value);
   formData.append("returnPolicy", returnPolicy.value);
@@ -151,10 +149,10 @@ updateButton.addEventListener("click", async (event) => {
       console.log("hi")
       console.log(data.msg);
     } else {
-      swal("success", "Product Updated Successfully", "success");
+      swal.fire("success", "Product Updated Successfully", "success");
       setTimeout(() => {
         window.location.href = "/admin/products";
-      },1500);
+      }, 1500);
     }
   } catch (err) {
     console.error(err);
@@ -176,8 +174,8 @@ async function changeImage(index) {
     });
 
     const data = await response.json();
-     console.log(data);
-     
+    console.log(data);
+
     if (data.val) {
       window.location.href = `/admin/Product/update/${productId.value}`;
     }

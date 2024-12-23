@@ -328,7 +328,7 @@
                           <label class="size-label" for="size_<%= sizes[i] %>">Size <%= sizes[i] %></label>
                           <input type="number" class="stock-input" name="stockQuantities" id="stock_<%= sizes[i] %>"
                             placeholder="Stock for size <%= sizes[i] %>"
-                            style="<%= checked ? 'display: block;' : 'display: none;' %>" value="<%= stockValue %>"
+                            style="<%= (checked ? 'display: block;' : 'display: none;') %>" value="<%= stockValue %>"
                             min="1" />
                     </div>
                     <% } %>

@@ -135,6 +135,9 @@ module.exports = {
 
       const transformedOrders = orders.map((order) => ({
         id: order._id,
+        razorpayOrderId: order.razorpayOrderId,
+        razorpayPaymentStatus: order.razorpayPaymentStatus,
+        paymentMethod: order.paymentMethod || "N/A",
         date: order.createdAt ? order.createdAt.toLocaleDateString() : "N/A",
         products: order.products.map((product) => ({
           name: product.productId?.name || "Unknown Product",

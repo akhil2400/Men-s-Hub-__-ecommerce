@@ -449,6 +449,7 @@
         async function validateOrder() {
           const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked');
           const selectedPayment = document.querySelector('input[name="payment"]:checked');
+          const cartTotal = document.getElementById('cart-total').textContent;
 
           // Validate inputs
           if (!selectedAddress) {
@@ -474,6 +475,7 @@
             const orderPayload = {
               selectedAddress: selectedAddress.value,
               items: cartItems,
+              payableAmount:cartTotal.replace("₹", "")
             };
 
             if (selectedPayment.id === 'cash-on-delivery') {
@@ -503,10 +505,10 @@
 
               if (razorpayOrderData.val) {
                 const razorpayOptions = {
-                  key: 'rzp_test_mUKkruYO0ysf3W', // Your Razorpay Key
-                  amount: razorpayOrderData.amount, // Amount in paise
+                  key: 'rzp_test_mUKkruYO0ysf3W', 
+                  amount: razorpayOrderData.amount, 
                   currency: 'INR',
-                  name: 'Your Company Name',
+                  name: "MEN'S HUB",
                   description: 'Order Payment',
                   order_id: razorpayOrderData.razorpayOrderId,
                   handler: async function (response) {
@@ -516,8 +518,9 @@
                       headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({
                         paymentId: response.razorpay_payment_id,
-                        orderId: razorpayOrderData.razorpayOrderId,
+                        razorpayOrderId: razorpayOrderData.razorpayOrderId,
                         razorpaySignature: response.razorpay_signature,
+                        orderId:razorpayOrderData.orderId
                       }),
                     });
                     const verifyData = await verifyResponse.json();

@@ -23,7 +23,6 @@
 
 <body>
   <%- include("./layouts/header.ejs") %>
-
     <div class="containerdac">
       <div class="sidebar">
         <ul>
@@ -70,9 +69,11 @@
                 <div class="products">
                   <% order.products.forEach(product=> { %>
                     <div class="product-item">
-                      <p><strong>Name:</strong> <%= product.name %>
+                      <p><strong>Name:</strong>
+                        <%= product.name %>
                       </p>
-                      <p><strong>Category:</strong> <%= product.category %>
+                      <p><strong>Category:</strong>
+                        <%= product.category %>
                       </p>
                       <p><strong>Price:</strong> &#8377;<%= product.price.toFixed(2) %>
                       </p>
@@ -82,11 +83,18 @@
 
                 <div class="order-actions d-flex justify-content-end ">
                   <!-- <a href="/order/details/<%= order.id %>" class="btn btn-details" style="margin-right: 4px;background-color: rgb(186, 31, 31); border-radius: 8px;border: none;">Return</a> -->
-                  <a href="/order/details/<%= order.id %>" class="btn btn-details" style="margin-right: 4px;background-color: #FFAB00; color: #000000;  border-radius: 8px;border: none;">View Details</a>
+                  <a href="/order/details/<%= order.id %>" class="btn btn-details"
+                    style="margin-right: 4px;background-color: #FFAB00; color: #000000;  border-radius: 8px;border: none;">View
+                    Details</a>
                   <a href="/invoice/<%= order.id %>" class="btn btn-outline-magenta btn-sm">
                     Download Invoice
-    </a>
+                  </a>
+                  <% if (order.razorpayPaymentStatus==='pending' && order.paymentMethod==='razorpay' ) { %>
+                    <button onclick="retryPayment('<%= order.razorpayOrderId ,order._id %>')" class="btn btn-warning btn-sm">Retry
+                      Payment</button>
+                    <%}%>
                 </div>
+              
               </div>
               <% }); %>
                 <% } else { %>
@@ -99,6 +107,92 @@
     <%- include("./layouts/footer.ejs") %>
 
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+      <script>
+        async function retryPayment(orderId,ordId) {
+          try {
+            const response = await fetch("/retry-payment", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ orderId: orderId }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+              const options = {
+                key: "rzp_test_mUKkruYO0ysf3W",
+                order_id: data.newOrder.id,
+                amount: data.newOrder.amount,
+                currency: data.newOrder.currency,
+                name: "MENS'S HUB",
+                description: "Retry Payment for your order " + orderId,
+                image: "/img/logo.png",
+                handler: function (response) {
+                  const paymentData = {
+                    razorpayOrderId: data.newOrder.id,
+                    razorpayPaymentId: response.razorpay_payment_id,
+                    razorpaySignature: response.razorpay_signature,
+                  };
+                  console.log(paymentData);
+
+                  fetch('/verify-razorpay-payment', {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        paymentId: paymentData.razorpayPaymentId,
+                        razorpayOrderId: paymentData.razorpayOrderId,
+                        razorpaySignature : paymentData.razorpaySignature,
+                        orderId:ordId
+                      })
+                  })
+                    .then((res) => res.json())
+                    .then((data) => {
+                      console.log(data)
+                    if(data.success)
+                    swal.fire("Success!", "Payment confirmed successfully.", "success").then(() =>
+                        window.location.href = `/thankyou`
+                      );
+                    
+                      
+                    })
+                    .catch((error) => {
+                      console.error("Error confirming payment:", error);
+                      Swal.fire("Error!", "Payment confirmation failed. Please try again.", "error");
+                    });
+                },
+                prefill: {
+                  name: "Customer Name",
+                  email: "customer@example.com",
+                  contact: "1234567890",
+                },
+                theme: {
+                  color: "#F37254",
+                },
+              };
+
+              const razorpay = new Razorpay(options);
+
+              razorpay.on("payment.failed", function (response) {
+                alert("Payment failed. Please try again.");
+                console.error("Payment failed:", response.error);
+              });
+
+              razorpay.open();
+            } else {
+              alert(data.error || "Failed to initiate retry. Please try again.");
+            }
+          } catch (error) {
+            console.error("Error retrying payment:", error);
+            alert("An error occurred while retrying payment. Please try again.");
+          }
+        }
+
+
+      </script>
+
 </body>
 
 </html>
