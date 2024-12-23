@@ -333,49 +333,82 @@
       </div>
       </div>
     
-      <!-- content-wrapper ends -->
     </div>
-    <!-- main-panel ends -->
+
   </div>  
   <script>
     const ctx = document.getElementById("myChart2").getContext("2d");
     let myChart = null;
-  
-    // Fetch chart data based on type
+
     async function fetchChartData(type) {
-      try {
-        const endpoint = type === "products" ? "top-selling-products" : "top-selling-categories";
-        const response = await fetch(`/admin/${endpoint}`);
-        const result = await response.json();
-  
-        if (result.success) {
-          const labels = result.data.map((item) => (type === "products" ? item.name : item.categoryName));
-          const data = result.data.map((item) => item.quantity);
-  
-          const chartLabel = type === "products" ? "Top Selling Products" : "Top Selling Categories";
-          initializeChart(data, labels, chartLabel);
-        } else {
-          console.error("Error fetching data:", result.error || "Unknown error occurred");
+        try {
+            const endpoint = type === "products" ? "top-selling-products" : "top-selling-categories";
+            const response = await fetch(`/admin/${endpoint}`);
+            const result = await response.json();
+
+            if (result.success) {
+                const labels = result.data.map(item => type === "products" ? item.name : item.categoryName);
+                const data = result.data.map(item => item.quantity);
+
+                const chartLabel = type === "products" ? "Top Selling Products" : "Top Selling Categories";
+                initializeChart(data, labels, chartLabel);
+            } else {
+                console.error("Error fetching data:", result.error || "Unknown error occurred");
+            }
+        } catch (error) {
+            console.error("Error fetching chart data:", error);
         }
-      } catch (error) {
-        console.error("Error fetching chart data:", error);
-      }
     }
-  
-    // Initialize or update the chart
-    
-  
-    // Update chart when dropdown value changes
+
+    function initializeChart(data, labels, chartLabel) {
+        if (myChart) {
+            myChart.destroy(); 
+        }
+
+        myChart = new Chart(ctx, {
+            type: 'bar', 
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: chartLabel,
+                        data: data,
+                        backgroundColor: 'rgba(255, 171, 0, 0.2)',
+                        borderColor: 'rgba(255, 171, 0, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
     function updateChart() {
-      const chartType = document.getElementById("chartType").value;
-      fetchChartData(chartType);
+        const chartType = document.getElementById("chartType").value;
+        fetchChartData(chartType);
     }
-  
-    // Initialize chart on page load
+
     document.addEventListener("DOMContentLoaded", function () {
-      fetchChartData("products"); // Default chart type is "products"
+        fetchChartData("products"); 
+
+        const dropdown = document.getElementById("chartType");
+        dropdown.addEventListener("change", updateChart);
     });
-  </script>
+</script>
+
   
   
 
