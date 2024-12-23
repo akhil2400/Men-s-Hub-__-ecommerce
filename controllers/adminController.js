@@ -266,20 +266,22 @@ module.exports = {
         { $sort: { totalQuantity: -1 } }, // Sort by quantity sold, descending
         { $limit: 10 }, // Limit to top 10 products
       ]);
-  
+      console.log(topProducts);
+      console.log("______________________________")
       // Populate product details
-      const populatedProducts = await productModel.populate(topProducts, {
+      let populatedProducts = await productModel.populate(topProducts, {
         path: "_id", // Populate product ID
-        select: "name price", // Include product name and price
+        select: "name price", // Incluede product name and price
       });
-  
+      populatedProducts = populatedProducts.filter((product)=> product._id !== null)
+      console.log(populatedProducts)
       // Prepare and return the response
       res.status(200).json({
         success: true,
         data: populatedProducts.map((product) => ({
-          productId: product._id, // Nested productId
-          name: product.name, // Populated product name
-          price: product.price, // Populated product price
+          productId: product._id._id, // Nested productId
+          name: product._id.name, // Populated product name
+          price: product._id.price, // Populated product price
           quantity: product.totalQuantity, // Total quantity sold
           sales: product.totalSales, // Total sales amount
         })),
