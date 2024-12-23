@@ -25,7 +25,6 @@ module.exports = {
       const products = await productModel.find({})
         .skip(skip)
         .limit(limit)
-        .sort({ createdAt: -1 });
         
   
       return res.status(200).render("products", {
@@ -149,6 +148,7 @@ module.exports = {
       res.status(500).json({ val: false, msg: "Internal server error" });
     }
   },
+  
 async productUnlist(req, res) {
   const { id, val } = req.query;
   try {
@@ -292,7 +292,6 @@ async loadupdateProducts(req, res) {
     res.status(500).json({success:false, message: "Server error" });
   }
   },
-
 
   async productImageUpdate(req, res) {
     console.log("GAdyjuu");
