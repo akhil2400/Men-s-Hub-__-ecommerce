@@ -85,15 +85,12 @@
                             <div class="input-group">
                               <!-- Decrease Button -->
                               <button class="btn btn-outline-secondary decrease" data-index="<%= index %>">-</button>
-                          
+
 
                               <!-- Quantity Input (Read-Only) -->
-                              <input type="number" class="form-control quantity-input-<%= index %>" 
-                              value="<%= item.quantity %>" 
-                              min="1" 
-                              id="quantity-<%= item.productId._id %>" 
-                              style="width: 60px; text-align: center;" 
-                              readonly />
+                              <input type="number" class="form-control quantity-input-<%= index %>"
+                                value="<%= item.quantity %>" min="1" id="quantity-<%= item.productId._id %>"
+                                style="width: 60px; text-align: center;" readonly />
 
                               <!-- Increase Button -->
                               <button class="btn btn-outline-secondary increase" data-index="<%= index %>"
@@ -125,10 +122,16 @@
         <div class="row">
           <div class="col-md-6">
             <div class="row mb-5">
-              
-              <div class="col-md-6">
-                <a href="/shop"><button class="btn btn-outline-black btn-sm btn-block">Continue Shopping</button></a>
-              </div>
+              <% if (message) { %>
+                <div class="alert alert-danger">
+                  <%= message %>
+                </div>
+                <% } %>
+
+                  <div class="col-md-6">
+                    <a href="/shop"><button class="btn btn-outline-black btn-sm btn-block">Continue
+                        Shopping</button></a>
+                  </div>
             </div>
           </div>
           <div class="col-md-6 pl-5">

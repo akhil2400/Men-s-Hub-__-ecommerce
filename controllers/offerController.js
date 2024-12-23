@@ -16,9 +16,9 @@ module.exports = {
         path: "categoryOrProduct", // Ensure the correct path is provided
         select: "name", // Select only the name field from the referenced document
       });
-  
+
       console.log(`offers: ${offers}`);
-  
+
       // Check if any offers exist
       if (!offers || offers.length === 0) {
         return res.render("offermanagement", {
@@ -26,7 +26,7 @@ module.exports = {
           msg: "No offers found.", // Message to display when no offers exist
         });
       }
-  
+
       // Render the page with offers data
       res.render("offermanagement", {
         val: true, // Offers exist
@@ -53,7 +53,7 @@ module.exports = {
       });
     }
   },
-  
+
 
   async loadproductoffer(req, res) {
     try {
@@ -87,9 +87,9 @@ module.exports = {
         endDate,
         description,
       } = req.body;
-  
-      console.log("2222:", categoryOrProduct);
-  
+
+      console.log("categoryOrProduct:", categoryOrProduct);
+
       const newOffer = new offerModel({
         name,
         type,
@@ -101,15 +101,15 @@ module.exports = {
         status: "Active",
         description: description || "",
       });
-  
-      // Calculate new offer price if the offer applies to a product
+
+      // If the offer applies to a product
       if (type === "Product") {
         const product = await productModel.findById(categoryOrProduct);
-  
+
         if (product) {
           // Save old offer price
-          product.previousOfferPrice = product.offerPrice || product.price;
-  
+          product.previousOfferPrice = product.offerPrice;
+
           // Calculate discount
           if (discountType === "Percentage") {
             const discountAmount = (product.price * discountValue) / 100;
@@ -119,58 +119,113 @@ module.exports = {
             product.offerPrice = product.price - discountValue;
             product.offerPercentage = ((discountValue / product.price) * 100).toFixed(2);
           }
-  
+
           // Save updated product
           await product.save();
         }
       }
-  
+      // If the offer applies to a category
+      else if (type === "Category") {
+        const products = await productModel.find({ category: categoryOrProduct });
+
+        for (const product of products) {
+          // Save old offer price
+          product.previousOfferPrice = product.offerPrice;
+
+          // Calculate discount
+          if (discountType === "Percentage") {
+            const discountAmount = (product.price * discountValue) / 100;
+            product.offerPrice = product.price - discountAmount;
+            product.offerPercentage = discountValue;
+          } else if (discountType === "Fixed Amount") {
+            product.offerPrice = product.price - discountValue;
+            product.offerPercentage = ((discountValue / product.price) * 100).toFixed(2);
+          }
+
+          // Save updated product
+          await product.save();
+        }
+      }
+
       const savedOffer = await newOffer.save();
-      
-      console.log("savedoffer:"+ savedOffer)
+      console.log("savedOffer:", savedOffer);
+
       res.status(201).json({ success: true, offer: savedOffer });
     } catch (error) {
       console.error("Error creating offer:", error);
       res.status(500).json({ success: false, message: "Server error" });
     }
-  },
+  }
+  ,
 
-  async deleteoffer (req, res){
+  async deleteoffer(req, res) {
     try {
       const { id } = req.params;
-  
-      // Delete the offer from the database
-      const result = await offerModel.findByIdAndDelete(id);
-  
-      if (result) {
-        return res.status(200).json({ success: true, message: "Offer deleted successfully" });
-      } else {
+
+      // Find the offer to be deleted
+      const offer = await offerModel.findById(id);
+      if (!offer) {
         return res.status(404).json({ success: false, message: "Offer not found" });
       }
+
+      // If the offer applies to a product, update the product details
+      if (offer.type === "Product") {
+        const product = await productModel.findById(offer.categoryOrProduct);
+        if (product) {
+          // Revert to the previous offer price
+          product.offerPrice = product.previousOfferPrice || product.price;
+          product.previousOfferPrice = null;
+          product.offerPercentage = null;
+
+          // Save the updated product
+          await product.save();
+        }
+      }
+      // If the offer applies to a category, update all products in the category
+      else if (offer.type === "Category") {
+        const products = await productModel.find({ category: offer.categoryOrProduct });
+
+        for (const product of products) {
+          // Revert to the previous offer price
+          product.offerPrice = product.previousOfferPrice || product.price;
+          product.previousOfferPrice = null;
+          product.offerPercentage = null;
+
+          // Save the updated product
+          await product.save();
+        }
+      }
+
+      // Delete the offer from the database
+      await offerModel.findByIdAndDelete(id);
+
+      return res.status(200).json({ success: true, message: "Offer deleted successfully" });
     } catch (error) {
       console.error("Error deleting offer:", error);
       return res.status(500).json({ success: false, message: "Server error" });
     }
-  },
-  
-  async updateoffer(req,res){
+  }
+
+  ,
+
+  async updateoffer(req, res) {
     const offerId = req.params.id;
     const updatedData = req.body;
-    console.log("OfferId:"+offerId)
+    console.log("OfferId:" + offerId)
     console.log(updatedData)
-  
+
     try {
       const updatedOffer = await offerModel.findByIdAndUpdate(offerId, updatedData, { new: true });
-       console.log(`krgwekogj:${updatedOffer}`)
+      console.log(`krgwekogj:${updatedOffer}`)
       if (!updatedOffer) {
         return res.status(404).json({ success: false, message: "Offer not found." });
       }
-  
+
       res.status(200).json({ success: true, message: "Offer updated successfully.", data: updatedOffer });
     } catch (error) {
       console.error("Error updating offer:", error);
       res.status(500).json({ success: false, message: "Internal server error." });
     }
   },
-  
+
 };

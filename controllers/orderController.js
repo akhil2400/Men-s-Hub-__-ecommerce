@@ -10,9 +10,10 @@ const cartModel = require('../models/cartModel');
 const addressModel = require('../models/addressModel')
 const orderModel = require('../models/orderModel');
 const walletModel = require('../models/walletModel');
-
-const mongoose = require('mongoose');
+const PDFDocument = require("pdfkit");
+const fs = require("fs");
 const path = require('path');
+const mongoose = require('mongoose');
 
 module.exports = {
   //Admin side
@@ -327,8 +328,118 @@ module.exports = {
       console.error(error);
       res.status(500).json({ success: false, message: 'Server error' });
     }
-  
+
+  },
+  async downloadInvoice(req, res) {
+    try {
+        const { orderId } = req.params;
+
+        // Fetch order details from the database with populated references
+        const order = await orderModel.findById(orderId)
+            .populate("userId", "userName email") // Populate user details
+            .populate("products.productId", "name") // Populate product details
+            .populate("deliveryAddress", "houseNumber street city landmark district state country pinCode") // Populate delivery address
+            .lean();
+
+        if (!order) {
+            return res.status(404).send("Order not found");
+        }
+
+        // Create a new PDF document
+        const pdfDoc = new PDFDocument({ margin: 50 });
+
+        // Register and set custom font (NotoSans)
+        const rupeeFontPath = path.join(__dirname, '..', 'public', 'fonts', 'NotoSans-Regular.ttf');
+        const rupeeFontPathBold = path.join(__dirname, '..', 'public', 'fonts', 'NotoSans_Condensed-Bold.ttf');
+
+        pdfDoc.registerFont('NotoSans', rupeeFontPath);
+        pdfDoc.registerFont('NotoSans-Bold', rupeeFontPathBold);
+
+        pdfDoc.font('NotoSans');
+
+        // Set headers to prompt the download
+        const fileName = `invoice-${orderId}.pdf`;
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader("Content-Disposition", `attachment; filename=${fileName}`);
+
+        // Pipe the PDF stream directly to the response
+        pdfDoc.pipe(res);
+
+        // Generate the Invoice Header with background color
+        pdfDoc.rect(50, 30, 500, 40).fill('#4CAF50');
+        pdfDoc.fillColor('#FFFFFF').fontSize(20).text("INVOICE", 50, 40, { align: "center" });
+        pdfDoc.moveDown(2);
+
+        // Order and Customer Details Section
+        pdfDoc.fillColor('#000000').fontSize(12).text(`Order ID: ${order._id}`, { align: "left" });
+        pdfDoc.text(`Date: ${new Date(order.createdAt).toLocaleDateString()}`, { align: "left" });
+        pdfDoc.text(`Customer Name: ${order.userId.userName}`, { align: "left" });
+        pdfDoc.text(`Customer Email: ${order.userId.email}`, { align: "left" });
+        pdfDoc.text(`Address: ${order.deliveryAddress.houseNumber}, ${order.deliveryAddress.street}, ${order.deliveryAddress.landmark}, ${order.deliveryAddress.city}, ${order.deliveryAddress.district}, ${order.deliveryAddress.state}, ${order.deliveryAddress.country} - ${order.deliveryAddress.pinCode}`);
+        pdfDoc.moveDown(2);
+
+        // Products Table Header with styled background
+        const headerY = pdfDoc.y;
+        pdfDoc.rect(50, headerY, 500, 25).fill('#ffab00');
+        pdfDoc.fillColor('#000000').fontSize(12).font('NotoSans-Bold');
+        pdfDoc.text("#", 60, headerY + 5, { width: 40, align: "center" });
+        pdfDoc.text("Product Name", 100, headerY + 5, { width: 200, align: "left" });
+        pdfDoc.text("Quantity", 300, headerY + 5, { width: 60, align: "center" });
+        pdfDoc.text("Price (₹)", 380, headerY + 5, { width: 60, align: "center" });
+        pdfDoc.text("Total (₹)", 460, headerY + 5, { width: 60, align: "center" });
+
+        let tableY = headerY + 25;
+
+        // Draw table rows for products
+        pdfDoc.font('NotoSans').fontSize(10);
+        order.products.forEach((item, index) => {
+            const productTotal = item.quantity * item.price;
+            const isEvenRow = index % 2 === 0;
+
+            // Alternate row colors
+            pdfDoc.rect(50, tableY, 500, 20).fill(isEvenRow ? '#ffffff' : '#f9f9f9').stroke();
+            pdfDoc.fillColor('#000000');
+
+            pdfDoc.text(index + 1, 60, tableY + 5, { width: 40, align: "center" });
+            pdfDoc.text(item.productId.name, 100, tableY + 5, { width: 200, align: "left" });
+            pdfDoc.text(item.quantity, 300, tableY + 5, { width: 60, align: "center" });
+            pdfDoc.text(`₹${item.price.toFixed(2)}`, 380, tableY + 5, { width: 60, align: "center" });
+            pdfDoc.text(`₹${productTotal.toFixed(2)}`, 460, tableY + 5, { width: 60, align: "center" });
+
+            tableY += 20;
+        });
+
+        pdfDoc.moveDown(2);
+
+        // Total Amount Section with bold fonts
+        pdfDoc.fontSize(12).font('NotoSans-Bold').fillColor('#000000');
+        pdfDoc.text(`Subtotal: ₹${(order.totalAmount - (order.deliveryCharges || 0)).toFixed(2)}`, { align: "right", indent: -50 });
+        pdfDoc.text(`Delivery Charges: ₹${(order.deliveryCharges || 0).toFixed(2)}`, { align: "right", indent: -50 });
+        pdfDoc.text(`Total Amount: ₹${order.totalAmount.toFixed(2)}`, { align: "right", indent: -50, underline: true });
+
+        pdfDoc.moveDown(2);
+
+        // Payment Method and Footer
+        pdfDoc.fontSize(12).font('NotoSans-Bold').text(`Payment Method: ${order.paymentMethod}`, { align: "left" , indent: -50 });
+        pdfDoc.moveDown();
+
+        pdfDoc.rect(50, pdfDoc.y, 500, 40).fill('#4CAF50');
+        pdfDoc.fillColor('#FFFFFF').fontSize(16).text("Thank you for your order!", 50, pdfDoc.y + 10, { align: "center" });
+
+        // End the PDF document
+        pdfDoc.end();
+    } catch (error) {
+        console.error("Error generating invoice:", error);
+        res.status(500).send("Internal Server Error");
+    }
 },
+
+
+
+
+
+
+
 
   // async initiateIndividualReturn(req, res) {
   //   const orderId = req.params.id;

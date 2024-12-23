@@ -55,7 +55,8 @@ router.get('/admin/dashboard', adminController.whenDashboardLoad);
 router.get('/admin/dashboard/data', adminController.dashboardData);
 router.post('/admin/dashboard/download-report', adminController.downloadReport);
 router.put("/handle-return/:orderId", adminController.handleReturn);
-
 router.get('/admin/salesreport',adminController.loadSalesReport)
 router.get('/admin/salesreportdata',adminController.reportData)
+router.get('/admin/top-selling-products',adminController.getTopSellingProducts)
+router.get('/admin/top-selling-categories',adminController.getTopSellingCategories)
 module.exports = router;

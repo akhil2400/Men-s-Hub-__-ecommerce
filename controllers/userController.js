@@ -567,49 +567,61 @@ module.exports = {
       const { email } = req.session.userData;
       console.log(email);
       const user = await userModel.findOne({ email }).lean();
-
+  
       if (!user) {
         return res.status(404).send("User not found");
       }
-
+  
       const cart = await cartModel
         .findOne({ userId: user._id })
         .populate("items.productId");
       console.log(cart);
-
+  
       // If the cart doesn't exist, create an empty cart object
       if (!cart) {
         return res.render("cart", { cart: { items: [], cartTotal: 0 } });
       }
-
+  
       // Ensure cart.items is always an array
       if (!Array.isArray(cart.items)) {
         cart.items = [];
       }
-
-      // Ensure cartTotal exists, calculate it if missing
-      if (cart.cartTotal === undefined || cart.cartTotal === null) {
-        cart.cartTotal = cart.items.reduce(
-          (total, item) => total + item.price * item.quantity,
-          0
-        );
-      }
-
-      // Add stock info to each cart item
+      const message = req.session.message;
+      req.session.message = null; // Clear the message after displaying it
+  
+      // Add stock info to each cart item and adjust quantities if needed
       cart.items = cart.items.map((item) => {
         const stockAvailable = item.productId.stock;
+  
+        // If the cart quantity exceeds available stock, adjust it
+        if (item.quantity > stockAvailable) {
+          console.log(
+            `Adjusting quantity for product ${item.productId._id}: cart quantity (${item.quantity}) exceeds stock (${stockAvailable})`
+          );
+          item.quantity = stockAvailable;
+        }
+  
+        // Attach stock information
         item.stockAvailable = stockAvailable;
         return item;
       });
-
+  
+      // Ensure cartTotal exists, calculate it if missing or after adjustments
+      if (cart.cartTotal === undefined || cart.cartTotal === null) {
+        cart.cartTotal = cart.items.reduce(
+          (total, item) => total + item.productId.price * item.quantity,
+          0
+        );
+      }
+  
       console.log("Cart loaded:", cart);
-      return res.render("cart", { cart });
+      return res.render("cart", { cart,message });
     } catch (error) {
       console.error("Error in loadcart:", error);
       res.status(500).send("An error occurred while loading the cart");
     }
   },
-
+  
   async fetchCart(req, res) {
     try {
       const { email } = req.session.userData;
@@ -828,37 +840,53 @@ module.exports = {
         email: req.session.userData.email,
       });
       const userId = user.id;
-
+  
       if (!userId) {
         return res.status(400).send("User ID is required");
       }
-
+  
       const addresses = await addressModel.find({ userId });
       if (!addresses || addresses.length === 0) {
         return res.status(400).send("No addresses found for this user");
       }
-      console.log("address",addresses);
-
+      console.log("address", addresses);
+  
       const cartData = req.body.cartData ? JSON.parse(req.body.cartData) : {};
       if (!cartData.items || cartData.items.length === 0) {
         return res.status(400).send("Invalid or empty cart data");
       }
-
+  
+      // Check product quantities from the product model
+      for (const cartItem of cartData.items) {
+        const product = await productModel.findById(cartItem.productId);
+  
+        if (!product) {
+          req.session.message = `Product with ID ${cartItem.productId} not found.`;
+          return res.redirect("/cart");
+        }
+  
+        // If cart quantity exceeds stock, redirect to cart with a message
+        if (cartItem.quantity > product.stock) {
+          req.session.message = `We Are adjusted the stock for product: ${product.name}. Available stock: ${product.stock}, your cart quantity: ${cartItem.quantity}.So we are adjusting your caert quantity if you are ok you can proceed to the checkout page.`;
+          return res.redirect("/cart");
+        }
+      }
+  
       // Calculate the subtotal
       const subtotal = cartData.items.reduce((sum, item) => {
         return sum + item.offerPrice * item.quantity;
       }, 0);
-
+  
       const shippingCost = 50;
       let cartTotal = subtotal + shippingCost;
-
+  
       // Coupon application logic
       const { couponCode } = req.body;
       let discount = 0;
-
+  
       if (couponCode) {
         const coupon = await couponModel.findOne({ couponCode, isActive: true });
-
+  
         if (coupon) {
           const currentDate = new Date().toISOString();
           if (
@@ -872,41 +900,41 @@ module.exports = {
               } else if (coupon.discountType === "fixed") {
                 discount = coupon.discountValue;
               }
-
+  
               // Ensure discount doesn't exceed maximum purchase limit (if defined)
               if (coupon.maximumPurchase && subtotal > coupon.maximumPurchase) {
                 discount = Math.min(discount, coupon.maximumPurchase);
               }
-
+  
               // Deduct the discount from the total
               cartTotal -= discount;
             } else {
-              return res
-                .status(400)
-                .send(
-                  "Subtotal does not meet the minimum purchase requirement for this coupon."
-                );
+              req.session.message =
+                "Subtotal does not meet the minimum purchase requirement for this coupon.";
+              return res.redirect("/cart");
             }
           } else {
-            return res.status(400).send("Coupon is expired or not yet valid.");
+            req.session.message = "Coupon is expired or not yet valid.";
+            return res.redirect("/cart");
           }
         } else {
-          return res.status(400).send("Invalid or inactive coupon code.");
+          req.session.message = "Invalid or inactive coupon code.";
+          return res.redirect("/cart");
         }
       }
-
-
+  
       cartData.subtotal = subtotal;
       cartData.shippingCost = shippingCost;
       cartData.discount = discount;
       cartData.cartTotal = cartTotal;
-
+  
       res.render("checkout", { cart: cartData, addresses, userId });
     } catch (error) {
       console.error("Error processing checkout:", error);
       res.status(500).send("Internal Server Error");
     }
   },
+  
 
   async loadthankyou(req, res) {
     res.render("thankyou");
@@ -922,7 +950,7 @@ module.exports = {
       }
       const userId = user.id;
       req.session.userId = userId;
-
+  
       const { selectedAddress, items } = req.body;
       console.log("items:", items);
       if (!selectedAddress || !items || items.length === 0) {
@@ -930,14 +958,14 @@ module.exports = {
           .status(400)
           .json({ val: false, msg: "Address and items are required" });
       }
-
+  
       // Ensure user is logged in
       if (!req.session.userId) {
         return res
           .status(401)
           .json({ val: false, msg: "User is not logged in" });
       }
-
+  
       // Validate products and stock
       for (const item of items) {
         const product = await productModel.findById(item.productId);
@@ -952,17 +980,29 @@ module.exports = {
             msg: `Insufficient stock for product: ${product.name}`,
           });
         }
-        product.stock -= item.quantity;
-        await product.save();
       }
-
+  
       // Calculate total price based on product price and quantity
       const totalOrderPrice = items.reduce(
         (sum, item) => sum + item.offerPrice * item.quantity,
         50
       );
-
-
+  
+      // Check if total order price exceeds the limit for COD payment
+      if (totalOrderPrice > 1000) {
+        return res.status(400).json({
+          val: false,
+          msg: "Cash on Delivery is not available for orders exceeding ₹1000.",
+        });
+      }
+  
+      // Deduct stock after price check
+      for (const item of items) {
+        const product = await productModel.findById(item.productId);
+        product.stock -= item.quantity;
+        await product.save();
+      }
+  
       // Create the order with COD payment method
       const order = new orderModel({
         userId: req.session.userId,
@@ -972,15 +1012,15 @@ module.exports = {
         paymentMethod: "cod",
         paymentStatus: "pending", // Payment will be marked as pending for COD
       });
-
+  
       await order.save();
-
+  
       // Empty the cart
       await cartModel.findOneAndUpdate(
         { userId: req.session.userId },
         { $set: { items: [], cartTotal: 0 } }
       );
-
+  
       res.status(200).json({
         val: true,
         msg: "Order placed successfully with Cash on Delivery.",
@@ -991,7 +1031,8 @@ module.exports = {
         .status(500)
         .json({ val: false, msg: "An error occurred while placing the order" });
     }
-  },
+  }
+,  
 
   async placeOrderRazorpay(req, res) {
     try {
