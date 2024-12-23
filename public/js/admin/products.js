@@ -5,7 +5,7 @@ let currentImageIndex = null;
 const name = document.getElementById("productName");
 const description = document.getElementById("productDescription");
 const categorySelect = document.getElementById("productCategory");
-const brand = document.getElementById("productBrand");
+// const brand = document.getElementById("productBrand");
 const ogPrice = document.getElementById("productOgPrice");
 const offerPrice = document.getElementById("productOfferPrice");
 const tags = document.getElementById("productTags");
@@ -116,8 +116,8 @@ function validateAndSubmit() {
     showError(categorySelect, "Please select a category.");
   } else if (!tagsRegex.test(tags.value)) {
     showError(tags, "Tags should start with #, have letters or numbers, and be separated by spaces.");
-  } else if (!textRegex.test(brand.value)) {
-    showError(brand, "Brand name must be alphanumeric.");
+  // } else if (!textRegex.test(brand.value)) {
+  //   showError(brand, "Brand name must be alphanumeric.");
   } else if (!priceRegex.test(ogPrice.value)) {
     showError(ogPrice, "Original Price must be a valid number with up to 2 decimal places.");
 
@@ -137,7 +137,7 @@ function validateAndSubmit() {
     formData.append("name", name.value);
     formData.append("description", description.value);
     formData.append("category", categorySelect.value);
-    formData.append("brand", brand.value);
+    // formData.append("brand", brand.value);
     formData.append("price", parseFloat(ogPrice.value));
     formData.append("tags", tags.value);
     formData.append("sizes", JSON.stringify(sizes))
@@ -151,7 +151,7 @@ function validateAndSubmit() {
       name: name.value,
       description: description.value,
       category: categorySelect.value,
-      brand: brand.value,
+      // brand: brand.value,
       price: ogPrice.value,
       sizes,
       stockQuantities,
