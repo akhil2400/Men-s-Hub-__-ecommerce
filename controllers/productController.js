@@ -52,6 +52,7 @@ module.exports = {
       description,
       category,
       tags,
+      brand,
       price,
       sizes,
       cashOnDelivery,
@@ -59,6 +60,7 @@ module.exports = {
       stockQuantities,
       warranty,
       returnPolicy,
+      colors,
     } = req.body;
 
     console.log(req.body);
@@ -132,7 +134,8 @@ module.exports = {
         images: imagePaths,
         variants:variants,
         totalStock,
-        // colors: Array.isArray(colors) ? colors : colors.split(","),
+        colors: Array.isArray(colors) ? colors : colors.split(","),
+        brand,
         tags: tags.split("#").filter(Boolean),
         cashOnDelivery,
         warranty,

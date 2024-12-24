@@ -1018,7 +1018,7 @@ module.exports = {
         totalAmount: totalOrderPrice,
         payableAmount: payableAmount,
         paymentMethod: "cod",
-        paymentStatus: "pending", // Payment will be marked as pending for COD
+        paymentStatus: "pending", 
       });
       
       await order.save();

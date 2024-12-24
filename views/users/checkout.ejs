@@ -188,39 +188,11 @@
               </div>
               <br>
               <br>
-              <div class="border p-3 mb-3">
-                <div>
-                  <!-- Radio Button with ID -->
-                  <input type="radio" name="payment" id="razerpay" />
-
-                  <!-- Label for the Radio Button -->
-                  <label for="razerpay">
-                    <h3 class="h6 mb-0">
-                      <a class="d-block" data-bs-toggle="collapse" href="#collapsebank" role="button"
-                        aria-expanded="false" aria-controls="collapsepaypal" style="text-decoration: none">
-                        Bank Transfer
-                      </a>
-                    </h3>
-                  </label>
-                </div>
-
-                <div class="collapse" id="collapsebank">
-                  <div class="py-2">
-                    <p class="mb-0">
-                      Make your payment directly into our bank account.
-                      Please use your Order ID as the payment reference.
-                      Your order won't be shipped until the funds have
-                      cleared in our account.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
+              <br>
               <div class="border p-3 mb-3">
                 <div>
                   <!-- Radio Button with ID -->
                   <input type="radio" name="payment" id="cash-on-delivery" />
-
                   <!-- Label for the Radio Button -->
                   <label for="cash-on-delivery">
                     <h3 class="h6 mb-0">
@@ -475,7 +447,7 @@
             const orderPayload = {
               selectedAddress: selectedAddress.value,
               items: cartItems,
-              payableAmount:cartTotal.replace("₹", "")
+              payableAmount: cartTotal.replace("₹", "")
             };
 
             if (selectedPayment.id === 'cash-on-delivery') {
@@ -505,8 +477,8 @@
 
               if (razorpayOrderData.val) {
                 const razorpayOptions = {
-                  key: 'rzp_test_mUKkruYO0ysf3W', 
-                  amount: razorpayOrderData.amount, 
+                  key: 'rzp_test_mUKkruYO0ysf3W',
+                  amount: razorpayOrderData.amount,
                   currency: 'INR',
                   name: "MEN'S HUB",
                   description: 'Order Payment',
@@ -520,7 +492,7 @@
                         paymentId: response.razorpay_payment_id,
                         razorpayOrderId: razorpayOrderData.razorpayOrderId,
                         razorpaySignature: response.razorpay_signature,
-                        orderId:razorpayOrderData.orderId
+                        orderId: razorpayOrderData.orderId
                       }),
                     });
                     const verifyData = await verifyResponse.json();
@@ -608,7 +580,7 @@
           const statePattern = /^[a-zA-Z\s]+$/; // Letters and spaces
           const countryPattern = /^[a-zA-Z\s]+$/; // Letters and spaces
           const pinCodePattern = /^\d{6}$/; // Exactly 6 digits
-          const mobileNumberPattern =/^\d{10}$/;// Exactly 10 digits 
+          const mobileNumberPattern = /^\d{10}$/;// Exactly 10 digits 
 
           // Check for empty fields and display sweetalert for missing fields
           if (!houseNumber || !street || !city || !landmark || !district || !state || !country || !pinCode || !mobileNumber) {
@@ -764,8 +736,8 @@
           }
           return valid;
         }
-      
-      
+
+
       </script>
       <script src="js/bootstrap.bundle.min.js"></script>
       <script src="js/tiny-slider.js"></script>

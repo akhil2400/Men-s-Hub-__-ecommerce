@@ -22,8 +22,8 @@
     <!-- partial:partials/_sidebar.html -->
     <nav class="sidebar sidebar-offcanvas" id="sidebar">
       <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-        <a class="sidebar-brand brand-logo" href="/home">MEN'S HUB </a>
-        <a class="sidebar-brand brand-logo-mini" href="/home"><img src="/images/logo-mini.svg" alt="logo" /></a>
+        <a class="sidebar-brand brand-logo" href="index.html">MEN'S HUB </a>
+        <a class="sidebar-brand brand-logo-mini" href="index.html"><img src="/images/logo-mini.svg" alt="logo" /></a>
         <a href="/home"><img style="width: 30px;height: 30px;" src="/images/img/home-logo/home2.png" alt="To home"></a>
       </div>
       <ul class="nav">
@@ -256,6 +256,7 @@
                       <th style="color: white;">Image4</th>
                       <th style="color: white;">Name</th>
                       <th style="color: white;">category</th>
+                      <th style="color: white;">Brand</th>
                       <th style="color: white;">Price</th>
                       <th style="color: white;">stock</th>
                       <th style="color: white;">List</th>
@@ -294,6 +295,9 @@
                                 <%= x.name %>
                               <% } %>
                             <% }) %>
+                          </td>
+                          <td>
+                            <%= data.brand %>
                           </td>
                           <td>
                             <%= data.price %>
@@ -441,6 +445,11 @@
                   <input type="text" class="form-control product-tags" id="productTags" placeholder="Product tags"
                     required />
                 </div>
+                <div class="form-group">
+                  <label for="productBrand">Brand</label>
+                  <input type="text" class="form-control product-brand" id="productBrand" placeholder="Product brand"
+                    required />
+                </div>
                 <label for="sizes">Available Sizes:</label>
                 <div class="size-container">
                   <% const sizes=['XS', 'S' , 'M' , 'L' , 'XL' , 'XXL' ]; %>
@@ -453,7 +462,18 @@
                           placeholder="Stock for size <%= sizes[i] %>" style="display: none;" min="1" />
                       </div>
                       <% } %>
+
                 </div>
+                <!-- <div class="form-group">
+                  <label>Color Options</label>
+                  <div class="form-check">
+                    <input type="color" value="#008000" id="colorPicker" />
+                    <button class="btn btn-success mb-3" type="button" onclick="addColor()">
+                      Add Color
+                    </button>
+                  </div>
+                  <div class="showColors" id="showColors"></div>
+                </div> -->
                 <div class="form-group">
                   <label for="productOgPrice">Price</label>
                   <input type="number" class="form-control product-og-price" id="productOgPrice"
@@ -479,6 +499,12 @@
                     <p class="error-message" id="offerPriceError"></p>
                   </div>
                 </div>
+                <!-- <div class="form-group">
+                  <label for="productStock">Stock</label>
+                  <input type="number" class="form-control product-stock" id="productStock" placeholder="Stock"
+                    required />
+                  <p class="error-message" id="stockError"></p>
+                </div> -->
                 <div class="form-group">
                   <div class="form-check mb-3">
                     <input type="checkbox" class="form-check-input" id="toggleWarranty"
