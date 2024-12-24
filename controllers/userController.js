@@ -1052,23 +1052,24 @@ module.exports = {
       }
       const userId = user.id;
       req.session.userId = userId;
-
+  
       const { selectedAddress, items, payableAmount } = req.body;
-      console.log(payableAmount)
+      console.log(payableAmount);
       if (!selectedAddress || !items || items.length === 0) {
         return res
           .status(400)
           .json({ val: false, msg: "Address and items are required" });
       }
-
+  
       // Ensure user is logged in
       if (!req.session.userId) {
         return res
           .status(401)
           .json({ val: false, msg: "User is not logged in" });
       }
-
+  
       // Validate products and stock
+      const productsForOrder = [];
       for (const item of items) {
         const product = await productModel.findById(item.productId);
         if (!product) {
@@ -1082,51 +1083,59 @@ module.exports = {
             msg: `Insufficient stock for product: ${product.name}`,
           });
         }
+  
+        // Deduct stock and prepare product entry
         product.totalStock -= item.quantity;
         await product.save();
+  
+        productsForOrder.push({
+          productId: item.productId,
+          quantity: item.quantity,
+          price: product.offerPrice, // Ensure price is included
+        });
       }
-
+  
       // Calculate total price based on product price and quantity
       const totalOrderPrice = items.reduce(
         (sum, item) => sum + item.offerPrice * item.quantity,
         50
       );
-
+  
       // Create the order with Razorpay payment method
       const order = new orderModel({
         userId: req.session.userId,
         deliveryAddress: selectedAddress,
-        products: items,
+        products: productsForOrder, // Pass the prepared products array
         totalAmount: totalOrderPrice,
         payableAmount: payableAmount,
         paymentMethod: "razorpay",
         paymentStatus: "paid", // Payment will be pending until verified by Razorpay
       });
-
-     const savedOrder= await order.save();
-
+  
+      const savedOrder = await order.save();
+  
       // Call Razorpay payment initiation logic
       const razorpayInstance = new Razorpay({
         key_id: process.env.RAZORPAY_KEY_ID,
         key_secret: process.env.RAZORPAY_KEY_SECRET,
       });
-
+  
       const razorpayOrder = await razorpayInstance.orders.create({
         amount: payableAmount * 100, // Convert amount to paise
         currency: "INR",
         receipt: `order_receipt_${order._id}`,
         payment_capture: 1,
       });
-
+  
       // Save the Razorpay order ID in the order document
       order.razorpayOrderId = razorpayOrder.id;
       await order.save();
-
+  
       await cartModel.findOneAndUpdate(
         { userId: req.session.userId },
         { $set: { items: [], cartTotal: 0 } }
       );
-
+  
       res.status(200).json({
         val: true,
         razorpayOrderId: razorpayOrder.id,
@@ -1142,6 +1151,7 @@ module.exports = {
       });
     }
   },
+  
   
   // Verify Razorpay Payment
   async verifyRazorpayPayment(req, res) {
