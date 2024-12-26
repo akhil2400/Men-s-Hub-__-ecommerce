@@ -51,7 +51,8 @@
 
 .offer-price {
   font-weight: bold;
-  color: #28a745; /* green color for offer price */
+  color: #28a745;
+  /* green color for offer price */
 }
 
 .original-price {
@@ -61,7 +62,8 @@
 }
 
 .discount {
-  background-color: #ff5722; /* orange background for discount */
+  background-color: #ff5722;
+  /* orange background for discount */
   color: #fff;
   padding: 2px 6px;
   border-radius: 4px;
@@ -122,7 +124,7 @@
   cursor: pointer;
 }
 
-.size-option input[type="radio"]:checked + label {
+.size-option input[type="radio"]:checked+label {
   background-color: #333;
   color: white;
 }
@@ -139,13 +141,15 @@
 }
 
 .btn-add-to-cart {
-  background-color: #28a745; /* green button */
+  background-color: #28a745;
+  /* green button */
   color: #fff;
   margin-right: 10px;
 }
 
 .btn-warning {
-  background-color: #ffc107; /* yellow button */
+  background-color: #ffc107;
+  /* yellow button */
   color: #333;
 }
 
@@ -187,6 +191,7 @@
   border-radius: 5px;
   margin-top: 8px;
 }
+
 /* Container for the main image with zoom effect */
 .main-image {
   position: relative;
@@ -197,35 +202,41 @@
 .zoom-circle {
   position: absolute;
   border-radius: 50%;
-  width: 150px; /* Adjust size as needed */
+  width: 150px;
+  /* Adjust size as needed */
   height: 150px;
-  pointer-events: none; /* Allows mouse events to pass through */
+  pointer-events: none;
+  /* Allows mouse events to pass through */
   background-repeat: no-repeat;
-  display: none; /* Initially hidden */
+  display: none;
+  /* Initially hidden */
   border: 2px solid #ccc;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Color Option Selection */
 .color-option.selected {
-  border-color: black; /* Black border to indicate selection */
+  border-color: black;
+  /* Black border to indicate selection */
 }
 
 /* Size Option Selection */
 .size-option.selected {
-  background-color: green; /* Green background for selected size */
-  color: white; /* White text for better visibility */
-  border-color: green; /* Match border to background color */
+  background-color: green;
+  /* Green background for selected size */
+  color: white;
+  /* White text for better visibility */
+  border-color: green;
+  /* Match border to background color */
 }
 
 
 .heart-icon {
-    width: 22px;
-    position: absolute;
-    top: 656px;
-    bottom: 656px;
-    right: 442px;
-    font-size: 20px;
-    cursor: pointer;
+  width: 22px;
+  position: absolute;
+  top: 606px;
+  bottom: 663px;
+  right: 554px;
+  font-size: 20px;
+  cursor: pointer;
 }
-

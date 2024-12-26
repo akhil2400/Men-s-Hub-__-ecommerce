@@ -137,77 +137,80 @@ module.exports = {
   //     console.error("Error in addToCartFromWishlist:", error);
   //     res.status(500).json({ success: false, message: "An error occurred." });
   //   }
-  // }
-  // async addToCartFromWishlist(req, res) {
-  //   console.log(1111)
-  //   const {productId} = req.params;
-  //   let { quantity, productSize, color, price, total } = req.body;
-  //   const { email } = req.session.userData; 
+  // },
+  async addToCartFromWishlist(req, res) {
+    try {
+      console.log(1111)
+      const productId = req.params.productId;
+      console.log(productId)
+      let { quantity, productSize, price, total } = req.body;
+      const { email } = req.session.userData; 
+  
+      console.log(`productId : ${productId}`)
+      console.log(productId)
+  
+      console.log(price)
+      console.log(total)
+      console.log(productSize)
+      console.log(quantity)
+      // Find the product in the database
+      console.log(11)
+      const product = await productModel.findById(productId);
+      console.log(product)
+      console.log(12)
 
-  //   console.log(`productId : ${productId}`)
+      const user = await userModel.findOne({ email });
+      // Find the user's cart
+      let cart = await cartModel.findOne({ userId: user._id });
 
-  //   console.log(price)
-  //   console.log(total)
-  //   console.log(productSize)
-  //   console.log(quantity)
+      if (!cart) {
+        // If the cart doesn't exist, create a new cart
+        cart = new cartModel({
+          userId:user._id,
+          items: [{
+            productId,
+            quantity,
+            offerPrice:product.offerPrice || product.price,
+            size: productSize,
+            total,
+          }],
+          cartTotal: total,
+        });
+      } else {
+        // If the cart exists, check if the product is already in the cart
+        const existingItem = cart.items.find(item => item.productId.toString() === productId);
+        if (existingItem) {
 
-  //   try {
-  //     // Find the product in the database
-  //     console.log(11)
-  //     const product = await productModel.findOne({productId});
+          existingItem.quantity += quantity;
+          existingItem.total = existingItem.quantity * (product.offerPrice || product.price);
+        } else {
+          // Add the new product to the cart
+          cart.items.push({
+            productId,
+            quantity,
+            offerPrice:product.offerPrice || product.price,
+            size: productSize,
+            total,
+          });
+        }
 
-  //     console.log(12)
+        // Update the cart's total price
+        cart.cartTotal = cart.items.reduce((acc, item) => acc + item.total, 0);
+      }
 
-  //     const user = await userModel.findOne({ email });
-  //     // Find the user's cart
-  //     let cart = await cartModel.findOne({ userId: user._id });
+      // Save the updated cart to the database
+      await cart.save();
 
-  //     if (!cart) {
-  //       // If the cart doesn't exist, create a new cart
-  //       cart = new cartModel({
-  //         userId,
-  //         items: [{
-  //           productId,
-  //           quantity,
-  //           price,
-  //           size: productSize,
-  //           color,
-  //           total,
-  //         }],
-  //         cartTotal: total,
-  //       });
-  //     } else {
-  //       // If the cart exists, check if the product is already in the cart
-  //       const existingItem = cart.items.find(item => item.productId.toString() === productId);
-  //       if (existingItem) {
-  //         // Update the quantity of the existing item in the cart
-  //         existingItem.quantity += quantity;
-  //         existingItem.total = existingItem.quantity * price;
-  //       } else {
-  //         // Add the new product to the cart
-  //         cart.items.push({
-  //           productId,
-  //           quantity,
-  //           price,
-  //           size: productSize,
-  //           color,
-  //           total,
-  //         });
-  //       }
+      // Remove the product from the wishlist
+      await wishlistModel.deleteOne({ userId: user._id, productId });
+      
 
-  //       // Update the cart's total price
-  //       cart.cartTotal = cart.items.reduce((acc, item) => acc + item.total, 0);
-  //     }
+      return res.status(200).json({ success: true, message: "Product added to cart successfully" });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ success: false, message: "Server error" });
+    }
 
-  //     // Save the updated cart to the database
-  //     await cart.save();
-
-  //     return res.status(200).json({ success: true, message: "Product added to cart successfully" });
-  //   } catch (error) {
-  //     console.error(error);
-  //     return res.status(500).json({ success: false, message: "Server error" });
-  //   }
-
-  // }
+  }
 
 }

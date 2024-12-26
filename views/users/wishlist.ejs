@@ -92,7 +92,6 @@
                           </td>
                           <td class="product-price">₹<%= item.productPrice %>
                           </td>
-                          <p>HIII <%= item.productPrice %></p>
                           <td class="product-action">
                             <button class="add-to-cart-btn" data-price="<%= item.productPrice %>" data-id="<%= item.productId %>">
                               Add to Cart
@@ -109,10 +108,14 @@
                 </tbody>
               </table>
             </div>
+            <a href="/cart"><button id="goToCartButton" style= "border: none; width: 120px; font-size: 18px; padding: 8px;border-radius: 8px; background-color: rgb(47, 120, 47); color: white;">Go to Cart</button></a>
           </div>
         </div>
       </div>
     </div>
+
+    
+    
 
     <%- include("./layouts/footer.ejs") %>
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -179,65 +182,8 @@
       </script>
 
       <!-- add- to cart button -->
-      <!-- <script>
-        document.addEventListener("DOMContentLoaded", () => {
-          const addToCartButtons = document.querySelectorAll(".add-to-cart-btn");
-
-          addToCartButtons.forEach((button) => {
-            button.addEventListener("click", async (e) => {
-              const productId = JSON.parse(e.target.dataset.id);
-              const proid=productId._id
-              console.log(productId)
-              console.log(proid)
-              if (!productId) {
-                Swal.fire("Error!", "Product ID is missing.", "error");
-                return;
-              }
-              try {
-                // Make the POST request
-                const response = await fetch(`/addToCartFromWishlist/${productId}`, {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                });
-
-                // Check if response status is OK (200-299)
-                const data = await response.json();
-
-                console.log("Response Data:", data); // Log the response data for debugging
-
-                if (response.ok) {
-                  // Success case
-                  if (data.success) {
-                    Swal.fire(
-                      "Success!",
-                      "Product added to cart and removed from wishlist.",
-                      "success"
-                    );
-                    location.reload(); // Reload page to update wishlist
-                  } else {
-                    // Error case with the message from the backend
-                    Swal.fire(
-                      "Error!",
-                      data.message || "Unable to add product to cart.",
-                      "error"
-                    );
-                  }
-                } else {
-                  // In case of a non-200 response (like 500, 404, etc.)
-                  console.error("Server Error:", data); // Log the error data for more insight
-                  Swal.fire("Error!", "An error occurred. Please try again.", "error");
-                }
-              } catch (error) {
-                console.error("Error:", error); 
-                // Swal.fire("Error!", "An error occurred. Please try again.", "error");
-              }
-
-
-            });
-          });
-        });
-      </script> -->
-       <script>
+      
+      <script>
   document.addEventListener("DOMContentLoaded", () => {
     const addToCartButtons = document.querySelectorAll(".add-to-cart-btn");
 
@@ -246,11 +192,10 @@
         const productId = e.target.getAttribute("data-id");
         console.log(productId)
         const productSize = "M"; // You can modify this as per your UI for size
-        const color = "blue"; // Modify based on the selected color
         const quantity = 1; // Set default quantity to 1
         const productPrice = parseFloat(e.target.getAttribute("data-price")); // Get price from dataset
         const total = productPrice * quantity; // Calculate the total price
-
+        console.log("totol",total)
         try {
           // Send data to the server to add to cart
           const response = await fetch(`/wishlist/addToCart/${productId}`, {
@@ -262,7 +207,6 @@
               productId,
               quantity,
               productSize,
-              color,
               price: productPrice,
               total,
             }),
@@ -278,7 +222,9 @@
               showConfirmButton: false,
               timer: 1500,
             });
-            location.reload(); // Reload the page to update the cart
+            setTimeout(() => {
+              window.location.reload();
+            },1500)
           } else {
             Swal.fire({
               icon: "error",
@@ -286,6 +232,7 @@
               text: data.message || "Something went wrong.",
             });
           }
+          document.getElementById("goToCartButton").style.display = "block";
         } catch (err) {
           console.error(err);
           Swal.fire("Error!", "An error occurred. Please try again.", "error");

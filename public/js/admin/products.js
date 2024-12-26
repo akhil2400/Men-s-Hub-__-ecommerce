@@ -8,7 +8,6 @@ const categorySelect = document.getElementById("productCategory");
 const brand = document.getElementById("productBrand");
 const ogPrice = document.getElementById("productOgPrice");
 const offerPrice = document.getElementById("productOfferPrice");
-const stock = document.getElementById("productStock");
 const tags = document.getElementById("productTags");
 const warranty = document.getElementById("productWarranty");
 const returnPolicy = document.getElementById("productReturnPolicy");
@@ -16,7 +15,6 @@ const cashOnDelivery = document.getElementById("cashOnDelivery");
 
 const nameRegex = /^[a-zA-Z0-9 ]{3,}$/;
 const priceRegex = /^\d+(\.\d{1,2})?$/;
-const stockRegex = /^(0|[1-9]\d*)$/;
 const textRegex = /^[a-zA-Z0-9 ]+$/;
 const tagsRegex = /^(#\w+)(\s#\w+)*$/;
 
@@ -47,23 +45,23 @@ function previewAndCrop(event, index) {
 
 const colorsOption = [];
 
-function addColor() {
-  const colorPicker = document.getElementById("colorPicker");
-  const selectedColor = colorPicker.value;
-  if (!colorsOption.includes(selectedColor)) {
-    colorsOption.push(selectedColor);
-    const colorCircle = document.createElement("div");
-    colorCircle.style.width = "20px";
-    colorCircle.style.height = "20px";
-    colorCircle.style.backgroundColor = selectedColor;
-    colorCircle.style.borderRadius = "50%";
-    colorCircle.style.display = "inline-block";
-    colorCircle.style.margin = "5px";
-    document.getElementById("showColors").appendChild(colorCircle);
-  }
-  console.log(colorsOption)
-  colorPicker.value = "#ffffff";
-}
+// function addColor() {
+//   const colorPicker = document.getElementById("colorPicker");
+//   const selectedColor = colorPicker.value;
+//   if (!colorsOption.includes(selectedColor)) {
+//     colorsOption.push(selectedColor);
+//     const colorCircle = document.createElement("div");
+//     colorCircle.style.width = "20px";
+//     colorCircle.style.height = "20px";
+//     colorCircle.style.backgroundColor = selectedColor;
+//     colorCircle.style.borderRadius = "50%";
+//     colorCircle.style.display = "inline-block";
+//     colorCircle.style.margin = "5px";
+//     document.getElementById("showColors").appendChild(colorCircle);
+//   }
+//   console.log(colorsOption)
+//   colorPicker.value = "#ffffff";
+// }
 
 
 const selectedSizes = [];
@@ -122,9 +120,19 @@ function validateAndSubmit() {
     showError(brand, "Brand name must be alphanumeric.");
   } else if (!priceRegex.test(ogPrice.value)) {
     showError(ogPrice, "Original Price must be a valid number with up to 2 decimal places.");
-  } else if (!stockRegex.test(stock.value) || stock.value < 1) {
-    showError(stock, "Stock must be a positive integer.");
+
   } else {
+    const sizes = [];
+    const stockQuantities = [];
+    document.querySelectorAll('.size-checkbox:checked').forEach(checkbox => {
+      const size = checkbox.value;
+      const stockInput = document.getElementById(`stock_${size}`);
+      const stockValue = stockInput ? parseInt(stockInput.value) : 0;
+
+      sizes.push(size);
+      stockQuantities.push({stock: stockValue });
+    });
+
     const formData = new FormData();
     formData.append("name", name.value);
     formData.append("description", description.value);
@@ -132,16 +140,31 @@ function validateAndSubmit() {
     formData.append("brand", brand.value);
     formData.append("price", parseFloat(ogPrice.value));
     formData.append("tags", tags.value);
-    formData.append("sizes", selectedSizes);
+    formData.append("sizes", JSON.stringify(sizes))
+    formData.append("stockQuantities", JSON.stringify(stockQuantities));
     formData.append("colors", colorsOption);
     formData.append("cashOnDelivery", cashOnDelivery.checked);
     formData.append("offerPrice", offerPrice.value !== "" ? offerPrice.value : null);
-    formData.append("stock", parseInt(stock.value));
     formData.append("warranty", warranty.value !== "" ? warranty.value : null);
     formData.append("returnPolicy", returnPolicy.value !== "" ? returnPolicy.value : null);
+    console.log({
+      name: name.value,
+      description: description.value,
+      category: categorySelect.value,
+      brand: brand.value,
+      price: ogPrice.value,
+      sizes,
+      stockQuantities,
+      colors: colorsOption,
+      cashOnDelivery: cashOnDelivery.checked,
+      offerPrice: offerPrice.value,
+      warranty: warranty.value,
+      returnPolicy: returnPolicy.value,
+    });
+    
     croppedImages.forEach((croppedImage, index) => {
       if (croppedImage) {
-        formData.append(`productImage${index + 1}`,croppedImage);
+        formData.append(`productImage${index + 1}`, croppedImage);
       }
     });
 
@@ -152,29 +175,16 @@ function validateAndSubmit() {
           body: formData,
         });
         const data = await response.json();
+        swal.fire({
+          title: "Product Added Successfully",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500
+        })
+        setTimeout(() => {
+          window.location.reload(); 
+        },1500)
         console.log(data.msg);
-        if (data.msg === "success") {
-          swal.fire({
-            title: "Product Added Successfully",
-            icon: "success",
-            showConfirmButton: false,
-            timer: 1500,
-          })
-          setTimeout(() => {
-            window.location.reload();
-          }, 1500);
-          }else{
-            swal.fire({
-              title: "Product Added Successfully",
-              icon: "success",
-              showConfirmButton: false,
-              timer: 1500,
-            })
-            setTimeout(() => {
-              window.location.reload();
-            }, 1500);
-            }
-    
       } catch (err) {
         console.log("Error ::- " + err);
       }

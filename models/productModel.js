@@ -7,13 +7,15 @@ const productSchema = new mongoose.Schema({
   offerPrice: { type: Number },
   previousOfferPrice: { type: Number }, // New field to store old offer price
   offerPercentage: { type: Number },   // New field to store discount percentage
-  stock: { type: Number, default: 0 },
   images: [{ type: String }],
   tags: [{ type: String }],
-  sizes: [{ type: String }],
-  colors: [{ type: String }],
+  variants: [{ 
+    size: { type: String },
+    stock: { type: Number },
+  }],
+  totalStock: { type: Number, default: 0 },
   category: { type: mongoose.Schema.ObjectId, ref: 'Category' },
-  brand: { type: String },
+  // brand: { type: String },
   cashOnDelivery: { type: Boolean },
   warranty: { type: String },
   returnPolicy: { type: String },

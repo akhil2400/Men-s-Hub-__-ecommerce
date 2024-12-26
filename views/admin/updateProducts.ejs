@@ -7,6 +7,53 @@
   <title>Admin Panel</title>
 
   <style>
+    .add-Stock {
+      display: flex;
+      background-color: rgb(62, 196, 22);
+      color: white;
+      border: none;
+      position: relative;
+      bottom: 28px;
+      left: 138px;
+      border-radius: 5px;
+    }
+
+    .modal2 {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0, 0, 0);
+      background-color: rgba(0, 0, 0, 0.4);
+      padding-top: 60px;
+    }
+
+    .modal-content2 {
+      background-color: #191c24;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 50%;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
     .productsImages {
       display: flex;
       justify-content: start;
@@ -194,60 +241,7 @@
                     value="<%= products?.brand %>" required />
                 </div>
 
-                <!-- Size Options -->
-                <div class="form-group">
-                  <label>Size Options</label>
-                  <div style="padding: 10px">
-                    <div class="form-check">
-                      <input type="checkbox" class="form-check-input" id="sizeSmall" <%
-                        if(products?.sizes.includes("S")){ %>checked <% } %>
-                        value="S"
-                        onchange="updateSelectedSizes()"
-                        />
-                        <label class="form-check-label" for="sizeSmall">S</label>
-                    </div>
-                    <div class="form-check">
-                      <input type="checkbox" class="form-check-input" id="sizeMedium" <%
-                        if(products?.sizes.includes("M")){ %>checked <% } %>
-                        value="M"
-                        onchange="updateSelectedSizes()"
-                        />
-                        <label class="form-check-label" for="sizeMedium">M</label>
-                    </div>
-                    <div class="form-check">
-                      <input type="checkbox" class="form-check-input" id="sizeLarge" <%
-                        if(products?.sizes.includes("L")){ %>checked <% } %>
-                        value="L"
-                        onchange="updateSelectedSizes()"
-                        />
-                        <label class="form-check-label" for="sizeLarge">L</label>
-                    </div>
-                    <div class="form-check">
-                      <input type="checkbox" class="form-check-input" id="sizeXL" <% if(products?.sizes.includes("XL")){
-                        %>checked <% } %>
-                        value="XL"
-                        onchange="updateSelectedSizes()"
-                        />
-                        <label class="form-check-label" for="sizeXL">XL</label>
-                    </div>
-                    <div class="form-check">
-                      <input type="checkbox" class="form-check-input" id="sizeXXL" <%
-                        if(products?.sizes.includes("XXL")){ %>checked <% } %>
-                        value="XXL"
-                        onchange="updateSelectedSizes()"
-                        />
-                        <label class="form-check-label" for="sizeXXL">XXL</label>
-                    </div>
-                    <div class="form-check">
-                      <input type="checkbox" class="form-check-input" id="sizeXXXL" <%
-                        if(products?.sizes.includes("XXXL")){ %>checked <% } %>
-                        value="XXXL"
-                        onchange="updateSelectedSizes()"
-                        />
-                        <label class="form-check-label" for="sizeXXXL">XXXL</label>
-                    </div>
-                  </div>
-                </div>
+
                 <!-- Price -->
                 <div class="form-group">
                   <label for="productOgPrice">Price</label>
@@ -272,12 +266,12 @@
                 </div>
 
                 <!-- Stock -->
-                <div class="form-group">
+                <!-- <div class="form-group">
                   <label for="productStock">Stock</label>
                   <input type="number" class="form-control product-stock" id="productStock" placeholder="Stock"
                     value="<%= products?.stock  %>" required />
                   <p class="error-message" id="stockError"></p>
-                </div>
+                </div> -->
 
                 <!-- Warranty -->
                 <div class="form-group">
@@ -314,15 +308,151 @@
                   class="btn btn-primary mt-3 btn-CreateProduct update-product-btn" id="updateProductBtn">Update
                   Product</button>
           </form>
+          <!-- Size Options -->
+          <div id="sizesModal" class="modal2">
+            <div class="modal-content2">
+              <span class="close">&times;</span>
+              <h2>Update Available Sizes</h2>
+              <label for="sizes">Available Sizes:</label>
+              <div class="size-container">
+                <% const sizes=['XS', 'S' , 'M' , 'L' , 'XL' , 'XXL' ]; %>
+                  <% for (let i=0; i < sizes.length; i++) { %>
+                    <div class="size-item">
+                      <% let variant=products.variants.find(v=> v.size === sizes[i]);
+                        let checked = variant && variant.stock > 0 ? 'checked' : '';
+                        let stockValue = variant ? variant.stock : '';
+                        %>
+                        <input type="checkbox" class="size-checkbox" name="sizes" value="<%= sizes[i] %>"
+                          id="size_<%= sizes[i] %>" <%=checked %> onchange="toggleStockInput(this, '<%= sizes[i] %>')"
+                          />
+                          <label class="size-label" for="size_<%= sizes[i] %>">Size <%= sizes[i] %></label>
+                          <input type="number" class="stock-input" name="stockQuantities" id="stock_<%= sizes[i] %>"
+                            placeholder="Stock for size <%= sizes[i] %>"
+                            style="<%= (checked ? 'display: block;' : 'display: none;') %>" value="<%= stockValue %>"
+                            min="1" />
+                    </div>
+                    <% } %>
+              </div>
+              <button type="button" id="saveSizesBtn" class="btn btn-info">Save Changes</button>
+            </div>
+          </div>
         </div>
       </div>
+      <button id="addStockBtn" class="add-Stock">Add stock</button>
     </section>
   </div>
-
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.js"></script>
   <script src="/js/admin/updateProduct.js"></script>
 
+  <script>
+    function toggleStockInput(checkbox, size) {
+      const stockInput = document.getElementById(`stock_${size}`);
+      if (checkbox.checked) {
+        stockInput.style.display = "block";
+      } else {
+        stockInput.style.display = "none";
+        stockInput.value = "";
+      }
+    }
 
+    document.querySelectorAll('.size-checkbox').forEach(checkbox => {
+      const size = checkbox.value;
+      if (checkbox.checked) {
+        document.getElementById(`stock_${size}`).style.display = "block";
+      } else {
+        document.getElementById(`stock_${size}`).style.display = "none";
+      }
+    });
+
+
+    const modal = document.getElementById("sizesModal");
+    const addStockBtn = document.getElementById("addStockBtn");
+    const closeModal = document.getElementsByClassName("close")[0];
+
+    addStockBtn.onclick = function () {
+      modal.style.display = "block";
+    }
+
+    closeModal.onclick = function () {
+      modal.style.display = "none";
+    }
+
+    window.onclick = function (event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+
+    document.getElementById("saveSizesBtn").addEventListener("click", async (e) => {
+      let sizes = [];
+      let stockQuantities = [];
+      let valid = true
+
+      const id = document.getElementById("productId").value
+
+      document.querySelectorAll(".size-checkbox").forEach(checkbox => {
+        const size = checkbox.value;
+        const stockInput = document.getElementById(`stock_${size}`).value;
+        if (checkbox.checked) {
+          if (!stockInput) {
+            swal.fire({
+              text: `Enter stock for size ${size}`,
+              icon: "error"
+            });
+            valid = false;
+          }
+
+          if (stockInput <= 0) {
+            swal.fire({
+              text: "Stock should be a positive number",
+              icon: "error"
+            });
+            valid = false;
+          }
+
+          if (valid) {
+            sizes.push(size);
+            stockQuantities.push(stockInput);
+          }
+        }
+      });
+
+      if (!valid) {
+        return false;
+      }
+
+      const data = {
+        sizes: sizes,
+        stockQuantities: stockQuantities
+      }
+
+      try {
+        const response = await fetch(`/admin/updatesizestocks/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        })
+        const result = await response.json()
+        if (result.success) {
+          swal.fire({
+            text: result.message,
+            icon: "success"
+          })
+          setTimeout(() => {
+            window.location.href = `/admin/Product/update/${id}`
+          }, 1500);
+        } else {
+          swal.fire({
+            text: result.message,
+            icon: "error"
+          })
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    });
+  </script>
 
 </body>
 
