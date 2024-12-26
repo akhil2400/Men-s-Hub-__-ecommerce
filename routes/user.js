@@ -60,8 +60,6 @@ router.post('/checkout', userController.processCheckout);
 router.get('/wallet',walletController.loadWallet)
 router.post("/initiate-return", orderController.initiateReturn);
 router.post("/save-return-reason", orderController.saveReturnReason);
-// router.post("/initiate-individual-return/:id", orderController.initiateIndividualReturn);
-// router.put("/handle-return/:productId", orderController.handleReturn);
 router.get('/get-addresses', userController.getAddresses);
 router.get('/invoice/:orderId',orderController.downloadInvoice)
 router.post('/retry-payment', userController.retryPayment);
