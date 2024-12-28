@@ -86,15 +86,21 @@
                   <a href="/order/details/<%= order.id %>" class="btn btn-details"
                     style="margin-right: 4px;background-color: #FFAB00; color: #000000;  border-radius: 8px;border: none;">View
                     Details</a>
-                  <a href="/invoice/<%= order.id %>" class="btn btn-outline-magenta btn-sm">
-                    Download Invoice
-                  </a>
-                  <% if (order.razorpayPaymentStatus==='pending' && order.paymentMethod==='razorpay' ) { %>
-                    <button onclick="retryPayment('<%= order.razorpayOrderId ,order._id %>')" class="btn btn-warning btn-sm">Retry
-                      Payment</button>
-                    <%}%>
+                    
+                      <% if ((order.paymentMethod === 'razorpay' && order.razorpayPaymentStatus === 'paid')|| (order.paymentMethod === 'cod' && order.status === 'Delivered')) { %>
+                    <a href="/invoice/<%= order.id %>" class="btn btn-outline-magenta btn-sm">
+                      Download Invoice
+                    </a>
+                    <% } %>
+
+                      
+                        <% if (order.razorpayPaymentStatus==='pending' && order.paymentMethod==='razorpay' ) { %>
+                          <button onclick="retryPayment('<%= order.razorpayOrderId ,order._id %>')"
+                            class="btn btn-warning btn-sm">Retry
+                            Payment</button>
+                          <%}%>
                 </div>
-              
+
               </div>
               <% }); %>
                 <% } else { %>
@@ -109,7 +115,7 @@
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
       <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
       <script>
-        async function retryPayment(orderId,ordId) {
+        async function retryPayment(orderId, ordId) {
           try {
             const response = await fetch("/retry-payment", {
               method: "POST",
@@ -142,21 +148,21 @@
                       "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        paymentId: paymentData.razorpayPaymentId,
-                        razorpayOrderId: paymentData.razorpayOrderId,
-                        razorpaySignature : paymentData.razorpaySignature,
-                        orderId:ordId
-                      })
+                      paymentId: paymentData.razorpayPaymentId,
+                      razorpayOrderId: paymentData.razorpayOrderId,
+                      razorpaySignature: paymentData.razorpaySignature,
+                      orderId: ordId
+                    })
                   })
                     .then((res) => res.json())
                     .then((data) => {
                       console.log(data)
-                    if(data.success)
-                    swal.fire("Success!", "Payment confirmed successfully.", "success").then(() =>
-                        window.location.href = `/thankyou`
-                      );
-                    
-                      
+                      if (data.success)
+                        swal.fire("Success!", "Payment confirmed successfully.", "success").then(() =>
+                          window.location.href = `/thankyou`
+                        );
+
+
                     })
                     .catch((error) => {
                       console.error("Error confirming payment:", error);

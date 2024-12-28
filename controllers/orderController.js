@@ -87,7 +87,7 @@ module.exports = {
   
 
   async updateOrderStatus(req, res) {
-    const orderId = req.params.id;
+    const orderId = req.params.orderid;
     const { status } = req.body;
 
     console.log(orderId, status);
@@ -150,6 +150,7 @@ module.exports = {
         razorpayOrderId: order.razorpayOrderId,
         razorpayPaymentStatus: order.razorpayPaymentStatus,
         paymentMethod: order.paymentMethod || "N/A",
+        paymentStatus: order.paymentStatus || "N/A",
         date: order.createdAt ? order.createdAt.toLocaleDateString() : "N/A",
         products: order.products.map((product) => ({
           name: product.productId?.name || "Unknown Product",
@@ -368,13 +369,24 @@ module.exports = {
         // Pipe the PDF stream directly to the response
         pdfDoc.pipe(res);
 
+        // Add Company Logo and Details
+        const logoPath = path.join(__dirname, '..', 'public', 'images', 'img', 'logo', 'A_logo_with_the_letters_M_and_H_together_with_a_cap_on_M-removebg-preview.png');
+        pdfDoc.image(logoPath, 50, 20, { width: 80 }); // Adjusted position for logo
+
+        pdfDoc.fillColor('#000000').fontSize(12).font('NotoSans-Bold');
+        pdfDoc.text("MEN'S HUB", 150, 25, { align: "left" }); // Aligned company name with logo
+        pdfDoc.font('NotoSans').fontSize(10);
+        pdfDoc.text("777, Business Street, kinfra, INDIA", 150, 40, { align: "left" });
+        pdfDoc.text("Phone: +123 456 7890 | Email: menshub@gmail.com", 150, 55, { align: "left" });
+        pdfDoc.moveDown(2);
+
         // Generate the Invoice Header with background color
-        pdfDoc.rect(50, 30, 500, 40).fill('#4CAF50');
-        pdfDoc.fillColor('#FFFFFF').fontSize(20).text("INVOICE", 50, 40, { align: "center" });
+        pdfDoc.rect(50, 90, 500, 40).fill('#4CAF50');
+        pdfDoc.fillColor('#FFFFFF').fontSize(20).text("INVOICE", 50, 100, { align: "center" });
         pdfDoc.moveDown(2);
 
         // Order and Customer Details Section
-        pdfDoc.fillColor('#000000').fontSize(12).text(`Order ID: ${order._id}`, { align: "left" });
+        pdfDoc.fillColor('#000000').fontSize(12).text(`Order ID: ${order._id}`, 50, 150, { align: "left" });
         pdfDoc.text(`Date: ${new Date(order.createdAt).toLocaleDateString()}`, { align: "left" });
         pdfDoc.text(`Customer Name: ${order.userId.userName}`, { align: "left" });
         pdfDoc.text(`Customer Email: ${order.userId.email}`, { align: "left" });
@@ -423,7 +435,7 @@ module.exports = {
         pdfDoc.moveDown(2);
 
         // Payment Method and Footer
-        pdfDoc.fontSize(12).font('NotoSans-Bold').text(`Payment Method: ${order.paymentMethod}`, { align: "left" , indent: -50 });
+        pdfDoc.fontSize(12).font('NotoSans-Bold').text(`Payment Method: ${order.paymentMethod}`, { align: "left", indent: -50 });
         pdfDoc.moveDown();
 
         pdfDoc.rect(50, pdfDoc.y, 500, 40).fill('#4CAF50');
@@ -436,6 +448,7 @@ module.exports = {
         res.status(500).send("Internal Server Error");
     }
 },
+
 
 
 
