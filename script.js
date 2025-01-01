@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 require("dotenv").config();
 const session = require("express-session");
-const PORT = process.env.PORT || 3000; // Change to another port like 3001
+const PORT = process.env.PORT || 3001; // Change to another port like 3001
 const userRoutes = require("./routes/user");
 const otpRoutes = require("./routes/otpRoutes");
 const path = require("path");
