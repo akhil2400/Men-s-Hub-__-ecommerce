@@ -216,7 +216,7 @@
                 <div class="product-card">
                   <div class="product-image-container">
                     <a href="/productDetails/<%= product._id %>">
-                      <img src="/<%= product.images[0] ? product.images[0] : 'images/default-product.jpg' %>"
+                      <img src="<%= product.images[0] ? product.images[0] : 'images/default-product.jpg' %>"
                         alt="<%= product.name %>" class="img-fluid product-image" loading="lazy">
                     </a>
                     <div class="icon-overlay">

@@ -39,13 +39,13 @@
           <!-- Left: Main Product Image and Thumbnails -->
           <div class="col-md-6 product-images">
             <div class="main-image mb-3" id="mainImageContainer">
-              <img id="mainImage" src="/<%= product?.images[0] %>" class="img-fluid" alt="<%= product.name %>" />
+              <img id="mainImage" src="<%= product?.images[0] %>" class="img-fluid" alt="<%= product.name %>" />
               <div class="zoom-circle" id="zoomCircle"></div>
               <!-- Zoom circle -->
             </div>
             <div class="thumbnail-images d-flex">
               <% product.images.forEach((image, index)=> { %>
-                <img src="/<%= image %>" class="thumbnail img-thumbnail" alt="<%= product.name %>" />
+                <img src="<%= image %>" class="thumbnail img-thumbnail" alt="<%= product.name %>" />
                 <% }) %>
             </div>
           </div>
@@ -119,7 +119,7 @@
               <div class="actions mt-3">
                 <button class="btn btn-primary add-to-cart-btn" data-id="<%= product._id %>"
                   data-name="<%= product.name %>" data-price="<%= product.offerPrice || product.price %>"
-                  data-image="/<%= product.images[0] %>">
+                  data-image="<%= product.images[0] %>">
                   Add to Cart
                 </button>
 
@@ -142,7 +142,7 @@
               <div class="related-products d-flex flex-wrap">
                 <% relatedProducts.forEach(function(relatedProduct) { %>
                   <div class="col-md-3 text-center related-product">
-                    <img src="/<%= relatedProduct.images[0] %>" class="img-fluid" alt="<%= relatedProduct.name %>" />
+                    <img src="<%= relatedProduct.images[0] %>" class="img-fluid" alt="<%= relatedProduct.name %>" />
                     <p>
                       <%= relatedProduct.name %>
                     </p>

@@ -2,6 +2,7 @@ const userModel = require('../models/userModel');
 const productModel = require('../models/productModel');
 const categoryModel = require('../models/categoryModel');
 const path = require('path');
+const { handleUpload } = require('../utils/cloudinary');
 
 module.exports = {
   // admin side
@@ -43,10 +44,13 @@ module.exports = {
           msg: 'Category name already exists. Please choose a different name.',
         });
       }
-
+      const b64 = Buffer.from(req.file.buffer).toString("base64");
+      let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+      const cldRes = await handleUpload(dataURI);
+      const imagePath = cldRes.secure_url;
       // Process and store the image path
-      const imagePath = path.relative(path.join(__dirname, '..', 'public'), req.file.path);
-      console.log(imagePath);
+      // const imagePath = path.relative(path.join(__dirname, '..', 'public'), req.file.path);
+      // console.log(imagePath);
 
       // Create the new category
       await categoryModel.create({ name: categoryName, image: imagePath });
@@ -119,10 +123,17 @@ module.exports = {
           .status(400)
           .json({ val: false, msg: "No file was uploaded" });
       }
-      const filePath = path.relative(
-        path.join(__dirname, "..", "public"),
-        req.file.path
-      );
+      
+      const b64 = Buffer.from(req.file.buffer).toString("base64");
+      let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+      const cldRes = await handleUpload(dataURI);
+      const filePath = cldRes.secure_url;
+
+      // const filePath = path.relative(
+      //   path.join(__dirname, "..", "public"),
+      //   req.file.path
+      // );
+
       console.log("Category ID:", categoryId);
       console.log("File Path:", filePath);
       const category = await categoryModel.findOne({ _id: categoryId });

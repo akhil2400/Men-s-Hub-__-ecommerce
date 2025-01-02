@@ -98,7 +98,7 @@ function startCropping(index) {
         currentImageIndex = null;
       });
     } else {
-      alert(`Could not retrieve the cropped canvas for index: ${index}`);
+      swal.fire(`Could not retrieve the cropped canvas for index: ${index}`);
     }
   } else {
     alert("Please select an image to crop.");

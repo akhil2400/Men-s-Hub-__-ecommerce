@@ -2,6 +2,7 @@ const userModel = require('../models/userModel');
 const productModel = require('../models/productModel');
 const categoryModel = require('../models/categoryModel');
 const path = require('path');
+const { handleUpload } = require('../utils/cloudinary');
 
 
 module.exports = {
@@ -115,12 +116,20 @@ module.exports = {
       // Process images
       const imagePaths = [];
       for (const key in req.files) {
-        req.files[key].forEach((file) => {
-          imagePaths.push(
-            path.relative(path.join(__dirname, "..", "public"), file.path)
-          );
-        });
+        for (const file of req.files[key]) {
+          const b64 = Buffer.from(file.buffer).toString("base64");
+          const dataURI = "data:" + file.mimetype + ";base64," + b64;
+          const cldRes = await handleUpload(dataURI);
+          imagePaths.push(cldRes.secure_url);
+        }
       }
+      
+      // for(const file of req.files){
+      //   const b64 = Buffer.from(file.buffer).toString("base64");
+      //   let dataURI = "data:" + file.mimetype + ";base64," + b64;
+      //   const cldRes = await handleUpload(dataURI);
+      //   imagePaths.push(cldRes.secure_url);
+      // }
   
       // Create the product
       await productModel.create({
@@ -301,7 +310,13 @@ async loadupdateProducts(req, res) {
       if (!req.file) {
         return res.status(400).json({ val: false, msg: "No file was uploaded" });
       }
-      const filePath = path.relative(path.join(__dirname, "..", "public"), req.file.path);
+     // const filePath = path.relative(path.join(__dirname, "..", "public"), req.file.path);
+      const b64 = Buffer.from(req.file.buffer).toString("base64");
+      let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+      const cldRes = await handleUpload(dataURI);
+      const filePath = cldRes.secure_url;
+
+
       console.log("Product Index:", productIndex);
       console.log("Product ID:", productId);
       console.log("File Path:", filePath);
