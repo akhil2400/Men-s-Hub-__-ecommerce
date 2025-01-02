@@ -559,7 +559,7 @@ module.exports = {
 
   async loadSalesReport(req, res) {
     try {
-      res.render("SalesReport");
+      res.render("salesReport");
     } catch (error) {
       console.error("Error loading sales report", error);
       res.status(500).json({ message: "Internal server error" });

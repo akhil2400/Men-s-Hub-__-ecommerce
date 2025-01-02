@@ -235,11 +235,7 @@
               <h4 class="card-title">Coupon Management</h4>
               <div class="table-responsive">
                 <form class="nav-link mt-2 mt-md-0 d-lg-flex search">
-                  <input type="text" class="form-control" placeholder="Search coupons" />
-                  <div style="display: flex">
-                    <button style="height: 33px; margin: 3px 0px 0px 10px" class="btn btn-primary">
-                      Search
-                    </button>
+                  <div style="display: flex;">                    
                     <button type="button" class="btn btn-primary btn-addCouponModal" data-bs-toggle="modal"
                       data-bs-target="#couponUploadModal" style="width: 100px;margin-left: 10px; height: 38px">
                       Add New Coupon
@@ -248,17 +244,17 @@
                 </form>
                 <table class="table">
                   <thead>
-                    <tr>
-                      <th>No</th>
-                      <th>Coupon Code</th>
-                      <th>Discount Type</th>
-                      <th>Discount Value</th>
-                      <th>Minimum Purchase</th>
-                      <th>Start Date</th>
-                      <th>Expiry Date</th>
-                      <th>Usage Limit</th>
-                      <th>Status</th>
-                      <th>Update</th>
+                    <tr >
+                      <th style="color: white;">No</th>
+                      <th style="color: white;">Coupon Code</th>
+                      <th style="color: white;">Discount Type</th>
+                      <th style="color: white;">Discount Value</th>
+                      <th style="color: white;">Minimum Purchase</th>
+                      <th style="color: white;">Start Date</th>
+                      <th style="color: white;">Expiry Date</th>
+                      <th style="color: white;">Usage Limit</th>
+                      <th style="color: white;">Status</th>
+                      <th style="color: white;">Update</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -268,7 +264,7 @@
                       </p>
                       <% }else{ %>
                         <% coupons.forEach((data,index)=>{ %>
-                          <tr>
+                          <tr style="color: white;">
                             <td>
                               <%= index+1 %>
                             </td>
@@ -285,10 +281,10 @@
                               <%= data.minimumPurchase %>
                             </td>
                             <td>
-                              <%= data.startDate %>
+                              <%= new Date(data.startDate).toLocaleDateString() %>
                             </td>
                             <td>
-                              <%= data.expiryDate %>
+                              <%= new Date(data.expiryDate).toLocaleDateString() %>
                             </td>
                             <td>
                               <%= data.usageLimit %>

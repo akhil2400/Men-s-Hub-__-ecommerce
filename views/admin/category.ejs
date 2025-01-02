@@ -241,23 +241,21 @@
                   <table class="table">
                     <thead>
                       <tr>
-                        <th> No </th>
-                        <th> Image</th>
-                        <th> Name</th>
-                        <th> Products Count</th>
-                        <th> Unlist </th>
-                        <th> Update </th>
+                        <th style="color: white;"> No </th>
+                        <th style="color: white;"> Image</th>
+                        <th style="color: white;"> Name</th>
+                        <th style="color: white;"> Unlist </th>
+                        <th style="color: white;"> Update </th>
                       </tr>
                     </thead>
                     <tbody>
                       <% category.forEach((data,index)=>{ %>
-                        <tr>
+                        <tr style="color: white;">
                           <td> <%= index+1 %> </td>
                           <td>
                             <img src="<%= data.image %>" alt="image" />
                           </td>
                           <td> <%= data.name  %> </td>
-                          <td> <%= data.productCount  %> </td>
                           <td>
                             <button data-id="<%= data._id  %>" class="badge btnListAndUnlist <%= data.isDeleted?'badge-outline-success':'badge-outline-primary' %>"><%= data.isDeleted?'List':'Unlist'%></button>
                             <td>
