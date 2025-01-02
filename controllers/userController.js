@@ -280,7 +280,7 @@ module.exports = {
       const user = await userModel.findOne({ email });
       const address = await addressModel.find({ userId: user._id, isDeleted: false }).sort({ createdAt: -1 });
       // console.log(address)
-      res.render("myaddress", { user, address });
+      res.render("myAddress", { user, address });
     } catch (err) {
       console.error("Error loading myaddress:", err);
       res.status(500).send("Error loading my address");
