@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="Untree.co">
@@ -21,7 +22,8 @@
 <body>
 
   <%- include("./layouts/header.ejs") %>
-
+ 
+  <p>hi</p>
     <nav aria-label="breadcrumb" class="mb-4">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/home" class="d-flex align-items-center"><span
@@ -70,7 +72,7 @@
                       <% cart.items.forEach((item, index)=> { %>
                         <tr>
                           <td class="product-thumbnail">
-                            <img src="/<%= item.productId.images[0] %>" alt="<%= item.productId.name %>"
+                            <img src="<%= item.productId.images[0] %>" alt="<%= item.productId.name %>"
                               class="img-fluid">
                           </td>
                           <td class="product-name">

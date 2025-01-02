@@ -187,7 +187,7 @@ module.exports = {
         gender: user.gender,
       };
       req.session.logedIn = true;
-
+      req.session.userData = { userName:user.userName, email: user.email, mobileNumber: user.mobileNumber, gender: user.gender };
       // Send success response
       return res.status(200).json({
         type: null,
