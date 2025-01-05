@@ -208,17 +208,7 @@ async loadupdateProducts(req, res) {
         });
       }
 
-      // console.log('Uploaded image paths:', imgArr);
 
-      // // Include existing images
-      // if (existingImages) {
-      //   const parsedExistingImages = Array.isArray(existingImages)
-      //     ? existingImages
-      //     : JSON.parse(existingImages);
-      //   imgArr = [...parsedExistingImages, ...imgArr];
-      // }
-
-      // console.log('Final image array:', imgArr);
 
       // Check if product exists
       const product = await productModel.findOne({ _id: productId });

@@ -379,7 +379,7 @@ document.querySelectorAll('.edit-address-form').forEach(form => {
 // delete
 document.addEventListener('DOMContentLoaded', function () {
   // Handle Remove Address button click
-  document.querySelectorAll('.remove-address').forEach(button => {
+  document.querySelectorAll('.delete-address').forEach(button => {
     button.addEventListener('click', async function () {
       const addressId = this.closest('.address-box').getAttribute('data-id');
 

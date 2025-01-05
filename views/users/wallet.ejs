@@ -68,7 +68,7 @@
               <% walletData.transactions.forEach((transaction, index) => { %>
               <tr>
                 <td><%= index + 1 %></td>
-                <td>Rs. <%= transaction.amount %></td>
+                <td> <%= transaction.amount %></td>
                 <td><%= transaction.type %></td>
                 <td><%= new Date(transaction.date).toLocaleDateString() %></td>
               </tr>

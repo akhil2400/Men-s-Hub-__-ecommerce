@@ -24,6 +24,15 @@
         font-size: 14px;
         margin-top: 5px;
       }
+
+      .delete-address{
+        background-color: #b4291f;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
     </style>
 
   </head>
@@ -85,6 +94,7 @@
             </div>
             <div>
               <button class="edit-address" data-id="<%= data._id %>" >EDIT</button>
+              <button class="delete-address" data-id="<%= data._id %>" >REMOVE</button>
             </div>
             <!-- Edit Form for this address -->
             <form class="edit-address-form" data-id="<%= data._id %>" style="display: none;">

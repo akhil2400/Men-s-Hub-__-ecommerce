@@ -238,7 +238,7 @@ module.exports = {
 
       order.status = "Cancelled";
 
-      if (order.paymentMethod === "razorpay" && order.paymentStatus === "paid") {
+      if (order.paymentMethod === "razorpay" && order.razorpayPaymentStatus === "paid") {
         const refundAmount = order.totalAmount;
 
         let wallet = await walletModel.findOne({ userId: order.userId });

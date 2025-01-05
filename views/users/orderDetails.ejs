@@ -47,7 +47,9 @@
             <h1>Order Details</h1>
             <div>
               <% if (order.status==="Pending" ) { %>
-                <a href="#" class="btn btn-secondary cancel-order-btn" data-id="<%= order._id %>">Cancel Order</a>
+                <div>
+                  <a href="#" class="btn btn-secondary cancel-order-btn" data-id="<%= order._id %>">Cancel Order</a>
+                  </div>
                 <% } %>
                   <% if (order.status==='Delivered' ) { %>
                     <div>
@@ -124,18 +126,7 @@
                         </div> -->
                 </div>
 
-                <!-- Return Form
-                <div class="return-message-container" id="returnIndiMessageContainer-"
-                  style="display: none;">
-                  <form class="return-form" style="display:inline;" onsubmit="return false;">
-                    <label for="returnIndiMessage">Reason for return:</label>
-                    <input type="text" id="returnIndiMessage-" placeholder="Please enter your reason">
-                    <small class="error-message" style="color: red; display: none;">Please provide a reason for
-                      returning the order.</small>
-                    <button class="confirm-indi-return-btn">Confirm Return</button>
-                    <button class="cancel-indi-return-btn" data-index="">Go back</button>
-                  </form>
-                </div> -->
+                
                 <!-- Order Details -->
                 <div class="order-details" style="margin-top: 16px;">
                   <div class="order-info-item"

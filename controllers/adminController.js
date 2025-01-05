@@ -590,9 +590,13 @@ module.exports = {
       }
 
       const orders = await orderModel
-        .find({
-          createdAt: { $gte: start, $lte: end }, // Query orders within the date range
-        })
+      .find({
+        createdAt: { $gte: start, $lte: end }, // Filter by date range
+        $or: [
+          { paymentMethod: "cod", status: "Delivered" }, // COD orders with status Delivered
+          { paymentMethod: "razorpay", razorpayPaymentStatus: "paid" }, // Razorpay orders with payment status Paid
+        ],
+      })
         .populate("userId", "userName");
 
       console.log(orders);
