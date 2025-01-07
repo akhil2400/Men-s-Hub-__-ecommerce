@@ -6,7 +6,8 @@ const cartModel = require("../models/cartModel");
 const path = require("path");
 const mongoose = require("mongoose");
 const couponModel = require("../models/couponModel");
-const walletModel = require('../models/walletModel')
+const walletModel = require('../models/walletModel');
+const { time } = require("console");
 
 module.exports = {
   async loadWallet(req, res) {
@@ -26,10 +27,13 @@ module.exports = {
           holderName: user.name || "User",
           cardLastDigits: "9667", 
           balance: `Rs. ${wallet.balance.toFixed(2)}`,
-          transactions: wallet.transactions.map((transaction, index) => ({
+          transactions: wallet.transactions
+          .sort((a, b) => new Date(b.date) - new Date(a.date)) 
+          .map((transaction, index) => ({
             id: index + 1,
             amount: `Rs. ${transaction.amount.toFixed(2)}`,
             type: transaction.type,
+            time: transaction.date.toLocaleTimeString(),
             date: transaction.date.toLocaleDateString(),
           })),
         }

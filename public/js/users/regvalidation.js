@@ -30,6 +30,7 @@ function regFormvalidation(e) {
     document.getElementById("passwordError").innerText = "";
     document.getElementById("confirmPasswordError").innerText = "";
     document.getElementById("mobileNumberError").innerText = "";
+    document.getElementById("referralCodeError").style.border = "";
     document.getElementById("genderError").innerText = "";
 
 
@@ -39,6 +40,7 @@ function regFormvalidation(e) {
     const password = document.getElementById("password").value;
     const confirmPassword = document.getElementById("confirmPassword").value;
     const mobileNumber = document.getElementById("mobileNumber").value.trim();
+    const referralCode = document.getElementById("referralCode").value.trim();
     const gender1 = document.getElementById('gender1').value;
     const gender2 = document.getElementById('gender2').value;
     const gender3 = document.getElementById('gender3').value;
@@ -56,7 +58,17 @@ function regFormvalidation(e) {
     const userNamePattern = /^[a-zA-Z][a-zA-Z0-9_]{2,15}$/;
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+    const referralCodePattern = /^[a-zA-Z0-9]{6}$/;
     const mobilePattern = /^\d{10}$/; // Ensures exactly 10 digits
+
+    if (referralCode.value){
+        if (!referralCodePattern.test(referralCode.value)) {
+            document.getElementById("referralCodeError").innerHTML = "Invalid Referral Code";
+            document.querySelector(".getotp").style.display = "block";
+            document.querySelector(".loader").style.display = "none";
+            return;
+        }
+    }
 
     let valid = true;
 
@@ -98,6 +110,7 @@ function regFormvalidation(e) {
         document.querySelector(".loader").style.display = "none";
         valid = false;
     }
+   
 
 
     let gendertest = "";
@@ -125,6 +138,7 @@ function regFormvalidation(e) {
                         email: email,
                         password: password,
                         mobileNumber: mobileNumber,
+                        referralCode: referralCode,
                         gender: gendertest,
                         isResend: false,
 

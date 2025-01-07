@@ -11,10 +11,11 @@ const addressModel = require("../models/addressModel");
 const orderModel = require("../models/orderModel");
 const wishlistModel = require("../models/wishlistModel");
 const couponModel = require("../models/couponModel");
+const walletModel = require('../models/walletModel')
+const referralModel = require('../models/referralModel');
 const mongoose = require("mongoose");
 const Razorpay = require("razorpay");
 require("dotenv").config();
-const Referral = require('../models/referralModel');
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID, // Replace with your Razorpay key
@@ -80,9 +81,10 @@ module.exports = {
         msg: "session expired",
       });
     }
-    const { userName, email, password, mobileNumber, gender } =
+    const { userName, email, password, mobileNumber, referralCode, gender } =
       req.session.userData;
-    console.log(userName, email, password, mobileNumber, gender);
+
+    console.log(userName, email, password, mobileNumber, referralCode, gender);
     try {
       console.log("1");
       const otpData = await Otp.findOne({ email });
@@ -116,7 +118,43 @@ module.exports = {
       });
 
       req.session.logedIn = true;
-      req.session.userData = { userName, email, mobileNumber, gender };
+      req.session.userData = { userName, email, mobileNumber,referralCode, gender };
+
+      let user = req.session.userData
+      if (user.referralCode && req.session.referrerId) {
+        const referrer = await userModel.findById(req.session.referrerId)
+        if (referrer) {
+          const referrerWallet = await walletModel.findOne({ userId: referrer._id })
+          if (referrerWallet) {
+            referrerWallet.balance += 100;
+            referrerWallet.transactions.push({
+              id: `txn-${Date.now()}-referral`,
+              type: "Referral",
+              amount: 100,
+              date: Date.now(),
+            });
+            await referrerWallet.save();
+            const userId = await userModel.findOne({}, user.email)
+            const userWallet = await walletModel.findOne({ userId: userId._id })
+            if (userWallet) {
+              userWallet.balance += 50;
+              userWallet.transactions.push({
+                id: `txn-${Date.now()}-referral`,
+                type: "Credit",
+                amount: 50,
+                date: Date.now(),
+              });
+              await userWallet.save();
+            }
+            const referral = new referralModel({
+              user: referrer._id,
+              referralCode: referrer.referralCode,
+            });
+            await referral.save();
+          }
+        }
+
+      }
 
       return res.status(200).json({
         st: true,
@@ -188,7 +226,7 @@ module.exports = {
         gender: user.gender,
       };
       req.session.logedIn = true;
-      req.session.userData = { userName:user.userName, email: user.email, mobileNumber: user.mobileNumber, gender: user.gender };
+      req.session.userData = { userName: user.userName, email: user.email, mobileNumber: user.mobileNumber, gender: user.gender };
       // Send success response
       return res.status(200).json({
         type: null,
@@ -1019,9 +1057,9 @@ module.exports = {
         totalAmount: totalOrderPrice,
         payableAmount: payableAmount,
         paymentMethod: "cod",
-        paymentStatus: "pending", 
+        paymentStatus: "pending",
       });
-      
+
       await order.save();
 
       // Empty the cart
@@ -1053,7 +1091,7 @@ module.exports = {
       }
       const userId = user.id;
       req.session.userId = userId;
-  
+
       const { selectedAddress, items, payableAmount } = req.body;
       console.log(payableAmount);
       if (!selectedAddress || !items || items.length === 0) {
@@ -1061,14 +1099,14 @@ module.exports = {
           .status(400)
           .json({ val: false, msg: "Address and items are required" });
       }
-  
+
       // Ensure user is logged in
       if (!req.session.userId) {
         return res
           .status(401)
           .json({ val: false, msg: "User is not logged in" });
       }
-  
+
       // Validate products and stock
       const productsForOrder = [];
       for (const item of items) {
@@ -1084,24 +1122,24 @@ module.exports = {
             msg: `Insufficient stock for product: ${product.name}`,
           });
         }
-  
+
         // Deduct stock and prepare product entry
         product.totalStock -= item.quantity;
         await product.save();
-  
+
         productsForOrder.push({
           productId: item.productId,
           quantity: item.quantity,
           price: product.offerPrice, // Ensure price is included
         });
       }
-  
+
       // Calculate total price based on product price and quantity
       const totalOrderPrice = items.reduce(
         (sum, item) => sum + item.offerPrice * item.quantity,
         50
       );
-  
+
       // Create the order with Razorpay payment method
       const order = new orderModel({
         userId: req.session.userId,
@@ -1112,31 +1150,31 @@ module.exports = {
         paymentMethod: "razorpay",
         paymentStatus: "paid", // Payment will be pending until verified by Razorpay
       });
-  
+
       const savedOrder = await order.save();
-  
+
       // Call Razorpay payment initiation logic
       const razorpayInstance = new Razorpay({
         key_id: process.env.RAZORPAY_KEY_ID,
         key_secret: process.env.RAZORPAY_KEY_SECRET,
       });
-  
+
       const razorpayOrder = await razorpayInstance.orders.create({
         amount: payableAmount * 100, // Convert amount to paise
         currency: "INR",
         receipt: `order_receipt_${order._id}`,
         payment_capture: 1,
       });
-  
+
       // Save the Razorpay order ID in the order document
       order.razorpayOrderId = razorpayOrder.id;
       await order.save();
-  
+
       await cartModel.findOneAndUpdate(
         { userId: req.session.userId },
         { $set: { items: [], cartTotal: 0 } }
       );
-  
+
       res.status(200).json({
         val: true,
         razorpayOrderId: razorpayOrder.id,
@@ -1152,12 +1190,12 @@ module.exports = {
       });
     }
   },
-  
-  
+
+
   // Verify Razorpay Payment
   async verifyRazorpayPayment(req, res) {
     try {
-      const { paymentId, razorpayOrderId ,orderId} = req.body;
+      const { paymentId, razorpayOrderId, orderId } = req.body;
       console.log(paymentId, razorpayOrderId)
 
       if (!paymentId || !razorpayOrderId) {
@@ -1166,25 +1204,25 @@ module.exports = {
           msg: "Payment ID and Order ID are required",
         });
       }
-      
+
       const razorpayInstance = new Razorpay({
         key_id: process.env.RAZORPAY_KEY_ID,
         key_secret: process.env.RAZORPAY_KEY_SECRET,
       });
-      
+
       const paymentDetails = await razorpayInstance.payments.fetch(paymentId);
       if (paymentDetails.status === "captured") {
         console.log(`Payment details: ${JSON.stringify(paymentDetails)}`);
-        
+
         // Update the order payment status to "paid" using razorpayOrderId
         await orderModel.findOneAndUpdate(
           { razorpayOrderId: razorpayOrderId },
           { razorpayPaymentStatus: "paid" },
         );
-        
+
         res
-        .status(200)
-        .json({ success: true, msg: "Payment verified successfully" });
+          .status(200)
+          .json({ success: true, msg: "Payment verified successfully" });
       } else {
         res.status(400).json({ success: false, msg: "Payment failed" });
       }
@@ -1193,7 +1231,7 @@ module.exports = {
       res.status(500).json({ success: false, msg: "Error verifying payment" });
     }
   },
-  
+
   async retryPayment(req, res) {
     const { orderId } = req.body;
 

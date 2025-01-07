@@ -20,6 +20,17 @@ const tagsRegex = /^(#\w+)(\s#\w+)*$/;
 
 function previewAndCrop(event, index) {
   const file = event.target.files[0];
+  const applicable = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+  if (!applicable.includes(file.type )) {
+    event.target.value = "";
+    swal.fire({
+      title: "Error!",
+      text: "'Invalid file type'",
+      icon: "error"
+    });
+    return
+      
+  }
   if (!file) return;
 
   const cropPreview = document.getElementById(`cropPreview${index}`);

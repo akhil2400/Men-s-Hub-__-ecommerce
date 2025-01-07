@@ -2,6 +2,7 @@ const { sendOTP } = require('../utils/mailSender');
 const otpSchema = require('../models/otpModel');
 const User = require('../models/userModel');
 const { generateOTP, otpExpire } = require('../utils/otpGenerator');
+const Referral = require('../models/referralModel');
 
 
 
@@ -29,7 +30,8 @@ module.exports = {
         });
       
       }else{
-        const { userName, email, password, mobileNumber, gender } = req.body;
+        const { userName, email, password, mobileNumber,referralCode, gender } = req.body;
+        console.log(referralCode);
         const userExist = await User.findOne({ userName });
         const emailExist = await User.findOne({ email });
         if (userExist) {
@@ -46,11 +48,27 @@ module.exports = {
             msg: "Email already exist",
           });
         }
-        req.session.userData = {userName, email, password, mobileNumber, gender};
+
+        let referreer = null;
+        if(referralCode){
+          referreer = await Referral.findOne({ referralCode }).populate('user');
+          if(!referreer){
+            return res.status(400).json({
+              type: "referralCode",
+              st:false,
+              msg: "Invalid Referral Code",
+            });
+          }
+        }
+        req.session.userData = {userName, email, password, mobileNumber, gender , referralCode};
         console.log('1~~~~~')
         console.log(req.session.userData);
         const otp = generateOTP();
         console.log('otp: ', otp);
+
+        if(referreer){
+          req.session.referrerId = referreer.user._id;
+        }
         
         await otpSchema.deleteMany({ email });
         await sendOTP(email, otp);

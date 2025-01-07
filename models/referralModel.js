@@ -9,14 +9,14 @@ const referralSchema = new mongoose.Schema({
   referredUser: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
+    
   },
   referralCode: {
     type: String,
-    required: true,
+    
   },
   totalAmount: {
-    type: Number,
+    type: String,
   },
   createdAt: {
     type: Date,
