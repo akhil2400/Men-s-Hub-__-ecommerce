@@ -1,5 +1,5 @@
 // Start the countdown when the page loads
-startCountdown(5);
+startCountdown(59);
 
 
 const otpText = document.querySelector('.otpText'); // Get the span element
