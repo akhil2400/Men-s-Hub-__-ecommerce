@@ -11,6 +11,7 @@ const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/admin");
 require("./utils/googleAuth");
 const cors = require('cors');
+const referralRoutes = require('./routes/referralRoutes');
 
 // const authCheck = require("./middlewares/auth");
 app.use(cors());
@@ -55,6 +56,7 @@ app.use(checkBan);
 
 
 // Use user routes
+app.use("/", referralRoutes);
 app.use("/", userRoutes);
 app.use("/", authRoutes);
 app.use("/", otpRoutes);

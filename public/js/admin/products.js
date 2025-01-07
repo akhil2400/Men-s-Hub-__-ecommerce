@@ -45,23 +45,7 @@ function previewAndCrop(event, index) {
 
 const colorsOption = [];
 
-// function addColor() {
-//   const colorPicker = document.getElementById("colorPicker");
-//   const selectedColor = colorPicker.value;
-//   if (!colorsOption.includes(selectedColor)) {
-//     colorsOption.push(selectedColor);
-//     const colorCircle = document.createElement("div");
-//     colorCircle.style.width = "20px";
-//     colorCircle.style.height = "20px";
-//     colorCircle.style.backgroundColor = selectedColor;
-//     colorCircle.style.borderRadius = "50%";
-//     colorCircle.style.display = "inline-block";
-//     colorCircle.style.margin = "5px";
-//     document.getElementById("showColors").appendChild(colorCircle);
-//   }
-//   console.log(colorsOption)
-//   colorPicker.value = "#ffffff";
-// }
+
 
 
 const selectedSizes = [];

@@ -28,12 +28,13 @@
                 style="margin-left: 3px;color: #ffffff;">Orders</span></a></li>
           <li><a href="/my-address"><i class="fa-solid fa-location-dot" style="color: #000000;"></i><span
                 style="margin-left: 3px; color: #000000;">My Address</span></a></li>
-          <% if (user && user.isGoogleLogin===false) { %>
+          <!-- <% if (user && user.isGoogleLogin===false) { %>
             <li><a href="/change-password"><i class="fa-solid fa-key" style="color: #000000;"></i><span
                   style="margin-left: 3px;">Change Password</span></a></li>
-            <% } %>
+            <% } %> -->
               <li><a href="/wallet"><i class="fa-solid fa-wallet" style="color: #000000;"></i><span
                     style="margin-left: 3px;">Wallet</span></a></li>
+                    <li><a href="/referral"><i class="fa-solid fa-user-group" style="color: #000000;"></i><span style="margin-left: 3px;">Referral</span></a></li>
               <li><a href="/logout"><i class="fa-solid fa-arrow-right-from-bracket" style="color: #000000;"></i><span
                     style="margin-left: 3px;">Logout</span></a></li>
         </ul>
@@ -131,9 +132,9 @@
                 <div class="order-details" style="margin-top: 16px;">
                   <div class="order-info-item"
                     style="border: 1px solid #000000; padding: 8px; margin-right: 4px; border-radius: 5px;">
-                    <h6><strong>Order Date</strong></h6>
+                    <h6><strong>Order Date & Time</strong></h6>
                     <p>
-                      <%= order.createdAt %>
+                      <%= new Date(order.createdAt).toLocaleString() %>
                     </p>
                   </div>
                   <br>

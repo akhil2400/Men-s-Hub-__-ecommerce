@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link href="/css/tiny-slider.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/pdtDetails.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link href="/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #1b5e1b;
+      --secondary: #f4f7f4;
+      --text: #333;
+    }
+
+    body {
+      font-family: -apple-system, system-ui, sans-serif;
+      margin: 0;
+      background: var(--secondary);
+      color: var(--text);
+    }
+
+    .header {
+      background: white;
+      padding: 1rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .main-container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .referral-box {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .reward-amount {
+      font-size: 3rem;
+      font-weight: bold;
+      color: var(--primary);
+      margin: 1rem 0;
+    }
+
+    .code-container {
+      background: var(--secondary);
+      padding: 1rem;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .code {
+      font-family: monospace;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+    }
+
+    .copy-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .copy-btn:hover {
+      background: #154915;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .step-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .step-icon {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .progress-bar {
+      background: var(--secondary);
+      border-radius: 99px;
+      height: 8px;
+      margin: 2rem 0;
+      overflow: hidden;
+    }
+
+    .progress {
+      background: var(--primary);
+      width: 60%;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <%- include("./layouts/header.ejs") %>
+
+  <header class="header">
+    <nav>
+      <a href="/dashboard" style="color: var(--primary); text-decoration: none;">
+        <i class="fas fa-arrow-left"></i> Back
+      </a>
+    </nav>
+  </header>
+
+  <div class="main-container">
+    <div class="referral-box">
+      <h1>Invite Friends, Earn Rewards</h1>
+      <div class="reward-amount">₹<%= totalAmount %>
+      </div>
+      <p>For every friend who makes their first purchase</p>
+
+      <div class="code-container">
+        <span class="code">
+          <%= referralCode %>
+        </span>
+        <button class="copy-btn" onclick="copyCode()">
+          <i class="fas fa-copy"></i> Copy
+        </button>
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress"></div>
+      </div>
+      <p>6/10 referrals until next reward tier</p>
+    </div>
+
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-icon">
+          <i class="fas fa-share-alt"></i>
+        </div>
+        <h3>Share Code</h3>
+        <p>Share your unique referral code with friends</p>
+      </div>
+      <div class="step-card">
+        <div class="step-icon">
+          <i class="fas fa-shopping-cart"></i>
+        </div>
+        <h3>Friend Shops</h3>
+        <p>Friend makes their first purchase using your code</p>
+      </div>
+      <div class="step-card">
+        <div class="step-icon">
+          <i class="fas fa-gift"></i>
+        </div>
+        <h3>Get Rewarded</h3>
+        <p>Earn ₹100 in store credit for each referral</p>
+      </div>
+    </div>
+  </div>
+  <%- include("./layouts/footer.ejs") %>
+
+  <script>
+    function copyCode() {
+      navigator.clipboard.writeText('<%= referralCode %>');
+
+    }
+  </script>
+</body>
+
+</html>

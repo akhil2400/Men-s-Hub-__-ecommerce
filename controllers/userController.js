@@ -14,6 +14,7 @@ const couponModel = require("../models/couponModel");
 const mongoose = require("mongoose");
 const Razorpay = require("razorpay");
 require("dotenv").config();
+const Referral = require('../models/referralModel');
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID, // Replace with your Razorpay key
